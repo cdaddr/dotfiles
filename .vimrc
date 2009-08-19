@@ -209,18 +209,20 @@ function! ClojureHighlight()
 endfunction
 
 " S-arrows suck
-vmap <S-Up> <Up>
-imap <S-Up> <Up>
-nmap <S-Up> <Up>
-vmap <S-Down> <Down>
-imap <S-Down> <Down>
-nmap <S-Down> <Down>
+vnoremap <S-Up> <Up>
+inoremap <S-Up> <Up>
+nnoremap <S-Up> <Up>
+vnoremap <S-Down> <Down>
+inoremap <S-Down> <Down>
+nnoremap <S-Down> <Down>
 
 " Indent fun
 vnoremap > >gv
 vnoremap < <gv
-vmap <Tab> >
-vmap <S-Tab> <
+vnoremap <Tab> >
+vnoremap <S-Tab> <
+
+nnoremap <Leader>c :lcd %:h<CR>
 
 " Right-drag will do a vblock select
 " nnoremap <RightMouse> <LeftMouse><C-V>
@@ -399,17 +401,6 @@ endfunction
 
 let c_curly_error=1
 
-
-imap <M-(> <C-\><C-o>:norm yswb<CR>
-imap <M-[> <C-\><C-o>:norm yswr<CR>
-imap <M-{> <C-\><C-o>:norm yswB<CR>
-imap <M-<> <C-\><C-o>:norm yswa<CR>
-
-let g:surround_no_mappings = 1
-"imap <M-(> <Esc>:call SaveSearch()<cr>:call Surround('(', ')',0,0,'%',0)<cr>:call RestoreSearch()<cr>
-"imap <M-[> <Esc>:call SaveSearch()<cr>:call Surround('[', ']',0,0,'%',0)<cr>:call RestoreSearch()<cr>
-"imap <M-{> <Esc>:call SaveSearch()<cr>:call Surround('{', '}',0,0,'%',0)<cr>:call RestoreSearch()<cr>
-
 function! FixMarkdown()
     silent! %s,<\(/\?\)strong>,`,g
 endfunction
@@ -436,3 +427,16 @@ function! MarkDuplicateLines()
     echomsg count_dupes . " dupe(s) found"
 endfunction
 
+function! S(number)
+    return submatch(a:number)
+endfunction
+
+" Lines of strings => a paren-surrounded list of comma-separated strings on
+" one line
+nmap <Leader>mi gg_<C-v>G$A,ggVGJI($s)\h
+
+" Delete blank lines
+nmap <Leader>db :%g/^$/d<CR>\h
+
+" Surround every line in the file with quotes
+nmap <Leader>m" :%s/.*/"\0"<CR>\h

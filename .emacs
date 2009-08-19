@@ -214,15 +214,6 @@
 (enable-paredit-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Haskell
-
-(load-library "haskell-site-file")
-(require 'haskell-mode)
-(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-(define-key haskell-mode-map (kbd "<tab>") 'haskell-indent-cycle)
-(define-key haskell-mode-map "\C-m" 'newline)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
 
 ;(require 'ruby-mode)
@@ -245,12 +236,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure / SLIME
 
-(setq swank-clojure-binary "~/local/bin/clojure")
+(require 'swank-clojure-autoload)
+(if (string= window-system "w32")
+ (swank-clojure-config
+  ;;(setq swank-clojure-jar-path "c:/lisp/clojure/clojure.jar")
+  ;;(setq swank-clojure-extra-vm-args (list "-Djdbc.drivers=sun.jdbc.odbc.JdbcOdbcDriver"))
+  ;;(setq swank-clojure-extra-classpaths (list "c:/lisp/clojure-contrib/clojure-contrib.jar" "c:/lisp/mysql-connector-java-5.1.7-bin.jar")))
+  (setq swank-clojure-binary "c:/utils/clojure.bat"))
+ (setq swank-clojure-binary "~/local/bin/clojure"))
+
 (require-all '(
-               swank-clojure-autoload
                slime
                clojure-mode
               ))
+
+(setq slime-net-coding-system 'utf-8-unix)
 
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
@@ -311,5 +311,6 @@
  '(mode-line-inactive ((default (:inherit mode-line)) (((class color) (min-colors 88) (background dark)) (:foreground "#8b8b8b" :weight light))))
  '(tool-bar ((default (:foreground "black")) (((type x w32 ns) (class color)) (:background "grey75")))))
 
-(set-default-font "Consolas-12" t)
-
+(if (string= window-system "w32")
+  (set-face-font 'default "-outline-Consolas-normal-r-normal-normal-14-112-96-96-c-*-iso8859-1")
+  (set-default-font "Consolas-12" t))

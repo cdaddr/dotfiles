@@ -1,0 +1,5 @@
+.emacs.d/clojure-mode
+.emacs.d/history
+.emacs.d/saveplace
+.emacs.d/slime/
+.emacs.d/swank-clojure

@@ -251,6 +251,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure / SLIME
 
+(custom-set-variables
+ '(swank-clojure-extra-classpaths '("~/.emacs.d/swank-clojure/src")))
+
 (require 'swank-clojure-autoload)
 (if (string= window-system "w32")
  (swank-clojure-config

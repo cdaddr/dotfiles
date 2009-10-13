@@ -7,8 +7,6 @@
 "
 set nocompatible
 syntax on
-filetype on
-filetype plugin on
 filetype plugin indent on
 
 set encoding=utf-8
@@ -95,7 +93,7 @@ set nostartofline
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
     if v:version >= 700
-        set list listchars=eol:\ ,tab:»·,trail:·,precedes:…,extends:…,nbsp:‗
+        set list listchars=eol:\ ,tab:»-,trail:·,precedes:…,extends:…,nbsp:‗
     else
         set list listchars=eol:\ ,tab:»·,trail:·,extends:…
     endif
@@ -440,3 +438,19 @@ nmap <Leader>db :%g/^$/d<CR>\h
 " Surround every line in the file with quotes
 nmap <Leader>m" :%s/.*/"\0"<CR>\h
 
+function! Duplicate(repl, start, end, ...) range
+    if a:0 == 1
+        let format = a:1
+    else
+        let format = '%02d'
+    endif
+    let x = a:start
+    let txt = getline(a:firstline, a:lastline)
+    while x <= a:end
+        for line in copy(txt)
+            let newline = substitute(line, a:repl, printf(format, x), 'g')
+            call append('$', [newline])
+        endfor
+        let x += 1
+    endwhile
+endfunction

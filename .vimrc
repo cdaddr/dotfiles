@@ -65,7 +65,7 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
-set smartindent
+"set smartindent
 
 " The text to return for a fold
 function! FoldText()
@@ -166,7 +166,7 @@ if !exists("autocommands_loaded")
     endif
     au BufNewFile,BufRead *.{lisp,el,emacs} call LispHighlight()
 
-    au BufNewFile,BufRead *.clj setlocal complete+=k~/.vim/clj-keys.txt|call ClojureHighlight()
+    au BufNewFile,BufRead setf lisp|*.clj call ClojureHighlight()
 
     au BufNewFile,BufRead *.markdown setf markdown
 
@@ -328,7 +328,6 @@ vnoremap <silent> <Leader>i@ <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align 
 nmap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
 nmap <silent> <Leader>ss :set foldmethod=syntax<CR>
 nmap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
-nmap <Leader>e :g/^\s*$/d<CR>
 
 function! s:RunShellCommand(cmdline)
    botright new
@@ -433,10 +432,11 @@ endfunction
 
 " Lines of strings => a paren-surrounded list of comma-separated strings on
 " one line
-nmap <Leader>mi gg_<C-v>G$A,ggVGJI($s)\h
+nmap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
 
 " Delete blank lines
 nmap <Leader>db :%g/^$/d<CR>\h
 
 " Surround every line in the file with quotes
 nmap <Leader>m" :%s/.*/"\0"<CR>\h
+

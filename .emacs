@@ -35,6 +35,14 @@
 
 (global-set-key "\M-\d" 'my-backward-kill-word)
 
+;; From http://stackoverflow.com/questions/848936/how-to-preserve-clipboard-content-in-emacs-on-windows
+(defadvice kill-new (before kill-new-push-xselection-on-kill-ring activate)
+  "Before putting new kill onto the kill-ring, add the clipboard/external selection to the kill ring"
+  (let ((have-paste (and interprogram-paste-function
+                         (funcall interprogram-paste-function))))
+    (when have-paste (push have-paste kill-ring))))
+
+
 (global-hi-lock-mode 1)
 
 (defun my-isearch-word-at-point ()
@@ -63,7 +71,7 @@
 (global-set-key [M-kp-multiply] 'my-isearch-word-at-point)
 
 (global-set-key "\C-o" 'point-undo)
-(global-set-key "\C-i" 'point-redo)
+;;(global-set-key "\C-i" 'point-redo)
 
 ;; from http://stackoverflow.com/questions/589691/how-can-i-emulate-vims-search-in-gnu-emacs
 
@@ -124,15 +132,24 @@
 (setq column-number-mode nil)
 (setq size-indication-mode nil)
 (setq mode-line-position nil)
-(ido-mode)
+(ido-mode 1)
 
 (global-set-key "\C-m" 'reindent-then-newline-and-indent)  ;No tabs
 (global-set-key "\C-a" 'beginning-of-line-text)
 
+(setq window-min-height 2)
+(defun maximize-window ()
+  (interactive)
+  (let* ((other-windows (cdr (window-list)))
+         (other-heights (* (length other-windows) window-min-height))
+         (my-height (- (frame-height) other-heights)))
+    (setf (window-height) (- my-height 1))))
+
 (add-hook 'term-setup-hook (lambda () (windmove-default-keybindings 'meta)))
+;(defadvice windmove-up (after maximize activate) (maximize-window))
+;(defadvice windmove-down (after maximize activate) (maximize-window))
 
 (set-fringe-style (cons 0 1))
-(setq window-min-height 1)
 
 (setq vc-handled-backends (remq 'Bzr vc-handled-backends))
 
@@ -167,8 +184,6 @@
 
 (setq auto-save-list-file-prefix nil)
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(windmove-default-keybindings 'meta)
 
 ;; Auto-wrap isearch
 (defadvice isearch-search (after isearch-no-fail activate)
@@ -295,6 +310,7 @@
  '(scroll-step 1)
  '(scroll-up-aggressively 0.0)
  '(show-paren-mode t nil (paren))
+ '(slime-compilation-finished-hook nil)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.

@@ -237,6 +237,7 @@ nnoremap <Leader>c :lcd %:h<CR>
 "nnoremap <A-RightMouse> <RightMouse>
 
 nnoremap <Leader>bd :silent bufdo! bd<CR>
+nnoremap <Leader>BD :silent bufdo! bd!<CR>
 nnoremap <Leader>l :call CountLines()<CR>
 nnoremap <Leader>w :setlocal nowrap!<CR>
 nnoremap <Leader>h :nohls<CR>
@@ -453,4 +454,11 @@ function! Duplicate(repl, start, end, ...) range
         endfor
         let x += 1
     endwhile
+endfunction
+
+" http://vim.wikia.com/wiki/Generating_a_column_of_increasing_numbers
+let g:I=0
+function! INC(increment)
+  let g:I = g:I + a:increment
+  return g:I
 endfunction

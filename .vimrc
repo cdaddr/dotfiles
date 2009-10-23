@@ -437,6 +437,7 @@ nmap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
 nmap <Leader>db :%g/^$/d<CR>\h
 
 " Surround every line in the file with quotes
+nmap <Leader>m' :%s/.*/'\0'<CR>\h
 nmap <Leader>m" :%s/.*/"\0"<CR>\h
 
 function! Duplicate(repl, start, end, ...) range

@@ -282,6 +282,7 @@
 
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
+(font-lock-add-keywords 'clojure-mode '(("(\\|)" . paren-face)))
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 

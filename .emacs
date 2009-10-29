@@ -248,9 +248,29 @@
 (require 'css-mode)
 (define-key css-mode-map "}" 'electric-brace)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Clojure / SLIME
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Custom
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
+ '(bold ((t (:foreground "white" :weight normal))))
+ '(cursor ((t (:background "green"))))
+ '(font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
+ '(hi-blue ((((background dark)) (:background "grey20"))))
+ '(linum ((t (:inherit shadow :background "grey12"))))
+ '(mode-line ((((class color) (min-colors 88)) (:background "#333333" :foreground "#ffffff" :box (:line-width -1 :color "#333333")))))
+ '(mode-line-highlight ((((class color) (min-colors 88)) nil)))
+ '(mode-line-inactive ((default (:inherit mode-line)) (((class color) (min-colors 88) (background dark)) (:foreground "#8b8b8b" :weight light))))
+ '(tool-bar ((default (:foreground "black")) (((type x w32 ns) (class color)) (:background "grey75")))))
+
+(if (string= window-system "w32")
+    (set-face-font 'default "-outline-Consolas-normal-r-normal-normal-14-112-96-96-c-*-iso8859-1")
+  (set-default-font "Consolas-12" t))
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -279,6 +299,9 @@
  '(slime-compilation-finished-hook nil)
  '(swank-clojure-extra-classpaths (quote ("~/.emacs.d/swank-clojure/src")))
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Clojure / SLIME
 
 (require 'swank-clojure-autoload)
 (if (string= window-system "w32")
@@ -314,33 +337,18 @@
 (defface clojure-brackets '((((class color)) (:foreground "SteelBlue"))) "Clojure brackets" :group 'faces)
 (defface clojure-keyword '((((class color)) (:foreground "khaki"))) "Clojure keywords" :group 'faces)
 
-(font-lock-add-keywords 'clojure-mode '(("(\\|)" . 'clojure-parens)))
-(font-lock-add-keywords 'clojure-mode '(("{\\|}" . 'clojure-brackets)))
-(font-lock-add-keywords 'clojure-mode '(("\\[\\|\\]" . 'clojure-braces)))
-(font-lock-add-keywords 'clojure-mode '((":\\w+" . 'clojure-keyword)))
+(defun tweak-clojure-syntax ()
+  (font-lock-add-keywords nil '(("(\\|)" . 'clojure-parens)))
+  (font-lock-add-keywords nil '(("{\\|}" . 'clojure-brackets)))
+  (font-lock-add-keywords nil '(("\\[\\|\\]" . 'clojure-braces)))
+  (font-lock-add-keywords nil '((":\\w+" . 'clojure-keyword))))
+
+(add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
+(add-hook 'slime-repl-mode-hook (lambda ()
+                                  (enable-paredit-mode)
+                                  (tweak-clojure-syntax)))
+
+(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Custom
-
-
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
- '(bold ((t (:foreground "white" :weight normal))))
- '(cursor ((t (:background "green"))))
- '(font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
- '(hi-blue ((((background dark)) (:background "grey20"))))
- '(linum ((t (:inherit shadow :background "grey12"))))
- '(mode-line ((((class color) (min-colors 88)) (:background "#333333" :foreground "#ffffff" :box (:line-width -1 :color "#333333")))))
- '(mode-line-highlight ((((class color) (min-colors 88)) nil)))
- '(mode-line-inactive ((default (:inherit mode-line)) (((class color) (min-colors 88) (background dark)) (:foreground "#8b8b8b" :weight light))))
- '(tool-bar ((default (:foreground "black")) (((type x w32 ns) (class color)) (:background "grey75")))))
-
-(if (string= window-system "w32")
-  (set-face-font 'default "-outline-Consolas-normal-r-normal-normal-14-112-96-96-c-*-iso8859-1")
-  (set-default-font "Consolas-12" t))

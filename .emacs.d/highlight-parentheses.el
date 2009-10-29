@@ -1,12 +1,12 @@
 ;;; highlight-parentheses.el --- highlight surrounding parentheses
 ;;
-;; Copyright (C) 2007 Nikolaj Schumacher
+;; Copyright (C) 2007, 2009 Nikolaj Schumacher
 ;;
 ;; Author: Nikolaj Schumacher <bugs * nschum de>
-;; Version: 1.0
+;; Version: 1.0.1
 ;; Keywords: faces, matching
 ;; URL: http://nschum.de/src/emacs/highlight-parentheses/
-;; Compatibility: GNU Emacs 22.x
+;; Compatibility: GNU Emacs 22.x, GNU Emacs 23.x
 ;;
 ;; This file is NOT part of GNU Emacs.
 ;;
@@ -21,23 +21,25 @@
 ;; GNU General Public License for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, write to the Free Software
-;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;;; Commentary:
 ;;
 ;; Add the following to your .emacs file:
 ;; (require 'highlight-parentheses)
 ;;
-;; Enable `highlight-symbol-mode'.
+;; Enable `highlight-parentheses-mode'.
 ;;
-;;; Changes Log:
+;;; Change Log:
+;;
+;; 2009-03-19 (1.0.1)
+;;    Added setter for color variables.
 ;;
 ;; 2007-07-30 (1.0)
 ;;    Added background highlighting and faces.
 ;;
 ;; 2007-05-15 (0.9.1)
-;;    Support for defcustom.  Changed from vector to list.
+;;    Support for defcustom.
 ;;
 ;; 2007-04-26 (0.9)
 ;;    Initial Release.
@@ -51,21 +53,24 @@
   :group 'faces
   :group 'matching)
 
-(defvar hl-paren-overlays nil
-  "This buffers currently active overlays.")
-(make-variable-buffer-local 'hl-paren-overlays)
+(defun hl-paren-set (variable value)
+  (set variable value)
+  (when (fboundp 'hl-paren-color-update)
+    (hl-paren-color-update)))
 
 (defcustom hl-paren-colors
-  '("firebrick1" "IndianRed4" "IndianRed")
+  '("firebrick1" "IndianRed1" "IndianRed3" "IndianRed4")
   "*List of colors for the highlighted parentheses.
 The list starts with the the inside parentheses and moves outwards."
   :type '(repeat color)
+  :set 'hl-paren-set
   :group 'highlight-parentheses)
 
 (defcustom hl-paren-background-colors nil
   "*List of colors for the background highlighted parentheses.
 The list starts with the the inside parentheses and moves outwards."
   :type '(repeat color)
+  :set 'hl-paren-set
   :group 'highlight-parentheses)
 
 (defface hl-paren-face nil
@@ -76,6 +81,10 @@ Color attributes might be overriden by `hl-paren-colors' and
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar hl-paren-overlays nil
+  "This buffers currently active overlays.")
+(make-variable-buffer-local 'hl-paren-overlays)
+
 (defvar hl-paren-last-point 0
   "The last point for which parentheses were highlighted.
 This is used to prevent analyzing the same context over and over.")
@@ -84,53 +93,22 @@ This is used to prevent analyzing the same context over and over.")
 (defun hl-paren-highlight ()
   "Highlight the parentheses around point."
   (unless (= (point) hl-paren-last-point)
-   (save-excursion
-      (let ((pos (point))
-            (match-pos (point))
-            (level -1)
-            (max (1- (length hl-paren-overlays))))
-        (while (and match-pos (< level max))
-          (setq match-pos
-                (when (setq pos (cadr (syntax-ppss pos)))
-                  (ignore-errors (scan-sexps pos 1))))
-          (when match-pos
-            (hl-paren-put-overlay (incf level) pos 'hl-paren-face)
-            (hl-paren-put-overlay (incf level) (1- match-pos) 'hl-paren-face)))
-        (while (< level max)
-          (hl-paren-put-overlay (incf level) nil nil))))
-    (setq hl-paren-last-point (point))))
-
-(defun hl-paren-put-overlay (n pos face)
-  "Move or create the N'th overlay so its shown at POS."
-  (let ((ov (elt hl-paren-overlays n)) end)
-    (if (null pos)
-        (when ov
-          (delete-overlay ov)
-          (aset hl-paren-overlays n nil))
-      (if (atom pos)
-          (setq end (1+ pos))
-        (setq end (cdr pos))
-        (setq pos (car pos)))
-      (if ov
-          (move-overlay ov pos end)
-        (let ((face-attributes (face-attr-construct face))
-              (color-value (nth (/ n 2) hl-paren-colors))
-              (background-value (nth (/ n 2) hl-paren-background-colors)))
-          (when color-value
-            (let ((attribute (memq :foreground face-attributes)))
-              (if attribute
-                  (setcar (cdr attribute) color-value)
-                (push color-value face-attributes)
-                (push :foreground face-attributes))))
-          (when background-value
-            (let ((attribute (memq :background face-attributes)))
-              (if attribute
-                  (setcar (cdr attribute) background-value)
-                (push background-value face-attributes)
-                (push :background face-attributes))))
-          (setq ov (make-overlay pos end))
-          (aset hl-paren-overlays n ov)
-          (overlay-put ov 'face face-attributes))))))
+    (setq hl-paren-last-point (point))
+    (let ((overlays hl-paren-overlays)
+          pos1 pos2
+          (pos (point)))
+      (save-excursion
+        (condition-case err
+            (while (and (setq pos1 (cadr (syntax-ppss pos1)))
+                        (cddr overlays))
+              (move-overlay (pop overlays) pos1 (1+ pos1))
+              (when (setq pos2 (scan-sexps pos1 1))
+                (move-overlay (pop overlays) (1- pos2) pos2)
+                ))
+          (error nil))
+        (goto-char pos))
+      (dolist (ov overlays)
+        (move-overlay ov 1 1)))))
 
 ;;;###autoload
 (define-minor-mode highlight-parentheses-mode
@@ -138,17 +116,41 @@ This is used to prevent analyzing the same context over and over.")
   nil " hl-p" nil
   (if highlight-parentheses-mode
       (progn
-        (setq hl-paren-overlays
-              (make-vector (* 2 (max (length hl-paren-colors)
-                                     (length hl-paren-background-colors))) nil))
+        (hl-paren-create-overlays)
         (add-hook 'post-command-hook 'hl-paren-highlight nil t))
-    (let (ov)
-      (dotimes (i (length hl-paren-overlays))
-        (when (setq ov (elt hl-paren-overlays i))
-          (delete-overlay ov))))
+    (mapc 'delete-overlay hl-paren-overlays)
     (kill-local-variable 'hl-paren-overlays)
     (kill-local-variable 'hl-paren-point)
     (remove-hook 'post-command-hook 'hl-paren-highlight t)))
+
+;;; overlays ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun hl-paren-create-overlays ()
+  (let ((fg hl-paren-colors)
+        (bg hl-paren-background-colors)
+        attributes)
+    (while (or fg bg)
+      (setq attributes (face-attr-construct 'hl-paren-face))
+      (when (car fg)
+        (setq attributes (plist-put attributes :foreground (car fg))))
+      (pop fg)
+      (when (car bg)
+        (setq attributes (plist-put attributes :background (car bg))))
+      (pop bg)
+      (dotimes (i 2) ;; front and back
+        (push (make-overlay 0 0) hl-paren-overlays)
+        (overlay-put (car hl-paren-overlays) 'face attributes)))
+    (setq hl-paren-overlays (nreverse hl-paren-overlays))))
+
+(defun hl-paren-color-update ()
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when hl-paren-overlays
+        (mapc 'delete-overlay hl-paren-overlays)
+        (setq hl-paren-overlays nil)
+        (hl-paren-create-overlays)
+        (let ((hl-paren-last-point -1)) ;; force update
+          (hl-paren-highlight))))))
 
 (provide 'highlight-parentheses)
 

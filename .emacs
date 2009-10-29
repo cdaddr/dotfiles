@@ -252,7 +252,33 @@
 ;; Clojure / SLIME
 
 (custom-set-variables
- '(swank-clojure-extra-classpaths '("~/.emacs.d/swank-clojure/src")))
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(case-fold-search t)
+ '(fancy-splash-image "")
+ '(global-linum-mode t)
+ '(inhibit-startup-screen t)
+ '(lisp-loop-forms-indentation 6)
+ '(lisp-loop-keyword-indentation 6)
+ '(lisp-simple-loop-indentation 6)
+ '(mode-line-format (quote ("%e--[" mode-line-buffer-identification "]" (vc-mode vc-mode) "  " mode-line-modes global-mode-string " %-")))
+ '(mode-line-in-non-selected-windows t)
+ '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")))
+ '(mouse-wheel-progressive-speed nil)
+ '(require-final-newline t)
+ '(savehist-mode t nil (savehist))
+ '(scroll-bar-mode nil)
+ '(scroll-conservatively 100000)
+ '(scroll-down-aggressively 0.0)
+ '(scroll-margin 0)
+ '(scroll-step 1)
+ '(scroll-up-aggressively 0.0)
+ '(show-paren-mode t nil (paren))
+ '(slime-compilation-finished-hook nil)
+ '(swank-clojure-extra-classpaths (quote ("~/.emacs.d/swank-clojure/src")))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
 (require 'swank-clojure-autoload)
 (if (string= window-system "w32")
@@ -282,40 +308,23 @@
 
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
-(font-lock-add-keywords 'clojure-mode '(("(\\|)" . paren-face)))
+
+(defface clojure-parens '((((class color)) (:foreground "DimGrey"))) "Clojure parens" :group 'faces)
+(defface clojure-braces '((((class color)) (:foreground "LightSlateGrey"))) "Clojure braces" :group 'faces)
+(defface clojure-brackets '((((class color)) (:foreground "SteelBlue"))) "Clojure brackets" :group 'faces)
+(defface clojure-keyword '((((class color)) (:foreground "khaki"))) "Clojure keywords" :group 'faces)
+
+(font-lock-add-keywords 'clojure-mode '(("(\\|)" . 'clojure-parens)))
+(font-lock-add-keywords 'clojure-mode '(("{\\|}" . 'clojure-brackets)))
+(font-lock-add-keywords 'clojure-mode '(("\\[\\|\\]" . 'clojure-braces)))
+(font-lock-add-keywords 'clojure-mode '((":\\w+" . 'clojure-keyword)))
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom
 
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(case-fold-search t)
- '(fancy-splash-image "")
- '(global-linum-mode t)
- '(inhibit-startup-screen t)
- '(lisp-loop-forms-indentation 6)
- '(lisp-loop-keyword-indentation 6)
- '(lisp-simple-loop-indentation 6)
- '(mode-line-format (quote ("%e--[" mode-line-buffer-identification "]" (vc-mode vc-mode) "  " mode-line-modes global-mode-string " %-")))
- '(mode-line-in-non-selected-windows t)
- '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")))
- '(mouse-wheel-progressive-speed nil)
- '(require-final-newline t)
- '(savehist-mode t nil (savehist))
- '(scroll-bar-mode nil)
- '(scroll-conservatively 100000)
- '(scroll-down-aggressively 0.0)
- '(scroll-margin 0)
- '(scroll-step 1)
- '(scroll-up-aggressively 0.0)
- '(show-paren-mode t nil (paren))
- '(slime-compilation-finished-hook nil)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -324,6 +333,7 @@
  '(default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
  '(bold ((t (:foreground "white" :weight normal))))
  '(cursor ((t (:background "green"))))
+ '(font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
  '(hi-blue ((((background dark)) (:background "grey20"))))
  '(linum ((t (:inherit shadow :background "grey12"))))
  '(mode-line ((((class color) (min-colors 88)) (:background "#333333" :foreground "#ffffff" :box (:line-width -1 :color "#333333")))))

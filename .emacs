@@ -12,6 +12,7 @@
                light-symbol
                linum 
                color-theme
+               gentooish
                ido
                parenface
                point-undo
@@ -22,7 +23,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
+(color-theme-initialize)
+(if window-system
+    (color-theme-gentooish)
+    (color-theme-dark-laptop))
+
 (browse-kill-ring-default-keybindings)
+(setq auto-save-list-file-prefix nil)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (defun my-backward-kill-word ()
   "Kill words backward my way."
@@ -113,12 +121,6 @@
 (global-set-key [mouse-2] 'mouse-yank-primary)
 (cua-mode t)
 
-;; from http://www.emacswiki.org/emacs/AutoIndentation
-(defadvice yank (after indent-region activate)
-  (if (member major-mode '(emacs-lisp-mode lisp-mode))
-      (let ((mark-even-if-inactive t))
-        (indent-region (region-beginning) (region-end) nil)))) 
-
 (delete-selection-mode t)
 (tool-bar-mode 0)
 (global-linum-mode)
@@ -175,16 +177,6 @@
     (indent-according-to-mode)))
 (global-set-key [C-tab] 'indent-according-to-mode)
 
-(defun tab-fix ()
-  (local-set-key [tab] 'indent-or-expand))
-(defun slime-tab-fix ()
-  (local-set-key [tab] 'slime-complete-symbol))
-(add-hook 'emacs-lisp-mode-hook 'tab-fix)
-(add-hook 'lisp-mode-hook       'slime-tab-fix)
-
-(setq auto-save-list-file-prefix nil)
-(fset 'yes-or-no-p 'y-or-n-p)
-
 ;; Auto-wrap isearch
 (defadvice isearch-search (after isearch-no-fail activate)
   (unless isearch-success
@@ -226,6 +218,8 @@
 (define-key paredit-mode-map (kbd "M-)")
             'paredit-close-parenthesis-and-newline)
 
+(mapcar (lambda (hook) (add-hook hook 'enable-paredit-mode))
+        '(clojure-mode-hook lisp-mode-hook slime-repl-mode-hook emacs-lisp-mode-hook))
 (enable-paredit-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -248,35 +242,78 @@
 (require 'css-mode)
 (define-key css-mode-map "}" 'electric-brace)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic Lisp / Emacs Lisp
+;; from http://www.emacswiki.org/emacs/AutoIndentation
+
+(defadvice yank (after indent-region activate)
+  (if (member major-mode '(clojure-mode emacs-lisp-mode lisp-mode))
+      (let ((mark-even-if-inactive t))
+        (indent-region (region-beginning) (region-end) nil)))) 
+
+(defun tab-fix ()
+  (local-set-key [tab] 'indent-or-expand))
+(defun slime-tab-fix ()
+  (local-set-key [tab] 'slime-complete-symbol))
+(add-hook 'emacs-lisp-mode-hook 'tab-fix)
+(add-hook 'lisp-mode-hook       'slime-tab-fix)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Clojure / SLIME
+
+(require 'swank-clojure-autoload)
+(if (string= window-system "w32")
+    (swank-clojure-config
+     ;;(setq swank-clojure-jar-path "c:/lisp/clojure/clojure.jar")
+     ;;(setq swank-clojure-extra-vm-args (list "-Djdbc.drivers=sun.jdbc.odbc.JdbcOdbcDriver"))
+     ;;(setq swank-clojure-extra-classpaths (list "c:/lisp/clojure-contrib/clojure-contrib.jar" "c:/lisp/mysql-connector-java-5.1.7-bin.jar")))
+     (setq swank-clojure-binary "c:/utils/clojure.bat"))
+  (setq swank-clojure-binary "~/local/bin/clojure"))
+
+(require-all '(
+               slime
+               clojure-mode
+               ))
+
+(setq slime-net-coding-system 'utf-8-unix)
+
+(setq auto-mode-alist
+      (cons '("\\.clj$" . clojure-mode)
+            auto-mode-alist))
+
+(set-language-environment "UTF-8")
+(setq slime-net-coding-system 'utf-8-unix) 
+(slime-setup '(slime-fancy))
+(define-key clojure-mode-map (kbd "<tab>") 'indent-or-expand)
+(add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
+
+(defun lisp-enable-paredit-hook () (paredit-mode 1))
+(add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
+
+(defface clojure-parens '((((class color)) (:foreground "DimGrey"))) "Clojure parens" :group 'faces)
+(defface clojure-braces '((((class color)) (:foreground "#49b2c7"))) "Clojure braces" :group 'faces)
+(defface clojure-brackets '((((class color)) (:foreground "SteelBlue"))) "Clojure brackets" :group 'faces)
+(defface clojure-keyword '((((class color)) (:foreground "khaki"))) "Clojure keywords" :group 'faces)
+(defface clojure-namespace '((((class color)) (:foreground "#c476f1"))) "Clojure namespace" :group 'faces)
+(defface clojure-java-call '((((class color)) (:foreground "#4bcf68"))) "Clojure Java calls" :group 'faces)
+(defface clojure-special '((((class color)) (:foreground "#b8bb00"))) "Clojure special" :group 'faces)
+
+(defun tweak-clojure-syntax ()
+  (font-lock-add-keywords nil '(("#?(\\|)" . 'clojure-parens)))
+  (font-lock-add-keywords nil '(("#?\\^?{\\|}" . 'clojure-brackets)))
+  (font-lock-add-keywords nil '(("\\[\\|\\]" . 'clojure-braces)))
+  (font-lock-add-keywords nil '((":\\w+" . 'clojure-keyword)))
+  (font-lock-add-keywords nil '(("(\\(\\.[^ \n)]*\\|[^ \n)]+\\.\\|new\\)\\([ )\n]\\|$\\)" 1 'clojure-java-call)))
+  (font-lock-add-keywords nil '(("nil\\|true\\|false" . 'clojure-special)))
+                                        ; (font-lock-add-keywords nil '(("ns \\([^ )]+\\)" 1 'clojure-namespace)))
+  )
+
+(add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
+
+;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom
-
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
- '(bold ((t (:foreground "white" :weight normal))))
- '(cursor ((t (:background "green"))))
- '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "#c476f1"))))
- '(font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
- '(font-lock-function-name-face ((((class color) (min-colors 88) (background dark)) (:foreground "#4cbbd1"))))
- '(font-lock-keyword-face ((((class color) (min-colors 88) (background dark)) (:foreground "#9a383a"))))
- '(font-lock-string-face ((((class color) (min-colors 88) (background dark)) (:background "#0f291a" :foreground "#5dff9e"))))
- '(hi-blue ((((background dark)) (:background "grey20"))))
- '(ido-first-match ((t (:background "#361d45" :foreground "#cf7dff" :weight bold))))
- '(ido-only-match ((((class color)) (:background "#361d45" :foreground "#cf7dff" :weight bold))))
- '(ido-subdir ((((min-colors 88) (class color)) (:foreground "#7dcfff"))))
- '(linum ((t (:inherit shadow :background "grey12"))))
- '(minibuffer-prompt ((((background dark)) (:foreground "#863335"))))
- '(mode-line ((((class color) (min-colors 88)) (:background "#333333" :foreground "#ffffff" :box (:line-width -1 :color "#333333")))))
- '(mode-line-highlight ((((class color) (min-colors 88)) nil)))
- '(mode-line-inactive ((default (:inherit mode-line)) (((class color) (min-colors 88) (background dark)) (:foreground "#8b8b8b" :weight light))))
- '(show-paren-match ((((class color) (background dark)) (:background "#005500"))))
- '(tool-bar ((default (:foreground "black")) (((type x w32 ns) (class color)) (:background "grey75")))))
-
 (if (string= window-system "w32")
     (set-face-font 'default "-outline-Consolas-normal-r-normal-normal-14-112-96-96-c-*-iso8859-1")
   (set-default-font "Consolas-12" t))
@@ -311,63 +348,4 @@
  '(swank-clojure-extra-classpaths (quote ("~/.emacs.d/swank-clojure/src")))
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Clojure / SLIME
-
-(require 'swank-clojure-autoload)
-(if (string= window-system "w32")
- (swank-clojure-config
-  ;;(setq swank-clojure-jar-path "c:/lisp/clojure/clojure.jar")
-  ;;(setq swank-clojure-extra-vm-args (list "-Djdbc.drivers=sun.jdbc.odbc.JdbcOdbcDriver"))
-  ;;(setq swank-clojure-extra-classpaths (list "c:/lisp/clojure-contrib/clojure-contrib.jar" "c:/lisp/mysql-connector-java-5.1.7-bin.jar")))
-  (setq swank-clojure-binary "c:/utils/clojure.bat"))
- (setq swank-clojure-binary "~/local/bin/clojure"))
-
-(require-all '(
-               slime
-               clojure-mode
-              ))
-
-(setq slime-net-coding-system 'utf-8-unix)
-
-(setq auto-mode-alist
-      (cons '("\\.clj$" . clojure-mode)
-            auto-mode-alist))
-
-(set-language-environment "UTF-8")
-(setq slime-net-coding-system 'utf-8-unix) 
-(slime-setup '(slime-fancy))
-(define-key clojure-mode-map (kbd "<tab>") 'indent-or-expand)
-(add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
-
-(defun lisp-enable-paredit-hook () (paredit-mode 1))
-(add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
-
-(defface clojure-parens '((((class color)) (:foreground "DimGrey"))) "Clojure parens" :group 'faces)
-(defface clojure-braces '((((class color)) (:foreground "#49b2c7"))) "Clojure braces" :group 'faces)
-(defface clojure-brackets '((((class color)) (:foreground "SteelBlue"))) "Clojure brackets" :group 'faces)
-(defface clojure-keyword '((((class color)) (:foreground "khaki"))) "Clojure keywords" :group 'faces)
-(defface clojure-namespace '((((class color)) (:foreground "#c476f1"))) "Clojure namespace" :group 'faces)
-(defface clojure-java-call '((((class color)) (:foreground "#4bcf68"))) "Clojure Java calls" :group 'faces)
-(defface clojure-special '((((class color)) (:foreground "#b8bb00"))) "Clojure special" :group 'faces)
-
-(defun tweak-clojure-syntax ()
-  (font-lock-add-keywords nil '(("#?(\\|)" . 'clojure-parens)))
-  (font-lock-add-keywords nil '(("#?\\^?{\\|}" . 'clojure-brackets)))
-  (font-lock-add-keywords nil '(("\\[\\|\\]" . 'clojure-braces)))
-  (font-lock-add-keywords nil '((":\\w+" . 'clojure-keyword)))
-  (font-lock-add-keywords nil '(("(\\(\\.[^ \n)]*\\|[^ \n)]+\\.\\|new\\)\\([ )\n]\\|$\\)" 1 'clojure-java-call)))
-  (font-lock-add-keywords nil '(("nil\\|true\\|false" . 'clojure-special)))
-  ; (font-lock-add-keywords nil '(("ns \\([^ )]+\\)" 1 'clojure-namespace)))
-  )
-
-(add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
-(add-hook 'slime-repl-mode-hook (lambda ()
-                                  (enable-paredit-mode)
-                                  ;;(tweak-clojure-syntax)
-                                  ))
-
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-
-;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 

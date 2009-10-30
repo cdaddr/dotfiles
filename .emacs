@@ -212,20 +212,15 @@
 
 (require 'paredit)
 
-;; This conflicts with windmove otherwise
 (eval-after-load 'paredit
   '(progn
+     ;; Some paredit keybindings conflict with windmove and SLIME
      (define-key paredit-mode-map (kbd "<M-up>") nil)
-     (define-key paredit-mode-map (kbd "<M-down>") nil)))
-
-(define-key paredit-mode-map (kbd ")")
-            'paredit-close-parenthesis)
-(define-key paredit-mode-map (kbd "M-)")
-            'paredit-close-parenthesis-and-newline)
+     (define-key paredit-mode-map (kbd "<M-down>") nil)
+     (define-key paredit-mode-map "\M-r" nil)))
 
 (mapcar (lambda (hook) (add-hook hook 'enable-paredit-mode))
         '(clojure-mode-hook lisp-mode-hook slime-repl-mode-hook emacs-lisp-mode-hook))
-(enable-paredit-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby

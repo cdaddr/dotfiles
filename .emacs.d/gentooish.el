@@ -10,7 +10,6 @@
       (border-color . "000000")
       (cursor-color . "green")
       (background-mode . dark))
-     (default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
      (bold ((t (:foreground "white" :weight normal))))
      (font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "#c476f1"))))
      (font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))

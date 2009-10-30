@@ -24,6 +24,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
 (color-theme-initialize)
+
+(if (string= window-system "w32")
+    (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso8859-1")
+    (set-default-font "Consolas-12" t))
+
 (if window-system
     (color-theme-gentooish)
     (color-theme-dark-laptop))
@@ -314,15 +319,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom
-(if (string= window-system "w32")
-    (set-face-font 'default "-outline-Consolas-normal-r-normal-normal-14-112-96-96-c-*-iso8859-1")
-  (set-default-font "Consolas-12" t))
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(case-fold-search t)
+ '(comint-scroll-to-bottom-on-input t)
  '(fancy-splash-image "")
  '(global-linum-mode t)
  '(ido-decorations (quote ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
@@ -347,5 +350,4 @@
  '(slime-compilation-finished-hook nil)
  '(swank-clojure-extra-classpaths (quote ("~/.emacs.d/swank-clojure/src")))
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
-
 

@@ -253,19 +253,28 @@
 ;; Custom
 
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "#171717" :foreground "#c0c0c0" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 122 :width normal :foundry "microsoft" :family "Consolas"))))
  '(bold ((t (:foreground "white" :weight normal))))
  '(cursor ((t (:background "green"))))
+ '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "#c476f1"))))
  '(font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
+ '(font-lock-function-name-face ((((class color) (min-colors 88) (background dark)) (:foreground "#4cbbd1"))))
+ '(font-lock-keyword-face ((((class color) (min-colors 88) (background dark)) (:foreground "#9a383a"))))
+ '(font-lock-string-face ((((class color) (min-colors 88) (background dark)) (:background "#0f291a" :foreground "#5dff9e"))))
  '(hi-blue ((((background dark)) (:background "grey20"))))
+ '(ido-first-match ((t (:background "#361d45" :foreground "#cf7dff" :weight bold))))
+ '(ido-only-match ((((class color)) (:background "#361d45" :foreground "#cf7dff" :weight bold))))
+ '(ido-subdir ((((min-colors 88) (class color)) (:foreground "#7dcfff"))))
  '(linum ((t (:inherit shadow :background "grey12"))))
+ '(minibuffer-prompt ((((background dark)) (:foreground "#863335"))))
  '(mode-line ((((class color) (min-colors 88)) (:background "#333333" :foreground "#ffffff" :box (:line-width -1 :color "#333333")))))
  '(mode-line-highlight ((((class color) (min-colors 88)) nil)))
  '(mode-line-inactive ((default (:inherit mode-line)) (((class color) (min-colors 88) (background dark)) (:foreground "#8b8b8b" :weight light))))
+ '(show-paren-match ((((class color) (background dark)) (:background "#005500"))))
  '(tool-bar ((default (:foreground "black")) (((type x w32 ns) (class color)) (:background "grey75")))))
 
 (if (string= window-system "w32")
@@ -279,6 +288,8 @@
  '(case-fold-search t)
  '(fancy-splash-image "")
  '(global-linum-mode t)
+ '(ido-decorations (quote ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+ '(ido-everywhere t)
  '(inhibit-startup-screen t)
  '(lisp-loop-forms-indentation 6)
  '(lisp-loop-keyword-indentation 6)
@@ -333,20 +344,24 @@
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 
 (defface clojure-parens '((((class color)) (:foreground "DimGrey"))) "Clojure parens" :group 'faces)
-(defface clojure-braces '((((class color)) (:foreground "LightSlateGrey"))) "Clojure braces" :group 'faces)
+(defface clojure-braces '((((class color)) (:foreground "#49b2c7"))) "Clojure braces" :group 'faces)
 (defface clojure-brackets '((((class color)) (:foreground "SteelBlue"))) "Clojure brackets" :group 'faces)
 (defface clojure-keyword '((((class color)) (:foreground "khaki"))) "Clojure keywords" :group 'faces)
+(defface clojure-namespace '((((class color)) (:foreground "#c476f1"))) "Clojure namespace" :group 'faces)
 
 (defun tweak-clojure-syntax ()
   (font-lock-add-keywords nil '(("(\\|)" . 'clojure-parens)))
-  (font-lock-add-keywords nil '(("{\\|}" . 'clojure-brackets)))
+  (font-lock-add-keywords nil '(("#?{\\|}" . 'clojure-brackets)))
   (font-lock-add-keywords nil '(("\\[\\|\\]" . 'clojure-braces)))
-  (font-lock-add-keywords nil '((":\\w+" . 'clojure-keyword))))
+  (font-lock-add-keywords nil '((":\\w+" . 'clojure-keyword)))
+  (font-lock-add-keywords nil '(("ns \\([^ )]+\\)" 1 'clojure-namespace)))
+  )
 
 (add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
 (add-hook 'slime-repl-mode-hook (lambda ()
                                   (enable-paredit-mode)
-                                  (tweak-clojure-syntax)))
+                                  ;;(tweak-clojure-syntax)
+                                  ))
 
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 

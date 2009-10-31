@@ -7,7 +7,7 @@
    '(color-theme-gentooish
      ((foreground-color . "#c0c0c0")
       (background-color . "#171717")
-      (border-color . "000000")
+      (border-color . "black")
       (cursor-color . "green")
       (background-mode . dark))
      (bold ((t (:foreground "white" :weight normal))))

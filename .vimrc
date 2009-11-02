@@ -28,7 +28,8 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 " Appearance
 colorscheme gentooish
 if has('win32')
-    set guifont=Terminus:h12:w6
+    "set guifont=Terminus:h12:w6
+    set guifont=Consolas:h11:w6
     hi StatusLine gui=NONE
     hi User1 gui=NONE
     hi User2 gui=NONE

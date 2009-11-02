@@ -463,3 +463,18 @@ function! INC(increment)
   let g:I = g:I + a:increment
   return g:I
 endfunction
+
+function! CopyDiffLines()
+    let c = 1
+    let @a = ''
+    while c <= line('$')
+        if diff_hlID(c,1)
+            exe 'norm ' . c . 'G"Ayy'
+        endif
+        let c += 1
+    endwhile
+    new
+    norm V"ap
+endfunction
+            
+

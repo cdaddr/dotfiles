@@ -229,6 +229,15 @@
 (mapcar (lambda (hook) (add-hook hook 'enable-paredit-mode))
         '(clojure-mode-hook lisp-mode-hook slime-repl-mode-hook emacs-lisp-mode-hook))
 
+(defvar slime-override-map (make-keymap))
+(define-minor-mode slime-override-mode
+  "Fix SLIME REPL keybindings"
+  nil " SLIME-override" slime-override-map)
+(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+;;(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+;;(define-key slime-override-map "\C-j" 'slime-repl-return)
+(add-hook 'slime-repl-mode-hook (lambda () (slime-override-mode t)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
 

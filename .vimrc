@@ -152,6 +152,12 @@ if !exists("autocommands_loaded")
         au BufNewFile,BufRead *.php nmap <Leader>i :s/$\?\(\S\+\)/$this->\1 = $\1;/<CR>
     augroup END
 
+    augroup PYTHON
+        au BufNewFile,BufRead *.py abbr init __init__(self,
+        au BufNewFile,BufRead *.py abbr ifname if __name__ == "__main__":
+        au BufNewFile,BufRead imap <silent> <buffer> . .<C-X><C-O>
+    augroup END
+
     if has("win32")
         set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
         vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa 
@@ -426,6 +432,27 @@ function! MarkDuplicateLines()
     echomsg count_dupes . " dupe(s) found"
 endfunction
 
+function! MarkDuplicateLinesBetweenBuffers(first_time)
+    let count_lines = 0
+    if a:first_time
+        let g:_DupeLines = {}
+        for lnum in range(1, line('$'))
+            let g:_DupeLines[getline(lnum)] = 1
+            let count_lines += 1
+        endfor
+        echomsg count_lines . " line(s) slurped"
+    else
+        for lnum in range(1, line('$'))
+            let line = getline(lnum)
+            if has_key(g:_DupeLines, line)
+                exe lnum . 'norm I *****'
+                let count_lines += 1
+            endif
+        endfor
+        echomsg count_lines . " dupe(s) found"
+    endif
+endfunction
+
 function! S(number)
     return submatch(a:number)
 endfunction
@@ -477,5 +504,9 @@ function! CopyDiffLines()
     new
     norm V"ap
 endfunction
-            
+abbr qq - varname:  type:text:<Up><Up><End>
+abbr sqq - varname:  type: Scaletext:<Up><Up><End>
+vmap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
+nmap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
+nmap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>

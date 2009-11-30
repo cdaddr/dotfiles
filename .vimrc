@@ -6,8 +6,15 @@
 " experimental stuff in here.
 "
 set nocompatible
-syntax on
-filetype plugin indent on
+if has('gui_running')
+    syntax on
+    filetype on
+    filetype plugin indent on
+else
+    syntax off
+    filetype off
+    filetype plugin indent off
+end
 
 set encoding=utf-8
 set fileencoding=utf-8

@@ -1,8 +1,15 @@
+;;; This was installed by package-install.el.
+;;; This provides support for the package system and
+;;; interfacing with ELPA, the package archive.
+;;; Move this code earlier if you want to reference
+;;; packages in your .emacs.
+(when
+    (load
+     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
+
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
-    '("~/.emacs.d"
-      "~/.emacs.d/slime"
-      "~/.emacs.d/clojure-mode"
-      "~/.emacs.d/swank-clojure"))
+    '("~/.emacs.d"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -261,29 +268,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure / SLIME
 
-(require 'swank-clojure-autoload)
-(if (string= window-system "w32")
-    (swank-clojure-config
-     ;;(setq swank-clojure-jar-path "c:/lisp/clojure/clojure.jar")
-     ;;(setq swank-clojure-extra-vm-args (list "-Djdbc.drivers=sun.jdbc.odbc.JdbcOdbcDriver"))
-     ;;(setq swank-clojure-extra-classpaths (list "c:/lisp/clojure-contrib/clojure-contrib.jar" "c:/lisp/mysql-connector-java-5.1.7-bin.jar")))
-     (setq swank-clojure-binary "c:/utils/clojure.bat"))
-  (setq swank-clojure-binary "~/local/bin/clojure"))
-
-(require-all '(
-               slime
-               clojure-mode
-               ))
-
-(setq slime-net-coding-system 'utf-8-unix)
-
+(require 'clojure-mode)
+(setq swank-clojure-classpath (cons "."
+                                    (directory-files "~/local/clojure/libs" t "$")))
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))
 
 (set-language-environment "UTF-8")
 (setq slime-net-coding-system 'utf-8-unix) 
-(slime-setup '(slime-fancy))
+;;(slime-setup '(slime-fancy))
 (define-key clojure-mode-map (kbd "<tab>") 'indent-or-expand)
 (add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
 
@@ -348,6 +342,5 @@
  '(scroll-up-aggressively 0.0)
  '(show-paren-mode t nil (paren))
  '(slime-compilation-finished-hook nil)
- '(swank-clojure-extra-classpaths (quote ("~/.emacs.d/swank-clojure/src")))
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 

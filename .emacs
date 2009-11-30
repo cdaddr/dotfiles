@@ -278,8 +278,8 @@
 ;; Clojure / SLIME
 
 (require 'clojure-mode)
-(setq swank-clojure-classpath (cons "."
-                                    (directory-files "~/local/clojure/libs" t "$")))
+(require 'slime)
+(setq swank-clojure-classpath (list "." "~/local/clojure/libs/*"))
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))

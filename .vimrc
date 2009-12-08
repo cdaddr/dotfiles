@@ -174,7 +174,11 @@ if !exists("autocommands_loaded")
         au BufNewFile,BufRead *.bla nmap <Leader>r :silent !RUNME.BAT<CR>
         au BufNewFile,BufRead *.bla nmap <Leader>d :silent !del %:t:r.bdb<CR>
 
-        au BufNewFile,BufRead vmap <Leader>o <ESC>:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s:^\(\s*\)\(\d\+\) \(.*\):\1    C\2 (\2) "\3",:<CR>'<kA": (<ESC>'>$s<CR>)<ESC><<
+        au BufNewFile,BufRead *.bla vmap <Leader>c I"<ESC>A" / "@YPress Enter to continue.": T_PressAnyKey<ESC>I
+
+        au BufNewFile,BufRead *.bla nmap <Leader>t :s/\v(\S+)\.?\s*(.*)/\1 "\2" / "Response:":<CR>:nohls<CR>
+
+        au BufNewFile,BufRead *.bla vmap <Leader>o <ESC>:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s:^\(\s*\)\(\d\+\) \(.*\):\1    C\2 (\2) "\3",:<CR>'<kA (<ESC>'>$s<CR>)<ESC><<
     endif
     au BufNewFile,BufRead *.{lisp,el,emacs} call LispHighlight()
 

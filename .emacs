@@ -279,7 +279,7 @@
 
 (require 'clojure-mode)
 (require 'slime)
-(setq swank-clojure-classpath (list "." "~/local/clojure/libs/*"))
+(setq swank-clojure-classpath (list "~/.swank-clojure/*" "." "./src" "./deps/*"))
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))
@@ -352,4 +352,3 @@
  '(show-paren-mode t nil (paren))
  '(slime-compilation-finished-hook nil)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
-

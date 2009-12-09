@@ -234,9 +234,18 @@
   "Fix SLIME REPL keybindings"
   nil " SLIME-override" slime-override-map)
 (define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+(define-key slime-override-map (kbd "{") 'paredit-open-curly)
+(define-key slime-override-map (kbd "}") 'paredit-close-curly)
 ;;(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
 ;;(define-key slime-override-map "\C-j" 'slime-repl-return)
-(add-hook 'slime-repl-mode-hook (lambda () (slime-override-mode t)))
+
+(add-hook 'slime-repl-mode-hook (lambda ()
+                                  (slime-override-mode t)
+                                  ;; This used to work, but recently broke, is it because of ELPA-installed slime?
+                                  (modify-syntax-entry ?\[ "(]")
+                                  (modify-syntax-entry ?\] ")[")
+                                  (modify-syntax-entry ?\{ "(}")
+                                  (modify-syntax-entry ?\} "){")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
@@ -279,7 +288,7 @@
 
 (require 'clojure-mode)
 (require 'slime)
-(setq swank-clojure-classpath (list "~/.swank-clojure/*" "." "./src" "./deps/*"))
+(setq swank-clojure-classpath (list "." "./src" "./deps/*" "~/local/clojure/libs/user" "~/local/clojure/libs/*"))
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))

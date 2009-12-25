@@ -289,6 +289,7 @@
 (require 'clojure-mode)
 (require 'slime)
 (setq swank-clojure-classpath (list "." "./src" "./deps/*" "~/local/clojure/libs/user" "~/local/clojure/libs/*"))
+(setq swank-clojure-library-paths (list "/usr/local/lib"))
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))

@@ -329,6 +329,7 @@ nnoremap <Leader>fg :execute 'g/'.input("Search term: > ").'/norm ddGp'<CR>
 
 " Lining up code into columns using the nice Align plugin
 let g:loaded_alignmaps=1
+vnoremap <silent> <Leader>i" <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align "<CR>:AlignPop<CR>
 vnoremap <silent> <Leader>i= <ESC>:AlignPush<CR>:AlignCtrl lp1P1<CR>:'<,'>Align =<CR>:AlignPop<CR>
 vnoremap <silent> <Leader>i, <ESC>:AlignPush<CR>:AlignCtrl lp0P1<CR>:'<,'>Align ,<CR>:AlignPop<CR>
 vnoremap <silent> <Leader>i( <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align (<CR>:AlignPop<CR>

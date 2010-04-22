@@ -3,13 +3,9 @@
 ;;; interfacing with ELPA, the package archive.
 ;;; Move this code earlier if you want to reference
 ;;; packages in your .emacs.
-(when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
-  (package-initialize))
 
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
-    '("~/.emacs.d"))
+        '("~/.emacs.d" "~/.emacs.d/clojure-mode" "~/.emacs.d/slime"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -33,7 +29,7 @@
 (color-theme-initialize)
 
 (if (string= window-system "w32")
-    (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso8859-1")
+    (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
     (set-default-font "Consolas-12" t))
 
 (if window-system
@@ -229,24 +225,6 @@
 (mapcar (lambda (hook) (add-hook hook 'enable-paredit-mode))
         '(clojure-mode-hook lisp-mode-hook slime-repl-mode-hook emacs-lisp-mode-hook))
 
-(defvar slime-override-map (make-keymap))
-(define-minor-mode slime-override-mode
-  "Fix SLIME REPL keybindings"
-  nil " SLIME-override" slime-override-map)
-(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
-(define-key slime-override-map (kbd "{") 'paredit-open-curly)
-(define-key slime-override-map (kbd "}") 'paredit-close-curly)
-;;(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
-;;(define-key slime-override-map "\C-j" 'slime-repl-return)
-
-(add-hook 'slime-repl-mode-hook (lambda ()
-                                  (slime-override-mode t)
-                                  ;; This used to work, but recently broke, is it because of ELPA-installed slime?
-                                  (modify-syntax-entry ?\[ "(]")
-                                  (modify-syntax-entry ?\] ")[")
-                                  (modify-syntax-entry ?\{ "(}")
-                                  (modify-syntax-entry ?\} "){")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
 
@@ -288,15 +266,47 @@
 
 (require 'clojure-mode)
 (require 'slime)
-(setq swank-clojure-classpath (list "." "./src" "./deps/*" "~/local/clojure/libs/user" "~/local/clojure/libs/*"))
-(setq swank-clojure-library-paths (list "/usr/local/lib"))
+
+(setq swank-clojure-jar-home "~/.emacs.d/swank-clojure/")
+(add-to-list 'load-path "~/.emacs.d/swank-clojure")
+(require 'swank-clojure)
+(setq swank-clojure-classpath (append (swank-clojure-default-classpath) (list "." "src" "lib/*" "classes" "native")))
+(setq swank-clojure-library-paths
+      (if (string= window-system "w32")
+          (list "native/windows/x86")
+        (list "/usr/local/lib" "native/linux/x86")))
+(setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
+(ad-activate 'slime-read-interactive-args)
+
+;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
+
+(defvar slime-override-map (make-keymap))
+(define-minor-mode slime-override-mode
+  "Fix SLIME REPL keybindings"
+  nil " SLIME-override" slime-override-map)
+(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+(define-key slime-override-map (kbd "{") 'paredit-open-curly)
+(define-key slime-override-map (kbd "}") 'paredit-close-curly)
+(define-key slime-override-map [delete] 'paredit-forward-delete)
+(define-key slime-override-map [backspace] 'paredit-backward-delete)
+;;(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+;;(define-key slime-override-map "\C-j" 'slime-repl-return)
+
+(add-hook 'slime-repl-mode-hook (lambda ()
+                                  (slime-override-mode t)
+                                  (slime-redirect-inferior-output)
+                                  (modify-syntax-entry ?\[ "(]")
+                                  (modify-syntax-entry ?\] ")[")
+                                  (modify-syntax-entry ?\{ "(}")
+                                  (modify-syntax-entry ?\} "){")))
+
 (setq auto-mode-alist
       (cons '("\\.clj$" . clojure-mode)
             auto-mode-alist))
 
 (set-language-environment "UTF-8")
 (setq slime-net-coding-system 'utf-8-unix) 
-;;(slime-setup '(slime-fancy))
+(slime-setup '(slime-repl slime-highlight-edits slime-fuzzy))
 (define-key clojure-mode-map (kbd "<tab>") 'indent-or-expand)
 (add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
 
@@ -328,8 +338,6 @@
 
 (add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
 
-;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom
 (custom-set-variables
@@ -338,6 +346,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(case-fold-search t)
+ '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
  '(fancy-splash-image "")
  '(global-linum-mode t)
@@ -362,3 +371,9 @@
  '(show-paren-mode t nil (paren))
  '(slime-compilation-finished-hook nil)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(slime-highlight-edits-face ((((class color) (background dark)) (:background "#202020")))))

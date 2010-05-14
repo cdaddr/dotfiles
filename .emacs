@@ -206,6 +206,38 @@
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq save-place t)
 
+;; adapted from http://www.emacswiki.org/emacs/.emacs-ChristianRovner.el
+(defun expand-region-linewise ()
+  (interactive)
+  (let ((start (region-beginning))
+        (end (region-end)))
+   (goto-char start)
+   (beginning-of-line)
+   (set-mark (point))
+   (goto-char end)
+   (unless (bolp) (end-of-line))))
+
+;;(defun markdown-copy ()
+;;  (interactive)
+;;  (save-window-excursion
+;;   (save-excursion
+;;     (save-restriction
+;;       (expand-region-linewise)
+;;       (narrow-to-region (region-beginning) (region-end))
+;;       (goto-char (point-min))
+;;       (replace-regexp "^" "    ")
+;;       (clipboard-kill-ring-save (point-min) (point-max))
+;;       (goto-char (point-min))
+;;       (replace-regexp "^    " "")))))
+
+(defun markdown-copy ()
+  (interactive)
+  (save-excursion
+    (expand-region-linewise)
+    (indent-rigidly (region-beginning) (region-end) 4)
+    (clipboard-kill-ring-save (region-beginning) (region-end))
+    (indent-rigidly (region-beginning) (region-end) -4)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminals
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -270,13 +302,23 @@
 (setq swank-clojure-jar-home "~/.emacs.d/swank-clojure/")
 (add-to-list 'load-path "~/.emacs.d/swank-clojure")
 (require 'swank-clojure)
-(setq swank-clojure-classpath (append (swank-clojure-default-classpath) (list "." "src" "lib/*" "classes" "native")))
+(require 'clojure-test-mode)
+(setq swank-clojure-classpath (append (swank-clojure-default-classpath)
+                                      (list "." "src" "lib/*" "classes" "native")))
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
           (list "native/windows/x86")
         (list "/usr/local/lib" "native/linux/x86")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
+
+(defadvice swank-clojure-reset-implementation (around default-clojure)
+  (if (file-exists-p "lib")
+      ad-do-it
+    (let ((swank-clojure-classpath (append (swank-clojure-default-classpath)
+                                           (list "~/local/clojure/lib/*"))))
+      ad-do-it)))
 (ad-activate 'slime-read-interactive-args)
+(ad-activate 'swank-clojure-reset-implementation)
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 

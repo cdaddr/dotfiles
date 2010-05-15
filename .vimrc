@@ -6,15 +6,9 @@
 " experimental stuff in here.
 "
 set nocompatible
-if has('gui_running')
-    syntax on
-    filetype on
-    filetype plugin indent on
-else
-    syntax off
-    filetype off
-    filetype plugin indent off
-end
+syntax on
+filetype on
+filetype plugin indent on
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -128,6 +122,8 @@ if !exists("autocommands_loaded")
     " CSS
     au bufNewFile,BufRead *.css map <F2> omargin: 0;<CR>padding: 0;<ESC>
     au bufNewFile,BufRead *.css imap <F2> margin: 0;<CR>padding: 0;
+
+    au BufNewFile,BufRead *.{sass} setlocal tabstop=4|setlocal shiftwidth=4|setlocal softtabstop=4
 
     augroup Ruby
         au BufNewFile,BufRead *.{rb} setlocal tabstop=2|setlocal shiftwidth=2|setlocal softtabstop=2
@@ -522,3 +518,5 @@ vmap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
 nmap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
 nmap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
+
+vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>

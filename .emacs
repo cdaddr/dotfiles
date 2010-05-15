@@ -176,6 +176,16 @@
     (setq default-directory saved-default-directory))
 (global-set-key "\C-x\C-f" 'find-file-save-default-directory)
 
+(defun replace-globally ()
+  "Run replace-regexp across the whole file, rather than from
+point to the end of the file."
+  (interactive)
+  (let ((before (point)))
+    (goto-char (point-min))
+    (call-interactively 'replace-regexp)
+    (when (= (point) (point-min))
+      (goto-char before))))
+
 (require 'saveplace)
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq save-place t)

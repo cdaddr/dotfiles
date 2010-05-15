@@ -4689,6 +4689,15 @@ With prefix argument include internal symbols."
          (item (get-text-property pos 'item)))
     (slime-eval-describe `(swank:describe-definition-for-emacs ,item ,type))))
 
+(defun slime-info ()
+  "Open Slime manual"
+  (interactive)
+  (let ((file (expand-file-name "doc/slime.info" slime-path)))
+    (if (file-exists-p file)
+        (info file)
+        (message "No slime.info, run `make slime.info' in %s"
+                 (expand-file-name "doc/" slime-path)))))
+
 
 ;;;; XREF: cross-referencing
 
@@ -6250,14 +6259,18 @@ was called originally."
   (setq slime-thread-index-to-id nil)
   (slime-eval-async `(swank:quit-thread-browser)))
 
-(defvar slime-thread-index-to-id nil)
-
-;;; FIXME: the region selection is jumping
 (defun slime-update-threads-buffer ()
   (interactive)
   (with-current-buffer slime-threads-buffer-name
+    (slime-eval-async '(swank:list-threads)
+      'slime-display-threads)))
+
+(defvar slime-thread-index-to-id nil)
+
+;;; FIXME: the region selection is jumping
+(defun slime-display-threads (threads)
+  (with-current-buffer slime-threads-buffer-name
     (let* ((inhibit-read-only t)
-           (threads (slime-eval '(swank:list-threads)))
            (index (get-text-property (point) 'thread-id))
            (old-thread-id (and (numberp index)
                                (elt slime-thread-index-to-id index)))
@@ -6497,21 +6510,24 @@ was called originally."
 				     (slime-sexp-at-point))))
   (slime-eval-async `(swank:init-inspector ,string) 'slime-open-inspector))
 
-(define-derived-mode slime-inspector-mode fundamental-mode "Slime-Inspector"
+(define-derived-mode slime-inspector-mode fundamental-mode
+  "Slime-Inspector"
+  "
+\\{slime-inspector-mode-map}
+\\{slime-popup-buffer-mode-map}"
   (set-syntax-table lisp-mode-syntax-table)
   (slime-set-truncate-lines)
   (setq buffer-read-only t))
 
 (defun slime-inspector-buffer ()
   (or (get-buffer "*Slime Inspector*")
-      (with-current-buffer (get-buffer-create "*Slime Inspector*")
-	(setq slime-inspector-mark-stack '())
-	(slime-inspector-mode)
-        (slime-mode t)
+      (slime-with-popup-buffer ("*Slime Inspector*" :mode 'slime-inspector-mode)
+        (setq slime-inspector-mark-stack '())
         (buffer-disable-undo)
         (make-local-variable 'slime-saved-window-config)
+        (setq slime-popup-buffer-quit-function 'slime-inspector-quit)
         (setq slime-saved-window-config (current-window-configuration))
-	(current-buffer))))
+        (current-buffer))))
 
 (defmacro slime-inspector-fontify (face string)
   `(slime-add-face ',(intern (format "slime-inspector-%s-face" face)) ,string))
@@ -6655,12 +6671,12 @@ that value.
 	  (t (message "No next object")
 	     (ding)))))
   
-(defun slime-inspector-quit ()
+(defun slime-inspector-quit (&optional kill-buffer)
   "Quit the inspector and kill the buffer."
   (interactive)
   (slime-eval-async `(swank:quit-inspector))
   (set-window-configuration slime-saved-window-config)
-  (kill-buffer (current-buffer)))
+  (slime-popup-buffer-quit t))
 
 ;; FIXME: first return value is just point.
 ;; FIXME: could probably use slime-search-property.
@@ -6833,7 +6849,6 @@ If ARG is negative, move forwards."
   ("p" 'slime-inspector-pprint)
   ("e" 'slime-inspector-eval)
   ("h" 'slime-inspector-history)
-  ("q" 'slime-inspector-quit)
   ("g" 'slime-inspector-reinspect)
   ("v" 'slime-inspector-toggle-verbose)
   ("\C-i" 'slime-inspector-next-inspectable-object)

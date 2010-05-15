@@ -4,7 +4,8 @@
         (swank.util.concurrent thread)
         (swank.util string clojure)
         (swank.clj-contrib pprint macroexpand))
-  (:require (swank.util [sys :as sys]))
+  (:require (swank.util [sys :as sys])
+            (swank.commands [xref :as xref]))
   (:import (java.io StringReader File)
            (java.util.zip ZipFile)
            (clojure.lang LineNumberingPushbackReader)))
@@ -13,13 +14,13 @@
 
 (defslimefn connection-info []
   `(:pid ~(sys/get-pid)
-    :style :spawn
-    :lisp-implementation (:type "Clojure"
-                          :name "clojure"
-                          :version ~(clojure-version))
-    :package (:name ~(name (ns-name *ns*))
-              :prompt ~(name (ns-name *ns*)))
-    :version ~(deref *protocol-version*)))
+         :style :spawn
+         :lisp-implementation (:type "Clojure"
+                                     :name "clojure"
+                                     :version ~(clojure-version))
+         :package (:name ~(name (ns-name *ns*))
+                         :prompt ~(name (ns-name *ns*)))
+         :version ~(deref *protocol-version*)))
 
 (defslimefn quit-lisp []
   (System/exit 0))
@@ -35,7 +36,8 @@
   ([string]
      (eval-region string "NO_SOURCE_FILE" 1))
   ([string file line]
-     (with-open [rdr (proxy [LineNumberingPushbackReader] ((StringReader. string))
+     (with-open [rdr (proxy [LineNumberingPushbackReader]
+                         ((StringReader. string))
                        (getLineNumber [] line))]
        (binding [*file* file]
          (loop [form (read rdr false rdr), value nil, last-form nil]
@@ -44,6 +46,16 @@
              (recur (read rdr false rdr)
                     (eval (with-env-locals form))
                     form)))))))
+
+(defn- compile-region
+  "Compile region."
+  ([string file line]
+     (with-open [rdr1 (proxy [LineNumberingPushbackReader]
+                          ((StringReader. string)))
+                 rdr (proxy [LineNumberingPushbackReader] (rdr1)
+                       (getLineNumber [] (+ line (.getLineNumber rdr1) -1)))]
+       (clojure.lang.Compiler/load rdr file (.getName (File. file))))))
+
 
 (defslimefn interactive-eval-region [string]
   (with-emacs-package
@@ -55,13 +67,13 @@
 
 (defslimefn listener-eval [form]
   (with-emacs-package
-   (with-package-tracking
-    (let [[value last-form] (eval-region form)]
-      (when (and last-form (not (one-of? last-form '*1 '*2 '*3 '*e)))
-        (set! *3 *2)
-        (set! *2 *1)
-        (set! *1 value))
-      (send-repl-results-to-emacs value)))))
+    (with-package-tracking
+      (let [[value last-form] (eval-region form)]
+        (when (and last-form (not (one-of? last-form '*1 '*2 '*3 '*e)))
+          (set! *3 *2)
+          (set! *2 *1)
+          (set! *1 value))
+        (send-repl-results-to-emacs value)))))
 
 (defslimefn eval-and-grab-output [string]
   (with-emacs-package
@@ -94,7 +106,7 @@
 (def *compiler-exception-location-re* #"Exception:.*\(([^:]+):([0-9]+)\)")
 (defn- guess-compiler-exception-location [#^Throwable t]
   (when (instance? clojure.lang.Compiler$CompilerException t)
-    (let [[match file line] (re-find *compiler-exception-location-re* (.toString t))]
+    (let [[match file line] (re-find *compiler-exception-location-re* (str t))]
       (when (and file line)
         `(:location (:file ~file) (:line ~(Integer/parseInt line)) nil)))))
 
@@ -107,7 +119,7 @@
 (defn- exception-to-message [#^Throwable t]
   `(:message ~(.toString t)
              :severity :error
-             :location ~(exception-location t) 
+             :location ~(exception-location t)
              :references nil
              :short-message ~(.toString t)))
 
@@ -119,19 +131,19 @@
   ([file-name]
      (let [start (System/nanoTime)]
        (try
-        (let [ret (clojure.core/load-file file-name)
-              delta (- (System/nanoTime) start)]
-          `(:compilation-result nil ~(pr-str ret) ~(/ delta 1000000000.0)))
-        (catch Throwable t
-          (let [delta (- (System/nanoTime) start)
-                causes (exception-causes t)
-                num (count causes)]
-            (.printStackTrace t) ;; prints to *inferior-lisp*
-            `(:compilation-result
-              ~(map exception-to-message causes) ;; notes
-              nil ;; results
-              ~(/ delta 1000000000.0) ;; durations
-              )))))))
+         (let [ret (clojure.core/load-file file-name)
+               delta (- (System/nanoTime) start)]
+           `(:compilation-result nil ~(pr-str ret) ~(/ delta 1000000000.0)))
+         (catch Throwable t
+           (let [delta (- (System/nanoTime) start)
+                 causes (exception-causes t)
+                 num (count causes)]
+             (.printStackTrace t) ;; prints to *inferior-lisp*
+             `(:compilation-result
+               ~(map exception-to-message causes) ;; notes
+               nil ;; results
+               ~(/ delta 1000000000.0) ;; durations
+               )))))))
 
 (defslimefn compile-file-for-emacs
   ([file-name load? & compile-options]
@@ -143,15 +155,21 @@
 
 (defn- line-at-position [file position]
   (try
-   (with-open [f (java.io.LineNumberReader. (java.io.FileReader. file))]
-     (.skip f position)
-     (.getLineNumber f))
-   (catch Exception e 1)))
+    (with-open [f (java.io.LineNumberReader. (java.io.FileReader. file))]
+      (.skip f position)
+      (.getLineNumber f))
+    (catch Exception e 1)))
 
 (defslimefn compile-string-for-emacs [string buffer position directory debug]
   (let [start (System/nanoTime)
         line (line-at-position directory position)
-        ret (with-emacs-package (eval-region string directory line))
+        ret (with-emacs-package
+              (when-not (= (name (ns-name *ns*)) *current-package*)
+                (throw (clojure.lang.Compiler$CompilerException.
+                        directory line
+                        (Exception. (str "No such namespace: "
+                                         *current-package*)))))
+              (compile-region string directory line))
         delta (- (System/nanoTime) start)]
     `(:compilation-result nil ~(pr-str ret) ~(/ delta 1000000000.0))))
 
@@ -159,13 +177,13 @@
 
 (defn- describe-to-string [var]
   (with-out-str
-   (print-doc var)))
+    (print-doc var)))
 
 (defn- describe-symbol* [symbol-name]
   (with-emacs-package
-   (if-let [v (ns-resolve (maybe-ns *current-package*) (symbol symbol-name))]
-     (describe-to-string v)
-     (str "Unknown symbol " symbol-name))))
+    (if-let [v (ns-resolve (maybe-ns *current-package*) (symbol symbol-name))]
+      (describe-to-string v)
+      (str "Unknown symbol " symbol-name))))
 
 (defslimefn describe-symbol [symbol-name]
   (describe-symbol* symbol-name))
@@ -185,14 +203,14 @@
 ;;;; Documentation
 
 (defn- briefly-describe-symbol-for-emacs [var]
-  (let [lines (fn [s] (seq (.split #^String s (System/getProperty "line.separator"))))
+  (let [lines (fn [s] (.split #^String s (System/getProperty "line.separator")))
         [_ symbol-name arglists d1 d2 & __] (lines (describe-to-string var))
         macro? (= d1 "Macro")]
     (list :designator symbol-name
           (cond
-            macro? :macro
-            (:arglists (meta var)) :function
-            :else :variable)
+           macro? :macro
+           (:arglists (meta var)) :function
+           :else :variable)
           (apply str (concat arglists (if macro? d2 d1))))))
 
 (defn- make-apropos-matcher [pattern case-sensitive?]
@@ -216,17 +234,18 @@ Sorted alphabetically by namespace name and then symbol name, except
 that symbols accessible in the current namespace go first."
   [x y]
   (let [accessible?
-        (fn [var] (= (ns-resolve (maybe-ns *current-package*) (:name (meta var)))
+        (fn [var] (= (ns-resolve (maybe-ns *current-package*)
+                                 (:name (meta var)))
                      var))
         ax (accessible? x) ay (accessible? y)]
     (cond
-      (and ax ay) (compare (:name (meta x)) (:name (meta y)))
-      ax -1
-      ay 1
-      :else (let [nx (str (:ns (meta x))) ny (str (:ns (meta y)))]
-              (if (= nx ny)
-                (compare (:name (meta x)) (:name (meta y)))
-                (compare nx ny))))))
+     (and ax ay) (compare (:name (meta x)) (:name (meta y)))
+     ax -1
+     ay 1
+     :else (let [nx (str (:ns (meta x))) ny (str (:ns (meta y)))]
+             (if (= nx ny)
+               (compare (:name (meta x)) (:name (meta y)))
+               (compare nx ny))))))
 
 (defslimefn apropos-list-for-emacs
   ([name]
@@ -247,15 +266,15 @@ that symbols accessible in the current namespace go first."
 ;;;; Operator messages
 (defslimefn operator-arglist [name package]
   (try
-   (let [f (read-string name)]
-     (cond
-      (keyword? f) "([map])"
-      (symbol? f) (let [var (ns-resolve (maybe-ns package) f)]
-                    (if-let [args (and var (:arglists (meta var)))]
-                      (pr-str args)
-                      nil))
-      :else nil))
-   (catch Throwable t nil)))
+    (let [f (read-string name)]
+      (cond
+       (keyword? f) "([map])"
+       (symbol? f) (let [var (ns-resolve (maybe-ns package) f)]
+                     (if-let [args (and var (:arglists (meta var)))]
+                       (pr-str args)
+                       nil))
+       :else nil))
+    (catch Throwable t nil)))
 
 ;;;; Package Commands
 
@@ -274,31 +293,31 @@ that symbols accessible in the current namespace go first."
 (defonce traced-fn-map {})
 
 (defn- trace-fn-call [sym f args]
- (let [fname (symbol (str (.name (.ns sym)) "/" (.sym sym)))]
-   (println (str "Calling")
-            (apply str (take 240 (pr-str (when fname (cons fname args)) ))))
-   (let [result (apply f args)]
-     (println (str fname " returned " (apply str (take 240 (pr-str result)))))
-     result)))
+  (let [fname (symbol (str (.name (.ns sym)) "/" (.sym sym)))]
+    (println (str "Calling")
+             (apply str (take 240 (pr-str (when fname (cons fname args)) ))))
+    (let [result (apply f args)]
+      (println (str fname " returned " (apply str (take 240 (pr-str result)))))
+      result)))
 
 (defslimefn swank-toggle-trace [fname]
- (when-let [sym (ns-resolve (maybe-ns *current-package*) (symbol fname))]
-   (if-let [f# (get traced-fn-map sym)]
-     (do
-       (alter-var-root #'traced-fn-map dissoc sym)
-       (alter-var-root sym (constantly f#))
-       (str " untraced."))
-     (let [f# @sym]
-       (alter-var-root #'traced-fn-map assoc sym f#)
-       (alter-var-root sym
-         (constantly
-           (fn [& args]
-             (trace-fn-call sym f# args))))
-       (str " traced.")))))
+  (when-let [sym (ns-resolve (maybe-ns *current-package*) (symbol fname))]
+    (if-let [f# (get traced-fn-map sym)]
+      (do
+        (alter-var-root #'traced-fn-map dissoc sym)
+        (alter-var-root sym (constantly f#))
+        (str " untraced."))
+      (let [f# @sym]
+        (alter-var-root #'traced-fn-map assoc sym f#)
+        (alter-var-root sym
+                        (constantly
+                         (fn [& args]
+                           (trace-fn-call sym f# args))))
+        (str " traced.")))))
 
 (defslimefn untrace-all []
- (doseq [sym (keys traced-fn-map)]
-   (swank-toggle-trace (.sym sym))))
+  (doseq [sym (keys traced-fn-map)]
+    (swank-toggle-trace (.sym sym))))
 
 ;;;; Source Locations
 (comment
@@ -391,15 +410,30 @@ that symbols accessible in the current namespace go first."
                           (:error "Source definition not found."))))
               `((~(str "(method " (.getName sym) ")")
                   (:error ~(format "%s - definition not found." sym))))))]
-         (let [methods (try (. class getMethods) 
+         (let [methods (try (. class getMethods)
                             (catch java.lang.IllegalArgumentException e nil)
                             (catch java.lang.NullPointerException e nil))]
-              (map xref-lisp methods))))     
+              (map xref-lisp methods))))
+
+(defn who-calls [name]
+  (letfn [(xref-lisp [sym-var]        ; see find-definitions-for-emacs
+                     (when-let [meta (and sym-var (meta sym-var))]
+                       (if-let [path (slime-find-file (:file meta))]
+                         `((~(str (:name meta))
+                            (:location
+                             ~path
+                             (:line ~(:line meta))
+                             nil)))
+                         `((~(str (:name meta))
+                            (:error "Source definition not found."))))))]
+    (let [callers (xref/all-vars-who-call name) ]
+      (map first (map xref-lisp callers)))))
 
 (defslimefn xref [type name]
   (let [sexp (ns-resolve (maybe-ns *current-package*) (symbol name))]
        (condp = type
               :specializes (who-specializes sexp)
+              :calls   (who-calls (symbol name))
               :callers nil
               :not-implemented)))
 
@@ -436,7 +470,7 @@ that symbols accessible in the current namespace go first."
 (defslimefn frame-catch-tags-for-emacs [n] nil)
 (defslimefn frame-locals-for-emacs [n]
   (if (and (zero? n) *current-env*)
-      (locals-for-emacs (local-non-functions *current-env*))))
+    (locals-for-emacs (local-non-functions *current-env*))))
 
 (defslimefn frame-locals-and-catch-tags [n]
   (list (frame-locals-for-emacs n)
@@ -452,12 +486,12 @@ that symbols accessible in the current namespace go first."
 
 (defslimefn frame-source-location [n]
   (source-location-for-frame
-     (nth (.getStackTrace *current-exception*) n)))
+   (nth (.getStackTrace *current-exception*) n)))
 
 ;; Older versions of slime use this instead of the above.
 (defslimefn frame-source-location-for-emacs [n]
   (source-location-for-frame
-     (nth (.getStackTrace *current-exception*) n)))
+   (nth (.getStackTrace *current-exception*) n)))
 
 (defslimefn create-repl [target] '("user" "user"))
 
@@ -491,9 +525,9 @@ corresponding attribute values per thread."
 ;;; TODO: Find a better way, as Thread.stop is deprecated
 (defslimefn kill-nth-thread [index]
   (when index
-   (when-let [thread (nth @thread-list index nil)]
-     (println "Thread: " thread)
-     (.stop thread))))
+    (when-let [thread (nth @thread-list index nil)]
+      (println "Thread: " thread)
+      (.stop thread))))
 
 (defslimefn quit-thread-browser []
   (reset! thread-list []))

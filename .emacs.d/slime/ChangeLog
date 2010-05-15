@@ -1,3 +1,33 @@
+2010-04-27  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-info): New function, opens the manual.
+
+2010-04-24  Stas Boukarev  <stassats@gmail.com>
+
+	* swank.lisp (format-values-for-echo-area): Also print the length of an
+	integer in bits.
+
+2010-04-23  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-update-threads-buffer): Use slime-eval-async.
+
+2010-04-23  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-inspector-buffer): Use slime-with-popup-buffer,
+	that solves the problem with keybindings shadowed by slime-mode.
+	Reported by Nathan Bird.
+
+	* README: Better wording.
+
+2010-04-22  Stas Boukarev  <stassats@gmail.com>
+
+	* swank-backend.lisp (with-symbol): Test for package before doing
+	find-symbol.
+	* swank-sbcl.lisp(Multiprocessing): use with-symbol.
+	(emacs-inspect t): Remove newlines from text returned by
+	sb-impl::inspected-parts, otherwise there will be ".." inserted by
+	the printer due to (*print-lines* 1).
+
 2010-04-21  Stas Boukarev  <stassats@gmail.com>
 
 	* slime.el (slime-open-inspector): Use forward-line instead of

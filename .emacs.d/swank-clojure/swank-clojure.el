@@ -1,6 +1,6 @@
 ;;; swank-clojure.el --- slime adapter for clojure
 ;;
-;; Copyright (C) 2008, 2009 Jeffrey Chu and Phil Hagelberg
+;; Copyright (C) 2008-2010 Jeffrey Chu and Phil Hagelberg
 ;;
 ;; Authors: Jeffrey Chu <jochu0@gmail.com>
 ;;          Phil Hagelberg <technomancy@gmail.com>
@@ -23,7 +23,7 @@
 ;;    download the jars for Clojure, contrib, and swank-clojure,
 ;;    launch an instance, and connect to it. If you just want to try
 ;;    out Clojure, this is all you need. Just get Swank Clojure
-;;    through ELPA (http://tromey.com/elpa) and stop reading here.
+;;    through package.el (http://tromey.com/elpa) and stop reading here.
 ;;
 ;; 2. Custom classpath: If you want to hack on Clojure or Contrib, set
 ;;    swank-clojure-classpath to a list of paths to the jars you want to
@@ -146,16 +146,16 @@ this, keep that in mind."
 ;;;###autoload
 (defun swank-clojure-init (file encoding)
   (concat
-   (when swank-clojure-compile-p
-     "(require 'swank.loader)\n\n(swank.loader/init)\n\n")
+   ;;(when swank-clojure-compile-p
+   ;;  "(require 'swank.loader)\n\n(swank.loader/init)\n\n")
    "(require 'swank.swank)\n\n"
    (when (boundp 'slime-protocol-version)
-     (format "(swank.swank/ignore-protocol-version %S)\n\n"
+     (format "(swank.swank/ignore-protocol-version %S)\n"
              slime-protocol-version))
    ;; Hacked in call to get the localhost address to work around a bug
    ;; where the REPL doesn't pop up until the user presses Enter.
-   "(do (.. java.net.InetAddress getLocalHost getHostAddress) nil)"
-   (format "(swank.swank/start-server %S :encoding %S)\n\n"
+   ;;"(do (.. java.net.InetAddress getLocalHost getHostAddress) nil)"
+   (format "(swank.swank/start-server %S :encoding %S)\n"
            (expand-file-name file)
            (format "%s" (slime-coding-system-cl-name encoding)))))
 

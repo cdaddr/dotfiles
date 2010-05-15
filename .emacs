@@ -201,19 +201,6 @@ point to the end of the file."
    (goto-char end)
    (unless (bolp) (end-of-line))))
 
-;;(defun markdown-copy ()
-;;  (interactive)
-;;  (save-window-excursion
-;;   (save-excursion
-;;     (save-restriction
-;;       (expand-region-linewise)
-;;       (narrow-to-region (region-beginning) (region-end))
-;;       (goto-char (point-min))
-;;       (replace-regexp "^" "    ")
-;;       (clipboard-kill-ring-save (point-min) (point-max))
-;;       (goto-char (point-min))
-;;       (replace-regexp "^    " "")))))
-
 (defun markdown-copy ()
   (interactive)
   (save-excursion

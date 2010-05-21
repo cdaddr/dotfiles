@@ -67,13 +67,6 @@ set softtabstop=4
 set expandtab
 "set smartindent
 
-" The text to return for a fold
-function! FoldText()
-    let numlines = v:foldend - v:foldstart
-    let firstline = getline(v:foldstart)
-    "let spaces = 60 - len(firstline)
-    return printf("%3d » %s ", numlines, firstline)
-endfunction
 set foldtext=FoldText()
 set fillchars=fold:·
 set foldcolumn=0
@@ -91,6 +84,11 @@ set t_vb=''
 
 set nostartofline
 "set nowrapscan
+
+let g:loaded_alignmaps=1
+let c_curly_error=1
+
+set cmdheight=1
 
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
@@ -110,164 +108,25 @@ endif
 " Inspired by http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 set statusline=%f\ %2*%m\ %1*%h%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}\ %{getfperm(@%)}]\ 0x%B\ %12.(%c:%l/%L%)
 
-" Filetype-specific fun
+if has("win32")
+    set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
+endif
+
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
     au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
-
     autocmd QuickFixCmdPost * :copen
-
-    au bufNewFile,BufRead *baba* :set nowrap
-
-    " CSS
-    au bufNewFile,BufRead *.css map <F2> omargin: 0;<CR>padding: 0;<ESC>
-    au bufNewFile,BufRead *.css imap <F2> margin: 0;<CR>padding: 0;
-
-    au BufNewFile,BufRead *.{sass} setlocal tabstop=4|setlocal shiftwidth=4|setlocal softtabstop=4
-
-    augroup Ruby
-        au BufNewFile,BufRead *.{rb} setlocal tabstop=2|setlocal shiftwidth=2|setlocal softtabstop=2
-        au BufNewFile,BufRead *.{html.erb} setlocal tabstop=4|setlocal shiftwidth=4|setlocal softtabstop=4
-        "au BufNewFile *.rb :execute "0r " . s:homedir . "/skeleton/skeleton.ruby"|norm G
-
-        au BufNewFile,BufRead *.{rb,rhtml,erb} nmap <silent> <Leader>s :silent !pkill mongrel_rails;script/server -d<CR>
-        au BufNewFile,BufRead *.{rb,rhtml,erb} nmap <silent> <Leader>d :silent !pkill mongrel_rails;script/server -d<CR>
-        au BufNewFile,BufRead *.{rhtml,erb} map <F3> o<%=  %><LEFT><LEFT><LEFT>
-        au BufNewFile,BufRead *.{rhtml,erb} imap <F3> <%=  %><LEFT><LEFT><LEFT>
-        au BufNewFile,BufRead *.{rhtml,erb} map <S-F3> o<%  %><LEFT><LEFT><LEFT>
-        au BufNewFile,BufRead *.{rhtml,erb} imap <S-F3> <%  %><LEFT><LEFT><LEFT>
-
-        au BufNewFile,BufRead */migrate/*.rb iabbrev a_c add_column
-        au BufNewFile,BufRead */migrate/*.rb iabbrev r_c remove_column
-    augroup END
-
-    au BufNewFile *.{h,cpp} nmap <silent> <Leader>m :silent make<CR>
-    au BufNewFile *.h call Ifndef()
-
-    au BufNewFile,BufRead *cpp map <F3> :!g++ % -o %:r<CR>
-    au BufNewFile,BufRead *cpp map <F4> :!g++ % -o %:r && %:r<CR>
-
-    au BufNewFile,BufRead *.java let java_highlight_functions="style"
-
-    augroup PHP
-        au BufNewFile,BufRead *.php nmap <Leader>p Iprint_r(<ESC>A);<ESC>
-        au BufNewFile,BufRead *.php nmap <Leader>c iclass {<CR>function __construct() {<CR><CR>}<CR>}<CR>
-        au BufNewFile,BufRead *.php nmap <Leader>i :s/$\?\(\S\+\)/$this->\1 = $\1;/<CR>
-    augroup END
-
-    augroup PYTHON
-        au BufNewFile,BufRead *.py abbr init __init__(self,
-        au BufNewFile,BufRead *.py abbr ifname if __name__ == "__main__":
-        au BufNewFile,BufRead imap <silent> <buffer> . .<C-X><C-O>
-    augroup END
-
-    if has("win32")
-        set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
-        vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa 
-
-        au BufNewFile,BufRead *.bla setf bla
-        au BufNewFile,BufRead *.bla nmap <Leader>p :!"c:\Program Files\StatNeth\Blaise 4.8 Enterprise\Bin\B4CPars.exe" %:t:r.bpf<CR><CR>
-        au BufNewFile,BufRead *.bla nmap <Leader>r :silent !RUNME.BAT<CR>
-        au BufNewFile,BufRead *.bla nmap <Leader>d :silent !del %:t:r.bdb<CR>
-
-        au BufNewFile,BufRead *.bla vmap <Leader>c I"<ESC>A" / "@YPress Enter to continue.": T_PressAnyKey<ESC>I
-
-        au BufNewFile,BufRead *.bla nmap <Leader>t :s/\v(\S+)\.?\s*(.*)/\1 "\2" / "Response:":<CR>:nohls<CR>
-
-        au BufNewFile,BufRead *.bla vmap <Leader>o <ESC>:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s:^\(\s*\)\(\d\+\) \(.*\):\1    C\2 (\2) "\3",:<CR>'<kA (<ESC>'>$s<CR>)<ESC><<
-    endif
-    au BufNewFile,BufRead *.{lisp,el,emacs} call LispHighlight()
-
-    au BufNewFile,BufRead setf lisp|*.clj call ClojureHighlight()
-
-    au BufNewFile,BufRead *.markdown setf markdown
-
     au VimEnter * :call FixVimpager()
-
     au BufWritePost *vimrc so %
 endif
 
-function! Ifndef()
-    let str = toupper(expand("%:t:r"))
-    execute "norm i#ifndef " . str
-    norm o
-    execute "norm i#define " . str
-    norm o
-    norm o
-    norm i#endif
+" The text to return for a fold
+function! FoldText()
+    let numlines = v:foldend - v:foldstart
+    let firstline = getline(v:foldstart)
+    "let spaces = 60 - len(firstline)
+    return printf("%3d » %s ", numlines, firstline)
 endfunction
-
-" Use `:match none` to turn off the matches afterwards.
-function! CountLines()
-    let i = 0
-    let s:regex = input("Regex>")
-    execute('silent g/' . s:regex . '/let i = i + 1')
-    execute("match Search /^.*" . s:regex . ".*$/")
-    echo i . " lines match."
-    norm ''
-endfunction
-
-" Highlight parens in light grey so they blend in.  Backquoted should stand
-" out a bit more.
-function! LispHighlight()
-    syn region lispList matchgroup=lispList start="(" skip="|.\{-}|" end=")" contains=@lispListCluster
-    syn region lispBQList matchgroup=lispBQList start="`("  skip="|.\{-}|" end=")" contains=@lispListCluster
-    hi lispList guifg=#555555
-    hi lispBQList guifg=#999999
-endfunction
-
-function! ClojureHighlight()
-    hi clojureParen0 guifg=#555555
-endfunction
-
-" S-arrows suck
-vnoremap <S-Up> <Up>
-inoremap <S-Up> <Up>
-nnoremap <S-Up> <Up>
-vnoremap <S-Down> <Down>
-inoremap <S-Down> <Down>
-nnoremap <S-Down> <Down>
-
-" Indent fun
-vnoremap > >gv
-vnoremap < <gv
-vnoremap <Tab> >
-vnoremap <S-Tab> <
-
-nnoremap <Leader>c :lcd %:h<CR>
-
-" Right-drag will do a vblock select
-" nnoremap <RightMouse> <LeftMouse><C-V>
-" nnoremap <RightDrag> <LeftDrag>
-" vnoremap <RightMouse> <LeftMouse><C-V>
-" vnoremap <RightDrag> <LeftDrag>
-
-" Screwy default bindings for these, let's disable.
-"nnoremap <S-LeftMouse> <LeftMouse>
-"nnoremap <C-LeftMouse> <LeftMouse>
-"nnoremap <A-LeftMouse> <LeftMouse>
-"nnoremap <S-RightMouse> <RightMouse>
-"nnoremap <C-RightMouse> <RightMouse>
-"nnoremap <A-RightMouse> <RightMouse>
-
-nnoremap <Leader>bd :silent bufdo! bd<CR>
-nnoremap <Leader>BD :silent bufdo! bd!<CR>
-nnoremap <Leader>l :call CountLines()<CR>
-nnoremap <Leader>w :setlocal nowrap!<CR>
-nnoremap <Leader>h :nohls<CR>
-nnoremap <Leader>q :cclose<CR>
-
-" Emacs-ish keybindings, oops
-noremap! <M-Backspace> <C-W>
-noremap! <M-Left> <C-Left>
-noremap! <M-Right> <C-Right>
-noremap! <C-A> <Home>
-noremap! <C-E> <End>
-
-" Annoying
-nnoremap q: <Nop>
-nnoremap q/ <Nop>
-nnoremap q? <Nop>
 
 function! IsDiff(col)
     let hlID = diff_hlID(".", a:col)
@@ -286,87 +145,15 @@ function! FindDiffOnLine()
     endwhile
 endfunction
 
-nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
-nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
-
-" Window movements; I do this often enough to warrant using up M-arrows on
-" this
-nnoremap <M-Right> <C-W><Right>
-nnoremap <M-Left> <C-W><Left>
-nnoremap <M-Up> <C-W><Up><C-W>_
-nnoremap <M-Down> <C-W><Down><C-W>_
-
-" Open window below instead of above
-nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
-
-" Vertical equivalent of C-w-n and C-w-N
-nnoremap <C-w>v :vnew<CR>
-nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
-
-" I open new windows to warrant using up C-M-arrows on this
-nmap <C-M-Up> <C-w>n
-nmap <C-M-Down> <C-w>N
-nmap <C-M-Right> <C-w>v
-nmap <C-M-Left> <C-w>V
-
-" Maximize window (C-_ is a hard key combo to type)
-nmap <C-\-> <C-w>_
-
-" Horizontal window scrolling
-nnoremap <C-S-Right> zL
-nnoremap <C-S-Left> zH
-
-" I used this to record all of my :w's over the course of a day, for fun
-"cabbrev w <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'W' : 'w')<CR>
-"command! -nargs=* W :execute("silent !echo " . strftime("%Y-%m-%d %H:%M:%S") . " >> ~/timestamps")|w <args>
-
-" Cut all lines matching a pattern and move them to the end of the file
-nnoremap <Leader>fg :execute 'g/'.input("Search term: > ").'/norm ddGp'<CR>
-
-" Lining up code into columns using the nice Align plugin
-let g:loaded_alignmaps=1
-vnoremap <silent> <Leader>i" <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align "<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i= <ESC>:AlignPush<CR>:AlignCtrl lp1P1<CR>:'<,'>Align =<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i, <ESC>:AlignPush<CR>:AlignCtrl lp0P1<CR>:'<,'>Align ,<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i( <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align (<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i@ <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align @<CR>:AlignPop<CR>
-
-" Nasty, I used these at work for something.  I forget why, but I may need them again
-"nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
-"nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
-"vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
-"vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
-"nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
-"nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
-
-nmap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
-nmap <silent> <Leader>ss :set foldmethod=syntax<CR>
-nmap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
-
-function! s:RunShellCommand(cmdline)
-   botright new
-   setlocal buftype=nofile bufhidden=wipe noswapfile nowrap
-   call setline(1,a:cmdline)
-   call setline(2,substitute(a:cmdline,'.','=','g'))
-   execute 'silent $read !'.escape(a:cmdline,'()%#')
-   setlocal nomodifiable
-   if search('\m\C^--- .*\n+++ .*\n@@','n')
-       setlocal filetype=diff
-   endif
-   if a:cmdline =~ '\m\C^git '
-       match Statement /\v\C<commit \x{7,}>/
-   elseif a:cmdline =~ '\m\C^bzr log'
-       match Statement /\v-{50,}/
-   endif
+" Use `:match none` to turn off the matches afterwards.
+function! CountLines()
+    let i = 0
+    let s:regex = input("Regex>")
+    execute('silent g/' . s:regex . '/let i = i + 1')
+    execute("match Search /^.*" . s:regex . ".*$/")
+    echo i . " lines match."
+    norm ''
 endfunction
-
-function! DeleteUnlistedBuffer()
-    if ! buflisted(bufname("%"))
-        q
-    endif
-endfunction
-noremap <silent> <Leader><Space> :call DeleteUnlistedBuffer()<CR>
-vmap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
 
 " Copy/pasting from Word DOC files (uggggggh) results in a horrid mess
 function! FixInvisiblePunctuation()
@@ -384,14 +171,6 @@ function! FixInvisiblePunctuation()
     retab
 endfunction
 
-vmap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
-nmap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
-nmap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
-
-vmap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa 
-
-let g:loaded_alignmaps=1
-
 " Remove weird keybindings from vimpager; plain Vim is good enough
 function! FixVimpager()
     if exists("g:loaded_less") && g:loaded_less
@@ -403,27 +182,6 @@ function! FixVimpager()
         unmap d
     endif
 endfunction
-function! SaveSearch()
-    let g:hls_saved = &hls
-    let g:search_saved = @/
-endfunction
-function! RestoreSearch()
-    let &hls = g:hls_saved
-    let @/ = g:search_saved
-endfunction
-
-let c_curly_error=1
-
-function! FixMarkdown()
-    silent! %s,<\(/\?\)strong>,`,g
-endfunction
-
-set cmdheight=1
-
-function! Pwd()
-    let path=expand('%:h')
-    return system('cd "' . path . '"; pwd -L')
-endfunction!
 
 function! MarkDuplicateLines()
     let x = {}
@@ -465,34 +223,6 @@ function! S(number)
     return submatch(a:number)
 endfunction
 
-" Lines of strings => a paren-surrounded list of comma-separated strings on
-" one line
-nmap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
-
-" Delete blank lines
-nmap <Leader>db :%g/^$/d<CR>\h
-
-" Surround every line in the file with quotes
-nmap <Leader>m' :%s/.*/'\0'<CR>\h
-nmap <Leader>m" :%s/.*/"\0"<CR>\h
-
-function! Duplicate(repl, start, end, ...) range
-    if a:0 == 1
-        let format = a:1
-    else
-        let format = '%02d'
-    endif
-    let x = a:start
-    let txt = getline(a:firstline, a:lastline)
-    while x <= a:end
-        for line in copy(txt)
-            let newline = substitute(line, a:repl, printf(format, x), 'g')
-            call append('$', [newline])
-        endfor
-        let x += 1
-    endwhile
-endfunction
-
 " http://vim.wikia.com/wiki/Generating_a_column_of_increasing_numbers
 let g:I=0
 function! INC(increment)
@@ -512,11 +242,141 @@ function! CopyDiffLines()
     new
     norm V"ap
 endfunction
-abbr qq - varname:  type:text:<Up><Up><End>
-abbr sqq - varname:  type: Scaletext:<Up><Up><End>
-vmap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
-nmap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
-nmap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
+function! Duplicate(repl, start, end, ...) range
+    if a:0 == 1
+        let format = a:1
+    else
+        let format = '%02d'
+    endif
+    let x = a:start
+    let txt = getline(a:firstline, a:lastline)
+    while x <= a:end
+        for line in copy(txt)
+            let newline = substitute(line, a:repl, printf(format, x), 'g')
+            call append('$', [newline])
+        endfor
+        let x += 1
+    endwhile
+endfunction
+
+" S-arrows suck
+vnoremap <S-Up> <Up>
+inoremap <S-Up> <Up>
+nnoremap <S-Up> <Up>
+vnoremap <S-Down> <Down>
+inoremap <S-Down> <Down>
+nnoremap <S-Down> <Down>
+
+" Indent fun
+vnoremap > >gv
+vnoremap < <gv
+vnoremap <Tab> >
+vnoremap <S-Tab> <
+
+" Delete all buffers
+nnoremap <Leader>bd :silent bufdo! bd<CR>
+nnoremap <Leader>BD :silent bufdo! bd!<CR>
+
+"Change cwd to the path of the current file
+nnoremap <Leader>c :lcd %:h<CR>
+
+" Toggle wrapping, highlights
+nnoremap <Leader>w :setlocal nowrap!<CR>
+nnoremap <Leader>h :nohls<CR>
+
+" Close quickfix
+nnoremap <Leader>q :cclose<CR>
+
+" Emacs-ish keybindings, oops
+noremap! <M-Backspace> <C-W>
+noremap! <M-Left> <C-Left>
+noremap! <M-Right> <C-Right>
+noremap! <C-A> <Home>
+noremap! <C-E> <End>
+
+" Annoying
+nnoremap q: <Nop>
+nnoremap q/ <Nop>
+nnoremap q? <Nop>
+
+nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
+nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
+
+nnoremap <Leader>l :call CountLines()<CR>
+
+" Window movements; I do this often enough to warrant using up M-arrows
+nnoremap <M-Right> <C-W><Right>
+nnoremap <M-Left> <C-W><Left>
+nnoremap <M-Up> <C-W><Up><C-W>_
+nnoremap <M-Down> <C-W><Down><C-W>_
+
+" Open window below instead of above
+nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
+
+" Vertical equivalent of C-w-n and C-w-N
+nnoremap <C-w>v :vnew<CR>
+nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
+
+" I open new windows to warrant using up C-M-arrows on this
+nnoremap <C-M-Up> <C-w>n
+nnoremap <C-M-Down> <C-w>N
+nnoremap <C-M-Right> <C-w>v
+nnoremap <C-M-Left> <C-w>V
+
+" Horizontal window scrolling
+nnoremap <C-S-Right> zL
+nnoremap <C-S-Left> zH
+
+" I used this to record all of my :w's over the course of a day, for fun
+"cabbrev w <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'W' : 'w')<CR>
+"command! -nargs=* W :execute("silent !echo " . strftime("%Y-%m-%d %H:%M:%S") . " >> ~/timestamps")|w <args>
+
+" Cut all lines matching a pattern and move them to the end of the file
+nnoremap <Leader>fg :execute 'g/'.input("Search term: > ").'/norm ddGp'<CR>
+
+" Lining up code into columns using the nice Align plugin
+let g:loaded_alignmaps=1
+vnoremap <silent> <Leader>i" <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align "<CR>:AlignPop<CR>
+vnoremap <silent> <Leader>i= <ESC>:AlignPush<CR>:AlignCtrl lp1P1<CR>:'<,'>Align =<CR>:AlignPop<CR>
+vnoremap <silent> <Leader>i, <ESC>:AlignPush<CR>:AlignCtrl lp0P1<CR>:'<,'>Align ,<CR>:AlignPop<CR>
+vnoremap <silent> <Leader>i( <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align (<CR>:AlignPop<CR>
+vnoremap <silent> <Leader>i@ <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align @<CR>:AlignPop<CR>
+
+nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
+nnoremap <silent> <Leader>ss :set foldmethod=syntax<CR>
+nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
+vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
+
+vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
+nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
+nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
+
+vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa 
+
+" Lines of strings => a paren-surrounded list of comma-separated strings on
+" one line
+nnoremap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
+
+" Delete blank lines
+nnoremap <Leader>db :%g/^$/d<CR>\h
+
+" Surround every line in the file with quotes
+nnoremap <Leader>m' :%s/.*/'\0'<CR>\h
+nnoremap <Leader>m" :%s/.*/"\0"<CR>\h
+
+vnoremap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
+
+nnoremap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
+nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
 
 vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
+
+" Nasty, I used these at work for something.  I forget why, but I may need them again
+"nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
+"nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
+"vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
+"vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
+"nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
+"nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
+

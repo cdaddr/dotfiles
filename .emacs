@@ -209,6 +209,38 @@ point to the end of the file."
     (clipboard-kill-ring-save (region-beginning) (region-end))
     (indent-rigidly (region-beginning) (region-end) -4)))
 
+(defun yank-with-newline ()
+  "Yank, appending a newline if the yanked text doesn't end with one."
+  (yank)
+  (when (not (string-match "\n$" (current-kill 0)))
+    (newline-and-indent)))
+
+(defun yank-as-line-above ()
+  "Yank text as a new line above the current line.
+
+Also moves point to the beginning of the text you just yanked."
+  (interactive)
+  (let ((lnum (line-number-at-pos (point))))
+    (beginning-of-line)
+    (yank-with-newline)
+    (goto-line lnum)))
+
+(defun yank-as-line-below ()
+  "Yank text as a new line below the current line.
+
+Also moves point to the beginning of the text you just yanked."
+  (interactive)
+  (let* ((lnum (line-number-at-pos (point)))
+         (lnum (if (eobp) lnum (1+ lnum))))
+    (if (and (eobp) (not (bolp)))
+        (newline-and-indent)
+      (forward-line 1))
+    (yank-with-newline)
+    (goto-line lnum)))
+
+(global-set-key "\M-P" 'yank-as-line-above)
+(global-set-key "\M-p" 'yank-as-line-below)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminals
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)

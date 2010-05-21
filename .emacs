@@ -241,6 +241,24 @@ Also moves point to the beginning of the text you just yanked."
 (global-set-key "\M-P" 'yank-as-line-above)
 (global-set-key "\M-p" 'yank-as-line-below)
 
+;; from http://stackoverflow.com/questions/2173324/emacs-equivalents-of-vims-dd-o-o
+(defun open-line-above ()
+  (interactive)
+  (unless (bolp)
+    (beginning-of-line))
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(defun open-line-below ()
+  (interactive)
+  (unless (eolp)
+    (end-of-line))
+  (newline-and-indent))
+
+(global-set-key "\M-O" 'open-line-above)
+(global-set-key "\M-o" 'open-line-below)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminals
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)

@@ -15,6 +15,10 @@
 ;;
 ;;; Commentary:
 ;;
+;; NOTE: swank-clojure.el is currently unmaintained. Please see the
+;; swank-clojure readme for examples of how to start a swank server
+;; from your build tool and connect to it via SLIME.
+;;
 ;; The purpose of this file is to set up `slime-lisp-implementations'
 ;; to allow SLIME to communicate with the Swank server implemented in
 ;; Clojure. There are four ways to launch a session:
@@ -146,16 +150,16 @@ this, keep that in mind."
 ;;;###autoload
 (defun swank-clojure-init (file encoding)
   (concat
-   ;;(when swank-clojure-compile-p
-   ;;  "(require 'swank.loader)\n\n(swank.loader/init)\n\n")
+   (when swank-clojure-compile-p
+     "(require 'swank.loader)\n\n(swank.loader/init)\n\n")
    "(require 'swank.swank)\n\n"
    (when (boundp 'slime-protocol-version)
-     (format "(swank.swank/ignore-protocol-version %S)\n"
+     (format "(swank.swank/ignore-protocol-version %S)\n\n"
              slime-protocol-version))
    ;; Hacked in call to get the localhost address to work around a bug
    ;; where the REPL doesn't pop up until the user presses Enter.
-   ;;"(do (.. java.net.InetAddress getLocalHost getHostAddress) nil)"
-   (format "(swank.swank/start-server %S :encoding %S)\n"
+   "(do (.. java.net.InetAddress getLocalHost getHostAddress) nil)"
+   (format "(swank.swank/start-server %S :encoding %S)\n\n"
            (expand-file-name file)
            (format "%s" (slime-coding-system-cl-name encoding)))))
 

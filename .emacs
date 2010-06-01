@@ -336,7 +336,7 @@ Also moves point to the beginning of the text you just yanked."
   (if (file-exists-p "lib")
       ad-do-it
     (let ((swank-clojure-classpath (append (swank-clojure-default-classpath)
-                                           (list "~/local/clojure/lib/*"))))
+                                           (list "src" "lib" "~/local/clojure/lib/*"))))
       ad-do-it)))
 (ad-activate 'slime-read-interactive-args)
 (ad-activate 'swank-clojure-reset-implementation)

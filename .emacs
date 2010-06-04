@@ -21,6 +21,7 @@
                point-undo
                bar-cursor
                browse-kill-ring
+               smart-tab
                ))
 
 
@@ -35,6 +36,15 @@
 (if window-system
     (color-theme-gentooish)
     (color-theme-dark-laptop))
+
+;; from http://joost.zeekat.nl/2010/06/03/slime-hints-3-interactive-completions-and-smart-tabs/
+(setq smart-tab-completion-functions-alist
+      '((emacs-lisp-mode . lisp-complete-symbol)
+        (text-mode . dabbrev-completion)
+        (clojure-mode . slime-complete-symbol)
+        (slime-repl-mode . slime-complete-symbol)))
+
+(global-smart-tab-mode 1)
 
 (browse-kill-ring-default-keybindings)
 (setq auto-save-list-file-prefix nil)
@@ -135,7 +145,7 @@
 
 (set-fringe-style (cons 0 1))
 
-(setq vc-handled-backends (remq 'Bzr vc-handled-backends))
+(setq vc-handled-backends nil)
 
 (defun kill-all-buffers ()
   (interactive)

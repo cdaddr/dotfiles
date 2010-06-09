@@ -335,7 +335,7 @@ Also moves point to the beginning of the text you just yanked."
 (require 'swank-clojure)
 (require 'clojure-test-mode)
 (setq swank-clojure-classpath (append (swank-clojure-default-classpath)
-                                      (list "." "src" "lib/*" "classes" "native")))
+                                      (list "." "src" "lib/*" "classes" "native" "/usr/local/lib/*")))
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
           (list "native/windows/x86")

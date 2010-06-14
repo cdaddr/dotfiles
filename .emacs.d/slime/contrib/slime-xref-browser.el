@@ -1,15 +1,8 @@
-;;; slime-xref-browser.el --- xref browsing with tree-widget
-;;
-;; Author: Rui Patrocínio <rui.patrocinio@netvisao.pt>
-;; Licencse: GNU GPL (same license as Emacs)
-;; 
-;;; Installation:
-;;
-;; Add this to your .emacs: 
-;;
-;;   (add-to-list 'load-path "<directory-of-this-file>")
-;;   (slime-setup '(slime-xref-browser ... possibly other packages ...))
-;;
+
+(define-slime-contrib slime-xref-browser
+  "Xref browsing with tree-widget"
+  (:authors "Rui Patrocínio <rui.patrocinio@netvisao.pt>")
+  (:license "GPL"))
 
 
 ;;;; classes browser
@@ -26,7 +19,7 @@
   "Read the name of a class and show its subclasses."
   (interactive (list (slime-read-symbol-name "Class Name: ")))
   (slime-call-with-browser-setup 
-   "*slime class browser*" (slime-current-package) "Class Browser"
+   (slime-buffer-name :browser) (slime-current-package) "Class Browser"
    (lambda ()
      (widget-create 'tree-widget :tag name 
                     :expander 'slime-expand-class-node 
@@ -96,7 +89,7 @@ DSPEC can be used to expand the node."
                                           '(":callers" ":callees" ":calls"))
                                 nil t ":"))))
   (slime-call-with-browser-setup 
-   "*slime xref browser*" (slime-current-package) "Xref Browser"
+   (slime-buffer-name :xref) (slime-current-package) "Xref Browser"
    (lambda ()
      (widget-create 'tree-widget :tag name :xref-type type :xref-dspec name 
                     :expander 'slime-expand-xrefs :has-echildren t))))

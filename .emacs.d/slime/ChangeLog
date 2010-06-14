@@ -1,3 +1,182 @@
+2010-06-04  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el, swank.lisp: #'(lambda -> (lambda
+
+2010-06-04 Stelian Ionescu <sionescu@cddr.org>
+
+	* swank.lisp: Move definition of LCONS before first use.
+
+2010-06-04  Helmut Eller  <heller@common-lisp.net>
+
+	* swank-allegro.lisp (socket-fd): Add support for allegro.
+
+2010-06-04  Helmut Eller  <heller@common-lisp.net>
+
+	Some *sldb-quit-restart* related fixes.
+
+	* swank.lisp (*sldb-quit-restart*): Set to nil by default.
+	(throw-to-toplevel, debug-in-emacs): Get rid of boundp tests.
+	(format-restarts-for-emacs): Add a mark for *sldb-quit-restart*.
+	(handle-requests): Always bind *emacs-connection*.
+	(with-connection): Get rid of call-with-connection so that
+	compilers can remove the call frame more easily.
+	(repl-input-stream-read): Factored out from
+	make-repl-input-stream.  Bind a *sldb-quit-restart* here too; no
+	need to restart the repl and a extra prompt for errors in Emacs
+	requests.
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	Fix last change.
+
+	* slime.el (define-slime-contrib): Fix names.
+	Remove provide; makes no sense to call provide before file is
+	completely loaded.
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el (define-slime-contrib): Use destructuring-bind.
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	Move some var-defs before first use.
+
+	* slime.el (slime-show-xref-buffer, slime-read-connection)
+	(slime-thread-index-to-id):
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	Move wacky parsing code to contrib.
+
+	* slime.el (slime-extract-context, slime-parse-context)
+	(slime-in-expression-p, slime-pattern-path)
+	(slime-beginning-of-list, slime-end-of-list)
+	(slime-parse-toplevel-form, slime-arglist-specializers)
+	(slime-definition-at-point, slime-current-parser-state): Moved to
+	contrib/slime-parse.el
+	(slime-inspect-definition, slime-disassemble-definition): Moved to
+	contrib/slime-fancy-inspector.el
+
+2010-05-27  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el ([test] interactive-eval): Fix test.
+
+2010-05-27  Helmut Eller  <heller@common-lisp.net>
+
+	* swank-ccl.lisp (socket-fd): Implement backend function.
+
+2010-05-27  Helmut Eller  <heller@common-lisp.net>
+
+	Clean up some of the confusion regarding *sldb-quit-restart*.
+
+	* swank.lisp (top-level-restart-p, *toplevel-restart-available*)
+	(coerce-restart): Deleted.
+	(with-top-level-restart, simple-repl): Simplify.
+
+2010-05-26  Helmut Eller  <heller@common-lisp.net>
+
+	* swank.lisp (swank-error): Unrename from swank-protocol-error.
+
+2010-05-26  Helmut Eller  <heller@common-lisp.net>
+
+	* swank-cmucl.lisp (parse-gdb-line-info): Try working dir first.
+
+2010-05-26  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el (slime-defun-if-undefined): Renamed from
+	slime-DEFUN-if-undefined. No need to yell.
+
+2010-05-26  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el (slime-compile-file): Only send non-nil keyword args.
+	(slime-hack-quotes): New function.
+
+2010-05-18  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (sldb-insert-condition): Don't create a mouse tooltip
+	for long error message, tooltip shows the same text and doesn't
+	add any value.
+	(slime-definition-at-point): factor out of `slime-inspect-definition'.
+	(slime-disassemble-definition): New, similar to `slime-inspect-definition'.
+
+	* swank.lisp (disassemble-form): rename from disassemble-symbol,
+	do the same as before but evaluate the argument.
+
+
+2010-05-16  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-close-popup-window): Don't kill
+	slime-popup-restore-data local variable in another buffer.
+
+2010-05-13  Tobias C. Rittweiler <tcr@freebits.de>
+
+	* slime.el (define-slime-contrib): New macro.
+
+2010-05-13  Tobias C. Rittweiler <tcr@freebits.de>
+
+	* swank.lisp (*after-init-hook*, simple-break)
+	(coerce-to-condition, use-threads-p, current-thread-id): Moved
+	around in swank.lisp.
+	(with-temp-package): Deleted; not used anywhere.
+	(ensure-list): Use in SWANK-REQUIRE.
+
+2010-05-11  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-inspect-definition): New function,
+	inspects definition at point.
+	(slime-parse-context): Add :defstruct and :defpackage.
+
+2010-05-10  Mark Evenson  <evenson@panix.com>
+
+	* swank-loader.lisp (*architecture-features*): Add Java platforms
+	as features for ABCL.
+
+2010-05-06  Helmut Eller  <heller@common-lisp.net>
+
+	Remove some non-standard file variables.
+
+	* swank-cmucl.lisp, swank-scl.lisp: Remove pbook vars.
+	* swank-clisp.lisp: Remove indentation settings. Slime does it
+	automatically.
+
+2010-05-05  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-dispatch-event): Fix typo in the previous commit.
+
+2010-05-05  Stas Boukarev  <stassats@gmail.com>
+
+	* Make buffer names more consistent.
+	Patch by Leo Liu.
+
+2010-05-05  Helmut Eller  <heller@common-lisp.net>
+
+	* swank-cmucl.lisp (gdb-command): Use gdb's MI.
+
+2010-05-05  Mark Evenson <evenson@panix.com>
+
+	Fix for Cygwin Emacs filename problem.
+
+	* slime.el (slime-init-command): Use slime-to-lisp-filename.
+
+2010-05-05  Helmut Eller  <heller@common-lisp.net>
+
+	* slime.el (sldb-exit): When stepping, close buffer after a delay.
+	(sldb-close-step-buffer): New function.
+
+2010-05-01  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-restart-sentinel): Don't pop to the inferior
+	buffer, since this command is usually run either from
+	*inferior-lisp* buffer or from REPL, it makes sense to reuse
+	current window instead of messing up window configuration.
+	(slime-move-point): New function, moves point in a buffer and
+	its window.
+
+2010-04-29  Stas Boukarev  <stassats@gmail.com>
+
+	* slime.el (slime-compile-file): Run check-parens after checking
+	that the buffer is associated with a file.
+
 2010-04-27  Stas Boukarev  <stassats@gmail.com>
 
 	* slime.el (slime-info): New function, opens the manual.

@@ -5,7 +5,10 @@
 ;;; packages in your .emacs.
 
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
-        '("~/.emacs.d" "~/.emacs.d/clojure-mode" "~/.emacs.d/slime"))
+        '("~/.emacs.d"
+          "~/.emacs.d/clojure-mode"
+          "~/.emacs.d/slime"
+          "~/.emacs.d/swank-clojure-extra"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -22,6 +25,7 @@
                bar-cursor
                browse-kill-ring
                smart-tab
+               clojure-test-mode
                ))
 
 
@@ -38,10 +42,12 @@
     (color-theme-dark-laptop))
 
 ;; from http://joost.zeekat.nl/2010/06/03/slime-hints-3-interactive-completions-and-smart-tabs/
+
+(setq hippie-expand-try-functions-list
+      (append hippie-expand-try-functions-list '(slime-complete-symbol)))
 (setq smart-tab-completion-functions-alist
       '((emacs-lisp-mode . lisp-complete-symbol)
         (text-mode . dabbrev-completion)
-        (clojure-mode . slime-complete-symbol)
         (slime-repl-mode . slime-complete-symbol)))
 
 (global-smart-tab-mode 1)
@@ -158,15 +164,6 @@
 (defun make-backup-file-name (file)
   (concat "~/.backups/" (file-name-nondirectory file) "~"))
 
-(defun indent-or-expand (arg)
-  "Either indent according to mode, or expand the word preceding
-  point."
-  (interactive "*P")
-  (if (and
-        (or (bobp) (= ?w (char-syntax (char-before))))
-        (or (eobp) (not (= ?w (char-syntax (char-after))))))
-    (dabbrev-expand arg)
-    (indent-according-to-mode)))
 (global-set-key [C-tab] 'indent-according-to-mode)
 
 ;; Auto-wrap isearch
@@ -317,39 +314,32 @@ Also moves point to the beginning of the text you just yanked."
       (let ((mark-even-if-inactive t))
         (indent-region (region-beginning) (region-end) nil)))) 
 
-(defun tab-fix ()
-  (local-set-key [tab] 'indent-or-expand))
-(defun slime-tab-fix ()
-  (local-set-key [tab] 'slime-complete-symbol))
-(add-hook 'emacs-lisp-mode-hook 'tab-fix)
-(add-hook 'lisp-mode-hook       'slime-tab-fix)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Clojure / SLIME
+;; 
 
-(require 'clojure-mode)
-(require 'slime)
-
-(setq swank-clojure-jar-home "~/.emacs.d/swank-clojure/")
-(add-to-list 'load-path "~/.emacs.d/swank-clojure")
-(require 'swank-clojure)
-(require 'clojure-test-mode)
-(setq swank-clojure-classpath (append (swank-clojure-default-classpath)
-                                      (list "." "src" "lib/*" "classes" "native" "/usr/local/lib/*")))
+(setq swank-clojure-classpath
+      (list "." "src" "lib/*" "classes" "native" "/usr/local/lib/*"))
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
           (list "native/windows/x86")
         (list "/usr/local/lib" "native/linux/x86")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
 
-(defadvice swank-clojure-reset-implementation (around default-clojure)
-  (if (file-exists-p "lib")
-      ad-do-it
-    (let ((swank-clojure-classpath (append (swank-clojure-default-classpath)
-                                           (list "src" "lib" "~/local/clojure/lib/*"))))
-      ad-do-it)))
-(ad-activate 'slime-read-interactive-args)
-(ad-activate 'swank-clojure-reset-implementation)
+(eval-after-load "slime"
+  '(progn
+     (require 'swank-clojure-extra)
+     (add-to-list 'slime-lisp-implementations
+                  `(clojure ,(swank-clojure-cmd)
+                            :init swank-clojure-init)
+                  t)
+     (add-hook 'slime-indentation-update-hooks 'swank-clojure-update-indentation)
+     (add-hook 'slime-repl-mode-hook 'swank-clojure-slime-repl-modify-syntax t)
+     (add-hook 'clojure-mode-hook 'swank-clojure-slime-mode-hook t)
+     (setq slime-highlight-compiler-notes nil)))
+
+(defun clojure ()
+  (interactive)
+  (swank-clojure-project default-directory))
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
@@ -379,8 +369,7 @@ Also moves point to the beginning of the text you just yanked."
 
 (set-language-environment "UTF-8")
 (setq slime-net-coding-system 'utf-8-unix) 
-(slime-setup '(slime-repl slime-highlight-edits slime-fuzzy))
-(define-key clojure-mode-map (kbd "<tab>") 'indent-or-expand)
+(slime-setup '(slime-repl))
 (add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
 
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
@@ -443,7 +432,8 @@ Also moves point to the beginning of the text you just yanked."
  '(scroll-up-aggressively 0.0)
  '(show-paren-mode t nil (paren))
  '(slime-compilation-finished-hook nil)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ )
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.

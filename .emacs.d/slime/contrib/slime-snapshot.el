@@ -1,4 +1,9 @@
-;; slime-snapshot.el --- Save&restore memory images without disconnecting
+
+(define-slime-contrib slime-snapshot
+  "Save&restore memory images without disconnecting"
+  (:authors "Helmut Eller <heller@common-lisp.net>")
+  (:license "Unknown")
+  (:swank-dependencies swank-snapshot))
 
 (defun slime-snapshot (filename)
   "Save a memory image to the file FILENAME."
@@ -15,5 +20,4 @@
 			       nil t nil)
 		  (slime-connection)))
 
-(defun slime-snapshot-init ()
-  (slime-require :swank-snapshot))
+(provide 'slime-snapshot)

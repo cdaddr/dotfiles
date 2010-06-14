@@ -1,0 +1,53 @@
+* swank-clojure-extra
+
+swank-clojure-extra provides some extra utilities for using slime [1] with
+swank-clojure [2]. The extras provided by this package includes
+
+ - swank-clojure-project: a way to open swank-clojure on a specific
+   project. This is very useful as java does not provide a way to
+   modify classpath at runtime.
+ - manual configuration of swank/slime.
+ - more to come..
+
+This project is an offshoot of swank-clojure and was created as an attempt
+to separate emacs specific utilities which got added over a period of time
+into swank-clojure.el into a separate project. The rationale behind this
+split is explained in this thread:
+
+ <http://groups.google.com/group/swank-clojure/browse_thread/thread/e6656cc66c5ac15f>
+
+* Usage
+
+In your ~/.emacs file, add the swank-clojure-extra into your load-path
+and load it.
+
+(add-to-list 'load-path "~/src/swank-clojure-extra")
+(require 'swank-clojure-extra)
+
+** Customization
+
+swank-clojure-extra provides the a few variables which can be customized
+from your emacs configuration files.
+
+Here is what I have in my ~/.emacs file:
+
+(setq  swank-clojure-classpath (append (list "/usr/share/java/clojure.jar"
+					     "~/src/swank-clojure/src"
+					     "~/.clojure")
+				       (directory-files "/usr/share/java/"
+							t
+							".jar$")))
+
+(eval-after-load "slime"
+  '(progn
+     (require 'swank-clojure-extra)
+     (add-to-list 'slime-lisp-implementations `(clojure ,(swank-clojure-cmd)
+							:init swank-clojure-init)
+		  t)
+     (add-hook 'slime-indentation-update-hooks 'swank-clojure-update-indentation)
+     (add-hook 'slime-repl-mode-hook 'swank-clojure-slime-repl-modify-syntax t)
+     (add-hook 'clojure-mode-hook 'swank-clojure-slime-mode-hook t)))
+
+
+[1] http://common-lisp.net/project/slime/
+[2] http://github.com/technomancy/swank-clojure

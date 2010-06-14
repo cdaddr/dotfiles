@@ -1,3 +1,124 @@
+2010-06-14  Stas Boukarev  <stassats@gmail.com>
+
+	* swank-asdf.lisp (asdf-central-registry): ASDF2 compatibility.
+	Patch by Leo Liu.
+
+2010-06-04  Helmut Eller  <heller@common-lisp.net>
+
+	* inferior-slime.el (inferior-slime-show-transcript): Update
+	window point
+
+2010-05-29  Stas Boukarev  <stassats@gmail.com>
+
+	* swank-fancy-inspector.lisp (emacs-inspect): Add [finalize]
+	button for not finalized classes.
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	Call provide at the end of the file.
+
+	* slime-asdf.el slime-banner.el slime-clipboard.el
+	slime-compiler-notes-tree.el slime-enclosing-context.el
+	slime-highlight-edits.el slime-hyperdoc.el slime-indentation.el
+	slime-mdot-fu.el slime-motd.el slime-mrepl.el
+	slime-presentation-streams.el slime-sbcl-exts.el slime-snapshot.el
+	slime-sprof.el slime-tramp.el slime-typeout-frame.el
+	slime-xref-browser.el:
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	* slime-c-p-c.el slime-fancy-inspector.el slime-fancy.el
+	slime-fontifying-fu.el slime-fuzzy.el slime-package-fu.el
+	slime-parse.el slime-presentations.el slime-references.el
+	slime-repl.el slime-scratch.el: Call provide at the end of the
+	file.
+
+2010-05-28  Helmut Eller  <heller@common-lisp.net>
+
+	* swank-kawa.scm (wrap-compilation): Set Compilation.explict flag.
+	(list-file): Add cast to resolve overloaded parse method.
+	(disassemble-form): Update for change from 2010-05-18.
+
+2010-05-19  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-repl.el (slime-list-repl-short-cuts): Don't scroll to the
+	bottom, don't error if a shortcut has no documentation.
+
+2010-05-16  Stas Boukarev  <stassats@gmail.com>
+
+	* swank-arglists.lisp (decode-arglist): Handle (x . y) macro arglists.
+
+2010-05-14  Tobias C. Rittweiler <tcr@freebits.de>
+
+	* slime-highlight-edits.el, slime-hyperdoc.el, slime-mrepl.el,
+          slime-snapshot.el: Fix typo.
+
+2010-05-13  Tobias C. Rittweiler <tcr@freebits.de>
+
+	Perform PATHNAME on file-streams safely.
+
+	* swank-fancy-inspector.lisp (make-visit-file-thunk): Deleted.
+	(make-pathname-ispec): New helper.
+	(make-file-stream-ispec): New helper.
+	(emacs-inspect file-stream): Use them.
+	(emacs-inspect stream-error): Ditto.
+
+2010-05-13  Tobias C. Rittweiler <tcr@freebits.de>
+
+	* slime-autodoc.el, slime-c-p-c.el, slime-compiler-notes-tree.el,
+	slime-enclosing-context.el, slime-fancy.el, slime-fuzzy.el,
+	slime-hyperdoc.el, slime-mdot-fu.el, slime-mrepl.el,
+	slime-parse.el, slime-presentations.el, slime-repl.el,
+	slime-snapshot.el, slime-tramp.el, slime-xref-browser.el:
+
+	Use newly added `define-slime-contrib' macro to specify
+	slime and swank dependencies, and to specify what should happen on
+	contrib load/unload.
+
+2010-05-13  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-asdf.el (slime-asdf-collect-notes): New variable.
+	Collect and display notes produced by the compiler. Defaulted to T.
+
+2010-05-08  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-presentations.el (slime-presentation-write-result): Do
+	slime-repl-show-maximum-output at the end. This really solves
+	jumping.
+
+2010-05-07  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-presentations.el (slime-presentation-write): Reuse
+	functions from slime-repl. This fixes spurious point jumps.
+
+	* slime-repl.el (slime-repl-show-maximum-output):
+	Don't search for a window of the buffer if the current window
+	already displays it.
+	(slime-with-output-end-mark): Removed, unused.
+
+2010-05-05  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-tramp.el (slime-tramp-to-lisp-filename): Check if slime is
+	connected, because slime-to-lisp-filename is now used for
+	establishing connection.
+
+2010-05-05  Helmut Eller  <heller@common-lisp.net>
+
+	* slime-editing-commands.el: Fix typo.
+
+2010-05-01  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-fuzzy.el(slime-fuzzy-dehighlight-current-completion):
+	instead of creating new overlays, move one overlay around.
+	(slime-mimic-key-bindings): Renamed from mimic-key-bindings.
+	Patch by Leo Liu.
+
+2010-05-01  Stas Boukarev  <stassats@gmail.com>
+
+	* slime-repl.el (slime-repl-update-banner): Use slime-move-point
+	instead of goto-char alone, ensuring that the point is moved even
+	if the window isn't currently selected.
+
 2010-04-18  Stas Boukarev  <stassats@gmail.com>
 
 	* slime-presentations.el

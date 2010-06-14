@@ -655,9 +655,10 @@
         (messages (<gnu.text.SourceMessages>)))
     (try-catch
      (let ((c (as <gnu.expr.Compilation> (f messages))))
+       (set (@ explicit c) #t)
        (! compile-to-archive c (! get-module c) jar))
      (ex <throwable>
-         (log "error during compilation: ~a\n" ex)
+         (log "error during compilation: ~a\n~a" ex (! getStackTrace ex))
          (! error messages (as <char> #\f)
             (to-str (exception-message ex)) #!null)))
     (log "compilation done.\n")
@@ -968,11 +969,13 @@
 
 ;;;; Disassemble 
 
-(defslimefun disassemble-symbol (env name)
-  (let ((f (eval (read-from-string name) env)))
-    (typecase f
-      (<gnu.expr.ModuleMethod> 
-       (disassemble (module-method>meth-ref f))))))
+(defslimefun disassemble-form (env form)
+  (mcase (read-from-string form)
+    (('quote name)
+     (let ((f (eval name env)))
+       (typecase f
+         (<gnu.expr.ModuleMethod> 
+          (disassemble (module-method>meth-ref f))))))))
 
 (df disassemble ((mr <meth-ref>) => <str>)
   (with-sink #f (fun (out) (disassemble-meth-ref mr out))))
@@ -1965,7 +1968,7 @@
   (with (port (call-with-input-file filename))
     (let* ((lang (gnu.expr.Language:getDefaultLanguage))
            (messages (<gnu.text.SourceMessages>))
-           (comp (! parse lang port messages 0)))
+           (comp (! parse lang (as <gnu.mapping.InPort> port) messages 0)))
       (! get-module comp))))
 
 (df list-decls (file)
@@ -2165,5 +2168,5 @@
 
 ;; Local Variables:
 ;; mode: goo 
-;; compile-command:"kawa -e '(compile-file \"swank-kawa.scm\"\"swank-kawa\")'" 
+;; compile-command:"kawa -e '(compile-file \"swank-kawa.scm\"\"swank-kawa.zip\")'" 
 ;; End:

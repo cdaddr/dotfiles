@@ -319,10 +319,10 @@ nnoremap <C-w>v :vnew<CR>
 nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
 
 " I open new windows to warrant using up C-M-arrows on this
-nnoremap <C-M-Up> <C-w>n
-nnoremap <C-M-Down> <C-w>N
-nnoremap <C-M-Right> <C-w>v
-nnoremap <C-M-Left> <C-w>V
+nmap <C-M-Up> <C-w>n
+nmap <C-M-Down> <C-w>N
+nmap <C-M-Right> <C-w>v
+nmap <C-M-Left> <C-w>V
 
 " Horizontal window scrolling
 nnoremap <C-S-Right> zL
@@ -380,3 +380,4 @@ vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
 "nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
 "nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
 
+let g:loaded_AlignMapsPlugin = 1

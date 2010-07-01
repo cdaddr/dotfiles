@@ -1,9 +1,3 @@
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
         '("~/.emacs.d"
           "~/.emacs.d/clojure-mode"
@@ -315,10 +309,12 @@ Also moves point to the beginning of the text you just yanked."
         (indent-region (region-beginning) (region-end) nil)))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;; Clojure
 
-(setq swank-clojure-classpath
-      (list "." "src" "lib/*" "classes" "native" "/usr/local/lib/*"))
+(autoload 'clojure-test-mode "clojure-test-mode" "Clojure test mode" t)
+(autoload 'clojure-test-maybe-enable "clojure-test-mode" "" t)
+(add-hook 'clojure-mode-hook 'clojure-test-maybe-enable)
+
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
           (list "native/windows/x86")
@@ -328,10 +324,7 @@ Also moves point to the beginning of the text you just yanked."
 (eval-after-load "slime"
   '(progn
      (require 'swank-clojure-extra)
-     (add-to-list 'slime-lisp-implementations
-                  `(clojure ,(swank-clojure-cmd)
-                            :init swank-clojure-init)
-                  t)
+     
      (add-hook 'slime-indentation-update-hooks 'swank-clojure-update-indentation)
      (add-hook 'slime-repl-mode-hook 'swank-clojure-slime-repl-modify-syntax t)
      (add-hook 'clojure-mode-hook 'swank-clojure-slime-mode-hook t)
@@ -339,6 +332,15 @@ Also moves point to the beginning of the text you just yanked."
 
 (defun clojure ()
   (interactive)
+  (setq swank-clojure-classpath
+        (if (file-exists-p "lib")
+            (list "~/.clojure" "." "src" "test" "lib/*" "classes" "native" "/usr/local/lib/*")
+          (list "~/.clojure"
+                "~/local/clojure/lib/*")))
+  (add-to-list 'slime-lisp-implementations
+               `(clojure ,(swank-clojure-cmd)
+                         :init swank-clojure-init)
+               t)
   (swank-clojure-project default-directory))
 
 ;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))

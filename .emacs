@@ -8,6 +8,7 @@
     (mapcar #'require packages))
 
 (require-all '(
+               mwe-log-commands
                uniquify
                light-symbol
                linum 
@@ -317,8 +318,8 @@ Also moves point to the beginning of the text you just yanked."
 
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
-          (list "native/windows/x86")
-        (list "/usr/local/lib" "native/linux/x86")))
+          (list "native/windows/x86_64")
+        (list "/usr/local/lib" "/usr/lib" "native/linux/x86_64")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
 
 (eval-after-load "slime"

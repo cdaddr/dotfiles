@@ -1406,7 +1406,8 @@ expansion will be added to the REPL's history.)"
                                        (slime-current-connection))))
              (set-process-filter proc filter)))
 	  (noerror)
-	  (t (error "No inferior lisp process")))))
+	  (t ;;(error "No inferior lisp process")
+         ))))
 
 (defun slime-inferior-output-filter (proc string conn)
   (cond ((eq (process-status conn) 'closed)

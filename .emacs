@@ -21,6 +21,7 @@
                browse-kill-ring
                smart-tab
                clojure-test-mode
+               undo-tree
                ))
 
 
@@ -45,7 +46,14 @@
         (text-mode . dabbrev-completion)
         (slime-repl-mode . slime-complete-symbol)))
 
+(global-undo-tree-mode 1)
 (global-smart-tab-mode 1)
+(global-set-key "\C-R" 'undo-tree-redo)
+(add-hook 'undo-mode-visualizer-mode
+          (define-key undo-tree-visualizer-map
+            (kbd "<return>")
+            'undo-tree-visualizer-quit))
+
 
 (browse-kill-ring-default-keybindings)
 (setq auto-save-list-file-prefix nil)
@@ -319,7 +327,7 @@ Also moves point to the beginning of the text you just yanked."
 (setq swank-clojure-library-paths
       (if (string= window-system "w32")
           (list "native/windows/x86_64")
-        (list "/usr/local/lib" "/usr/lib" "native/linux/x86_64")))
+        (list "native/linux/x86_64")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
 
 (eval-after-load "slime"
@@ -335,7 +343,7 @@ Also moves point to the beginning of the text you just yanked."
   (interactive)
   (setq swank-clojure-classpath
         (if (file-exists-p "lib")
-            (list "~/.clojure" "." "src" "test" "lib/*" "classes" "native" "/usr/local/lib/*")
+            (list "~/.clojure" "." "src" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
           (list "~/.clojure"
                 "~/local/clojure/lib/*")))
   (add-to-list 'slime-lisp-implementations

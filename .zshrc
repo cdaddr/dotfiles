@@ -1,4 +1,4 @@
-export PATH="~/local/bin:$PATH"
+export PATH="$HOME/local/bin:$PATH"
 export EDITOR="vim"
 
 bindkey -e
@@ -20,15 +20,19 @@ setopt histignorespace
 setopt incappendhistory
 setopt extendedglob
 setopt nobeep
-zstyle :compinstall filename '~/.zshrc'
+zstyle :compinstall filename "$HOME/.zshrc"
 
 autoload -Uz compinit
 compinit
 
 setopt autopushd
 setopt noclobber
+setopt rc_quotes
+setopt shortloops
+setopt check_jobs
+setopt notify
 
-export WORDCHARS="${WORDCHARS:s#/##}"
+export WORDCHARS="${WORDCHARS//[\/_.]/}"
 
 setopt autolist
 setopt listtypes

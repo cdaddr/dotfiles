@@ -62,13 +62,20 @@ colors
 
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' stagedstr '*'
-zstyle ':vcs_info:*' unstagedstr '%F{11}'
+zstyle ':vcs_info:*' stagedstr '%F{3}S'
+zstyle ':vcs_info:*' unstagedstr '%F{2}U'
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats ' [%s:%F{2}%u%b%c%F{4}]%f'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
 zstyle ':vcs_info:*' enable git svn
-precmd () { vcs_info }
+precmd () {
+    if [[ -z $(git add -n . 2> /dev/null) ]] {
+        zstyle ':vcs_info:*' formats ' [%s:%F{2}%b%F{4}:%u%c%F{4}]'
+    } else {
+        zstyle ':vcs_info:*' formats ' [%s:%F{2}%b%F{4}:%u%c%F{5}?%F{4}]'
+    }
+
+    vcs_info
+}
 
 setopt prompt_subst
 PROMPT='%{$fg[blue]%}%n@%m %c${vcs_info_msg_0_}%{$fg[blue]%} %(?/%{$fg[blue]%}/%{$fg[red]%})%% %{$reset_color%}'

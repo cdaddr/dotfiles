@@ -1,5 +1,7 @@
 export PATH="$HOME/local/bin:$PATH"
 export EDITOR="vim"
+export PAGER="less"
+export RUBYOPT=rubygems
 
 bindkey -e
 bindkey '\e[H' beginning-of-line
@@ -55,28 +57,26 @@ alias pacman=pacman-color
 alias pacs='pacman -Ss'
 alias paci='pacman -S'
 
-git_prompt() {
-    edits=`git status -s 2>/dev/null`
-    branch=`git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/^* //'`
-    if [[ -n $branch ]] {
-        if [[ -n $edits ]] {
-            branch="$branch*"
-        }
-        echo " [$branch]"
-    }
-}
-
 autoload -U colors
 colors
 
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' stagedstr '*'
+zstyle ':vcs_info:*' unstagedstr '%F{11}'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats ' [%s:%F{2}%u%b%c%F{4}]%f'
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
+zstyle ':vcs_info:*' enable git svn
+precmd () { vcs_info }
+
 setopt prompt_subst
-PROMPT='%{$fg[blue]%}%n@%m %c%{$fg[green]%}$(git_prompt)%{$fg[blue]%} %(?/%{$fg[blue]%}/%{$fg[red]%})%% %{$reset_color%}'
+PROMPT='%{$fg[blue]%}%n@%m %c${vcs_info_msg_0_}%{$fg[blue]%} %(?/%{$fg[blue]%}/%{$fg[red]%})%% %{$reset_color%}'
 
 /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
-if [[ -f $HOME/.keychain/$HOSTNAME-sh ]] {
-    source $HOME/.keychain/$HOSTNAME-sh
+if [[ -f $HOME/.keychain/$HOST-sh ]] {
+    source $HOME/.keychain/$HOST-sh
 }
 
 alias gemi='gem install --no-ri --no-rdoc'
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
-export RUBYOPT=

@@ -62,23 +62,23 @@ colors
 
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' stagedstr '%F{3}S'
-zstyle ':vcs_info:*' unstagedstr '%F{2}U'
+zstyle ':vcs_info:*' stagedstr '%F{28}●'
+zstyle ':vcs_info:*' unstagedstr '%F{11}●'
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
 zstyle ':vcs_info:*' enable git svn
 precmd () {
     if [[ -z $(git add -n . 2> /dev/null) ]] {
-        zstyle ':vcs_info:*' formats ' [%s:%F{2}%b%F{4}:%u%c%F{4}]'
+        zstyle ':vcs_info:*' formats ' [%F{green}%b%c%u%F{blue}]'
     } else {
-        zstyle ':vcs_info:*' formats ' [%s:%F{2}%b%F{4}:%u%c%F{5}?%F{4}]'
+        zstyle ':vcs_info:*' formats ' [%F{green}%b%c%u%F{red}●%F{blue}]'
     }
 
     vcs_info
 }
 
 setopt prompt_subst
-PROMPT='%{$fg[blue]%}%n@%m %c${vcs_info_msg_0_}%{$fg[blue]%} %(?/%{$fg[blue]%}/%{$fg[red]%})%% %{$reset_color%}'
+PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
 
 /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
 if [[ -f $HOME/.keychain/$HOST-sh ]] {

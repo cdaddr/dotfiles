@@ -9,6 +9,7 @@ if exists("syntax_on")
    syntax reset
 endif
 
+let g:colors_name = "gentooish"
 
 hi Normal gui=NONE   guifg=#cccccc   guibg=#191919 ctermfg=252 ctermbg=234
 hi IncSearch gui=NONE   guifg=#000000   guibg=#8bff95 term=reverse ctermfg=16 ctermbg=120

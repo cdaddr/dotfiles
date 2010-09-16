@@ -2,3 +2,5 @@
 .emacs.d/saveplace
 .vim/.netrwhist
 .vim/.VimballRecord
+.vim/undo
+.vim/backup

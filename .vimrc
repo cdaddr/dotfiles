@@ -18,9 +18,14 @@ set backup
 if has('win32')
     let s:homedir = "$HOME/vimfiles"
 else
-    let s:homedir = "$HOME"
+    let s:homedir = "$HOME/.vim"
 endif
-execute "set backupdir=" . s:homedir . "/.backups"
+execute "set backupdir=" . s:homedir . "/backup"
+
+if has('persistent_undo')
+    set undofile
+    execute "set undodir=" . s:homedir .  "/undo"
+endif
 
 set history=5000
 set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
@@ -381,3 +386,26 @@ vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
 "nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
 
 let g:loaded_AlignMapsPlugin = 1
+
+function! Mirror(dict)
+    for [key, value] in items(a:dict)
+        let a:dict[value] = key
+    endfor
+    return a:dict
+endfunction
+
+function! SwapWords(dict, ...)
+    let words = keys(a:dict) + values(a:dict)
+    let words = map(words, 'escape(v:val, "|")')
+    if(a:0 == 1)
+        let delimiter = a:1
+    else
+        let delimiter = '/'
+    endif
+    let pattern = '\v(' . join(words, '|') . ')'
+    exe '%s' . delimiter . pattern . delimiter
+        \ . '\=' . string(Mirror(a:dict)) . '[S(0)]'
+        \ . delimiter . 'g'
+endfunction
+
+

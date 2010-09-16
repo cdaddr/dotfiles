@@ -7,6 +7,7 @@ swank-clojure [2]. The extras provided by this package includes
    project. This is very useful as java does not provide a way to
    modify classpath at runtime.
  - manual configuration of swank/slime.
+ - start a Leiningen swank server (and connect) from within Emacs: swank-clojure-lein-swank
  - more to come..
 
 This project is an offshoot of swank-clojure and was created as an attempt

@@ -4,10 +4,12 @@
 ;; Copyright (C) 2008, 2009, 2010 Jeffrey Chu,
 ;;                                Phil Hagelberg
 ;;                                Ramakrishnan Muthukrishnan
+;;                                Juergen Hoetzel
 ;;
 ;; Authors: Jeffrey Chu <jochu0@gmail.com>
 ;;          Phil Hagelberg <technomancy@gmail.com>
 ;;          Ramakrishnan Muthukrishnan <vu3rdd@gmail.com>
+;;          Juergen Hoetzel <juergen@archlinux.org>
 ;; URL: http://github.com/vu3rdd/swank-clojure-extra
 ;; Version: 1.1.0
 ;; Keywords: languages, lisp
@@ -37,6 +39,8 @@
 ;;    can launch a server from a shell
 ;;    (http://wiki.github.com/technomancy/leiningen/emacs-integration)
 ;;    and connect to it from within Emacs using M-x slime-connect.
+;;    `swank-clojure-lein-swank' can be used to start a leiningen
+;;    interactively from emacs.
 ;;
 ;;; Code:
 ;;
@@ -133,6 +137,13 @@ Due to a bug in url-retrieve-synchronously, they must be
 downloaded in order of size (ascending), so if you customize
 this, keep that in mind."
   :type 'list
+  :group 'swank-clojure)
+
+(defcustom swank-clojure-lein-swank-command "lein"
+  "lein program file name.  It is searched for in PATH. You can also
+set an absolute path, if the Leiningen bin directory is not in your PATH
+environment."
+  :type 'file
   :group 'swank-clojure)
 
 (defface swank-clojure-dim-trace-face
@@ -329,13 +340,20 @@ The `path' variable is bound to the project root when these functions run.")
 	(swank-clojure-classpath (copy-list swank-clojure-classpath))
         (swank-clojure-binary nil)
         (swank-clojure-extra-classpaths (let ((l (expand-file-name
-						  swank-clojure-project-dep-path path)))
-					  (if (file-directory-p l)
-					      (append
-					       (directory-files l t ".jar$")
-					       (remove-if-not
-						'directoryp
-						(directory-files l t "^[^\\.]")))))))
+						  swank-clojure-project-dep-path path))
+					      (d (expand-file-name "lib/dev" path)))
+					  (append
+					   (if (file-directory-p l) 
+					       (append 
+						(directory-files l t ".jar$")
+						(remove-if-not 'directoryp
+							       (directory-files l t "^[^\\.]"))))
+					   
+					   (if (file-directory-p d) 
+					       (append 
+						(directory-files d t ".jar$")
+						(remove-if-not 'directoryp
+							       (directory-files d t "^[^\\.]"))))))))
     
     (add-to-list 'swank-clojure-extra-classpaths (expand-file-name "classes/" path))
     (add-to-list 'swank-clojure-extra-classpaths (expand-file-name "src/" path))
@@ -360,6 +378,32 @@ The `path' variable is bound to the project root when these functions run.")
     (save-window-excursion
       (let ((default-directory path))
         (slime 'clojure)))))
+
+(defun swank-clojure-lein-swank (directory)
+  "Start a lein swank process in directory (default `default-directory')"
+  (interactive (list (or 
+		      (locate-dominating-file default-directory "project.clj")
+		      (read-directory-name "Leiningen Project directory: "))))
+  (let ((default-directory directory))
+    (when (not default-directory)
+      (error "Not in a Leiningen project."))
+    ;; you can customize slime-port using .dir-locals.el
+    (let ((proc (start-process "lein-swank" nil swank-clojure-lein-swank-command "swank" (number-to-string slime-port))))
+      (when proc
+	(process-put proc :output nil)
+	(set-process-sentinel proc (lambda (proc event)
+				     (message "%s%s: `%S'" 
+					      (process-get proc :output)
+					      proc (replace-regexp-in-string "\n" "" event))))
+	(set-process-filter proc
+			    (lambda (proc output)
+			      ;; record last line of output until connected (possible error message)
+			      (process-put proc :output (concat (process-get proc :output) output))
+			      (when (string-match "Connection opened on" output)
+				(slime-connect "localhost" slime-port)
+				;; no need to further process output
+				(set-process-filter proc nil))))
+	(message "Starting swank server...")))))
 
 (provide 'swank-clojure-extra)
 ;;; swank-clojure-extra.el ends here

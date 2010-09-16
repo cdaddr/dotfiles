@@ -2,7 +2,8 @@
         '("~/.emacs.d"
           "~/.emacs.d/clojure-mode"
           "~/.emacs.d/slime"
-          "~/.emacs.d/swank-clojure-extra"))
+          "~/.emacs.d/swank-clojure-extra"
+          "~/.emacs.d/haskell-mode"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -24,6 +25,13 @@
                undo-tree
                ))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Haskell
+
+(load "~/.emacs.d/haskell-mode/haskell-site-file")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;;(add-hook 'haskell-mode-hook (lambda () (smart-tab-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
@@ -170,13 +178,24 @@
 (global-set-key [C-tab] 'indent-according-to-mode)
 
 ;; Auto-wrap isearch
-(defadvice isearch-search (after isearch-no-fail activate)
-  (unless isearch-success
-    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)
-    (isearch-repeat (if isearch-forward 'forward))
-    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)))
+;;(defadvice isearch-search (after isearch-no-fail activate)
+;;  (unless isearch-success
+;;    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
+;;    (ad-activate 'isearch-search)
+;;    (isearch-repeat (if isearch-forward 'forward))
+;;    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
+;;    (ad-activate 'isearch-repeat)))
+
+(setq isearch-search-fun-function 'wrapping-search-fun)
+
+(defun wrapping-search-fun ()
+  (lambda (&rest args)
+    (let* ((isearch-search-fun-function nil)
+           (fun (isearch-search-fun)))
+      (or (apply fun args)
+          (unless (cadr args)
+            (goto-char (if isearch-forward (point-min) (point-max)))
+            (apply fun args))))))
 
 ;; Prevent Emacs from stupidly auto-changing my working directory
 (defun find-file-save-default-directory ()
@@ -344,15 +363,14 @@ Also moves point to the beginning of the text you just yanked."
   (setq swank-clojure-classpath
         (if (file-exists-p "lib")
             (list "~/.clojure" "." "src" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
-          (list "~/.clojure"
-                "~/local/clojure/lib/*")))
+          (list "~/.clojure" "~/code/playground/lib/*" "~/code/playground/lib/dev/*")))
   (add-to-list 'slime-lisp-implementations
                `(clojure ,(swank-clojure-cmd)
                          :init swank-clojure-init)
                t)
   (swank-clojure-project default-directory))
 
-;;(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
+(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
 (defvar slime-override-map (make-keymap))
 (define-minor-mode slime-override-mode

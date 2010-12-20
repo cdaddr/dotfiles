@@ -1,0 +1,5 @@
+data/.hgignore.i
+data/.hgtags.i
+data/README.markdown.i
+data/doc/gundo.txt.i
+data/plugin/gundo.vim.i

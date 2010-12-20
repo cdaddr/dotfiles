@@ -5,6 +5,9 @@
 " There's always a good possibility of there being broken or
 " experimental stuff in here.
 "
+
+call pathogen#runtime_append_all_bundles()
+
 set nocompatible
 syntax on
 filetype on
@@ -265,6 +268,8 @@ function! Duplicate(repl, start, end, ...) range
     endwhile
 endfunction
 
+nnoremap <F5> :GundoToggle<CR>
+
 " S-arrows suck
 vnoremap <S-Up> <Up>
 inoremap <S-Up> <Up>
@@ -372,8 +377,17 @@ nnoremap <Leader>m" :%s/.*/"\0"<CR>\h
 
 vnoremap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
-nnoremap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
-nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
+function! ToggleNumber()
+    if &nu
+        set rnu
+    else
+        set nu
+    endif
+endfunction
+nnoremap <silent> <leader>r :call ToggleNumber()<CR>
+
+"nnoremap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
+"nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
 
 vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
 
@@ -408,4 +422,5 @@ function! SwapWords(dict, ...)
         \ . delimiter . 'g'
 endfunction
 
-
+nmap ee :NERDTree<CR>
+let NERDChristmasTree=1

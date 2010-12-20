@@ -4,7 +4,7 @@
 
 ;; Author: Phil Hagelberg <technomancy@gmail.com>
 ;; URL: http://emacswiki.org/cgi-bin/wiki/ClojureTestMode
-;; Version: 1.4
+;; Version: 1.5.1
 ;; Keywords: languages, lisp, test
 ;; Package-Requires: ((slime "20091016") (clojure-mode "1.7"))
 
@@ -18,20 +18,16 @@
 
 ;;; Installation:
 
-;; If you use ELPA, you can install via the M-x package-list-packages
-;; interface. This is preferrable as you will have access to updates
-;; automatically.
+;; Install using package.el. You will need to add repo.technomancy.us
+;; to your archive list:
 
-;; If you need to install by hand for some reason:
+;; (add-to-list 'package-archives
+;;              '("technomancy" . "http://repo.technomancy.us/emacs/") t)
 
-;; (0) Add this file to your load-path, usually the ~/.emacs.d directory.
-;; (1) Either:
-;;     Add these lines to your .emacs:
-;;      (autoload 'clojure-test-mode "clojure-test-mode" "Clojure test mode" t)
-;;      (autoload 'clojure-test-maybe-enable "clojure-test-mode" "" t)
-;;      (add-hook 'clojure-mode-hook 'clojure-test-maybe-enable)
-;;
-;;     Or generate autoloads with the `update-directory-autoloads' function.
+;; If you use a version of Emacs prior to 24 that doesn't include
+;; package.el, you can get it from http://bit.ly/pkg-el. If you have
+;; an older package.el installed from tromey.com, you should upgrade
+;; in order to support installation from multiple sources.
 
 ;; This library does not currently support clojure.contrib.test-is
 ;; from Clojure Contrib's 1.0-compatibility branch. If you need it,
@@ -80,8 +76,19 @@
 ;;  * Depend upon slime, not swank-clojure.
 ;;  * Don't move the mark when activating.
 
+;; 1.5: 2010-09-16
+;;  * Allow customization of clojure-test-ns-segment-position.
+;;  * Fixes for Clojure 1.2.
+;;  * Check for active slime connection.
+;;  * Fix test toggling with negative segment-position.
+
+;; 1.5.1: 2010-11-27
+;;  * Add marker between each test run.
+
 ;;; TODO:
 
+;; * Prefix arg to jump-to-impl should open in other window
+;; * Put Testing indicator in modeline while tests are running
 ;; * Implement next-problem command
 ;; * Error messages need line number.
 ;; * Currently show-message needs point to be on the line with the
@@ -167,6 +174,7 @@
   (let ((result-vars (read (cadr results))))
     ;; slime-eval-async hands us a cons with a useless car
     (mapc #'clojure-test-extract-result result-vars)
+    (slime-repl-emit (concat "\n" (make-string (1- (window-width)) ?=) "\n"))
     (message "Ran %s tests. %s failures, %s errors."
              clojure-test-count
              clojure-test-failure-count clojure-test-error-count)))
@@ -350,14 +358,13 @@ Retuns the problem overlay if such a position is found, otherwise nil."
 
 ;;;###autoload
 (progn
-  (defun clojure-test-maybe-enable ()
-    "Enable clojure-test-mode if the current buffer contains Clojure tests.
-Also will enable it if the file is in a test directory."
-    (save-excursion
+(defun clojure-test-maybe-enable ()
+  "Enable clojure-test-mode if the current buffer contains a namespace 
+with a \"test.\" bit on it."
+  (let ((ns (clojure-find-package))) ; defined in clojure-mode.el
+    (when (search "test" ns)
       (save-window-excursion
-        (goto-char (point-min))
-        (when (search-forward "clojure.test" nil t)
-            (clojure-test-mode t)))))
+        (clojure-test-mode t)))))
   (add-hook 'clojure-mode-hook 'clojure-test-maybe-enable))
 
 (provide 'clojure-test-mode)

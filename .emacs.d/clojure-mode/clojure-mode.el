@@ -6,7 +6,7 @@
 ;;          Lennart Staflin <lenst@lysator.liu.se>
 ;;          Phil Hagelberg <technomancy@gmail.com>
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/ClojureMode
-;; Version: 1.7.1
+;; Version: 1.8.0
 ;; Keywords: languages, lisp
 
 ;; This file is not part of GNU Emacs.
@@ -16,36 +16,31 @@
 ;; Provides font-lock, indentation, and navigation for the Clojure
 ;; language. (http://clojure.org)
 
-;;; Installation:
-
-;; If you use ELPA (http://tromey.com/elpa), you can install via the
-;; M-x package-list-packages interface. This is preferrable as you
-;; will have access to updates automatically.
-
-;; If you need to install by hand for some reason:
-
-;; (0) Add this file to your load-path, usually the ~/.emacs.d directory.
-;; (1) Either:
-;;     Add this to your .emacs config: (require 'clojure-mode)
-;;     Or generate autoloads with the `update-directory-autoloads' function.
-
-;; See also the swank-clojure package for better interaction with
-;; Clojure subprocesses. Note that M-x clojure-install functionality
-;; has been moved to that package and is deprecated here.
-
 ;; Users of older Emacs (pre-22) should get version 1.4:
 ;; http://github.com/technomancy/clojure-mode/tree/1.4
 
-;; Paredit users:
+;; Install using package.el. You will need to add repo.technomancy.us
+;; to your archive list:
 
-;; Download paredit v21 or greater
-;;    http://mumble.net/~campbell/emacs/paredit.el
+;; (add-to-list 'package-archives
+;;              '("technomancy" . "http://repo.technomancy.us/emacs/") t)
+
+;; If you use a version of Emacs prior to 24 that doesn't include
+;; package.el, you can get it from http://bit.ly/pkg-el. If you have
+;; an older package.el installed from tromey.com, you should upgrade
+;; in order to support installation from multiple sources.
+
+;; Using clojure-mode with paredit is highly recommended. It is also
+;; available using package.el from the above archive.
 
 ;; Use paredit as you normally would with any other mode; for instance:
 ;;
 ;;   ;; require or autoload paredit-mode
-;;   (defun lisp-enable-paredit-hook () (paredit-mode 1))
-;;   (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
+;;   (defun turn-on-paredit () (paredit-mode 1))
+;;   (add-hook 'clojure-mode-hook 'turn-on-paredit)
+
+;; See slime-repl (also available from the same package archive) for
+;; better interaction with subprocesses.
 
 ;;; License:
 
@@ -88,7 +83,7 @@ Clojure to load that file."
   :type 'string
   :group 'clojure-mode)
 
-(defcustom clojure-mode-use-backtracking-indent nil
+(defcustom clojure-mode-use-backtracking-indent t
   "Set to non-nil to enable backtracking/context sensitive indentation."
   :type 'boolean
   :group 'clojure-mode)
@@ -136,7 +131,7 @@ Clojure to load that file."
 This holds a cons cell of the form `(DIRECTORY . FILE)'
 describing the last `clojure-load-file' or `clojure-compile-file' command.")
 
-(defvar clojure-def-regexp "^\\s *\\((def\\S *\\s +\\(\[^ \n\t\]+\\)\\)"
+(defvar clojure-def-regexp "^\\s *(def\\S *\\s +\\(?:\\^\\S +\\s +\\)?\\([^ \n\t]+\\)"
   "A regular expression to match any top-level definitions.")
 
 (defvar clojure-test-ns-segment-position -1
@@ -147,6 +142,10 @@ numbers count from the end:
 
   leiningen.compile -> leiningen.test.compile (uses 1)
   clojure.http.client -> clojure.http.test.client (uses -1)")
+
+(defun clojure-mode-version ()
+  "Currently package.el doesn't support prerelease version numbers."
+  "1.8.1-SNAPSHOT")
 
 ;;;###autoload
 (defun clojure-mode ()
@@ -176,12 +175,9 @@ if that value is non-nil."
        'clojure-indent-function)
   (set (make-local-variable 'lisp-doc-string-elt-property)
        'clojure-doc-string-elt)
-
-  (setq lisp-imenu-generic-expression
-        `((nil ,clojure-def-regexp 2)))
   (setq imenu-create-index-function
         (lambda ()
-          (imenu--generic-function lisp-imenu-generic-expression)))
+          (imenu--generic-function `((nil ,clojure-def-regexp 1)))))
 
   (clojure-mode-font-lock-setup)
 
@@ -733,7 +729,7 @@ check for contextual indenting."
 
   ;; clojure.test
   (testing 1)
-  (deftest 1)
+  (deftest 'defun)
 
   ;; contrib
   (handler-case 1)

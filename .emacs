@@ -148,6 +148,8 @@
 (global-set-key "\C-m" 'reindent-then-newline-and-indent)  ;No tabs
 (global-set-key "\C-a" 'beginning-of-line-text)
 
+(setq even-window-heights nil)
+(setq split-width-threshold nil)
 (setq window-min-height 2)
 (defun maximize-window ()
   (interactive)
@@ -363,7 +365,7 @@ Also moves point to the beginning of the text you just yanked."
   (setq swank-clojure-classpath
         (if (file-exists-p "lib")
             (list "~/.clojure" "." "src" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
-          (list "~/.clojure" "~/code/playground/lib/*" "~/code/playground/lib/dev/*")))
+          (list "~/.clojure" "~/code/playground/lib/*" "~/code/playground/lib/dev/*" "/usr/share/java/*")))
   (add-to-list 'slime-lisp-implementations
                `(clojure ,(swank-clojure-cmd)
                          :init swank-clojure-init)

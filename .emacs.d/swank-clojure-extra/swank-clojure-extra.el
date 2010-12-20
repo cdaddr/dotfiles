@@ -166,7 +166,7 @@ environment."
    ;; Hacked in call to get the localhost address to work around a bug
    ;; where the REPL doesn't pop up until the user presses Enter.
    "(do (.. java.net.InetAddress getLocalHost getHostAddress) nil)"
-   (format "(swank.swank/start-server %S :encoding %S)\n\n"
+   (format "(swank.swank/start-server %S :encoding %S :host \"localhost\")\n\n"
            (expand-file-name file)
            (format "%s" (slime-coding-system-cl-name encoding)))))
 

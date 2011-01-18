@@ -3,7 +3,9 @@
           "~/.emacs.d/clojure-mode"
           "~/.emacs.d/slime"
           "~/.emacs.d/swank-clojure-extra"
-          "~/.emacs.d/haskell-mode"))
+          "~/.emacs.d/haskell-mode"
+          "~/.emacs.d/org/lisp"
+          "~/.emacs.d/org/contrib/lisp"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -24,6 +26,19 @@
                clojure-test-mode
                undo-tree
                ))
+
+(defun code-mode (x)
+  (mapcar (lambda (hook) (add-hook hook x))
+          '(ruby-mode
+            clojure-mode-hook
+            lisp-mode-hook
+            slime-repl-mode-hook
+            emacs-lisp-mode-hook)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org-mode
+(require 'org-install)
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell
@@ -55,7 +70,8 @@
         (slime-repl-mode . slime-complete-symbol)))
 
 (global-undo-tree-mode 1)
-(global-smart-tab-mode 1)
+(code-mode 'smart-tab-mode)
+
 (global-set-key "\C-R" 'undo-tree-redo)
 (add-hook 'undo-mode-visualizer-mode
           (define-key undo-tree-visualizer-map
@@ -306,8 +322,7 @@ Also moves point to the beginning of the text you just yanked."
      (define-key paredit-mode-map (kbd "<M-down>") nil)
      (define-key paredit-mode-map "\M-r" nil)))
 
-(mapcar (lambda (hook) (add-hook hook 'enable-paredit-mode))
-        '(clojure-mode-hook lisp-mode-hook slime-repl-mode-hook emacs-lisp-mode-hook))
+(code-mode 'enable-paredit-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
@@ -402,9 +417,6 @@ Also moves point to the beginning of the text you just yanked."
 (setq slime-net-coding-system 'utf-8-unix) 
 (slime-setup '(slime-repl))
 (add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
-
-(defun lisp-enable-paredit-hook () (paredit-mode 1))
-(add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 
 (defmacro defclojureface (name color desc &optional others)
   `(defface ,name '((((class color)) (:foreground ,color ,@others))) ,desc :group 'faces))

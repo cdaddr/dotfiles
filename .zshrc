@@ -53,7 +53,6 @@ alias ll="ls -lh"
 alias lss="ls -lh --sort=size -r"
 alias pps="ps aux | grep"
 
-alias pacman=pacman-color
 alias pacs='pacman -Ss'
 alias paci='pacman -S'
 

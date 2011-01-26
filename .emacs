@@ -39,6 +39,12 @@
 ;; org-mode
 (require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(setq org-startup-indented t)
+
+(setq org-directory "~/Dropbox/Org")
+(setq org-mobile-directory "~/Dropbox/MobileOrg/")
+(setq org-agenda-files '("~/Dropbox/Org/my.org"))
+(setq org-mobile-inbox-for-pull "~/Dropbox/Org/inbox.org")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell
@@ -148,7 +154,7 @@
 
 (delete-selection-mode t)
 (tool-bar-mode 0)
-(global-linum-mode)
+(code-mode 'linum-on)
 (setq linum-format "%3d ")
 (setq-default indent-tabs-mode nil)
 (setq indent-tabs-mode nil)
@@ -454,7 +460,6 @@ Also moves point to the beginning of the text you just yanked."
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
  '(fancy-splash-image "")
- '(global-linum-mode t)
  '(ido-decorations (quote ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
  '(ido-everywhere t)
  '(inhibit-startup-screen t)
@@ -475,11 +480,11 @@ Also moves point to the beginning of the text you just yanked."
  '(scroll-up-aggressively 0.0)
  '(show-paren-mode t nil (paren))
  '(slime-compilation-finished-hook nil)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
- )
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(org-hide ((((background dark)) (:foreground "#171717"))))
  '(slime-highlight-edits-face ((((class color) (background dark)) (:background "#202020")))))

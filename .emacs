@@ -57,7 +57,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
 (color-theme-initialize)
-
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))
 (if (string= window-system "w32")
     (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
     (set-default-font "Consolas-12" t))
@@ -385,7 +385,7 @@ Also moves point to the beginning of the text you just yanked."
   (interactive)
   (setq swank-clojure-classpath
         (if (file-exists-p "lib")
-            (list "~/.clojure" "." "src" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
+            (list "~/.clojure" "." "src" "src/clj" "src/cljs" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
           (list "~/.clojure" "~/code/playground/lib/*" "~/code/playground/lib/dev/*" "/usr/share/java/*")))
   (add-to-list 'slime-lisp-implementations
                `(clojure ,(swank-clojure-cmd)

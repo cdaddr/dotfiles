@@ -84,6 +84,9 @@ set foldlevelstart=1
 set laststatus=2
 set wildmenu
 
+set noballooneval
+set ttyfast
+
 " Bouncy parens
 set showmatch
 
@@ -422,5 +425,22 @@ function! SwapWords(dict, ...)
         \ . delimiter . 'g'
 endfunction
 
-nmap ee :NERDTree<CR>
-let NERDChristmasTree=1
+" nmap ee :NERDTree<CR>
+" let NERDChristmasTree=1
+
+function! ShuffleLines()
+ruby << EOF
+    buf = VIM::Buffer.current
+    nlines = buf.count
+    firstnum =  VIM::evaluate('a:firstline')
+    lastnum = VIM::evaluate('a:lastline')
+    lines = []
+    firstnum.upto(lastnum) do |lnum|
+      lines << buf[lnum]
+    end
+    lines.shuffle!
+    firstnum.upto(lastnum) do |lnum|
+      buf[lnum] = lines[lnum-firstnum]
+    end
+EOF
+endfunction

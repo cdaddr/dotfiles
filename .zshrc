@@ -24,6 +24,7 @@ setopt incappendhistory
 setopt extendedglob
 setopt nobeep
 zstyle :compinstall filename "$HOME/.zshrc"
+zstyle ":completion:*:commands" rehash 1
 
 autoload -Uz compinit
 compinit

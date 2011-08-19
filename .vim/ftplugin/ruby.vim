@@ -4,3 +4,4 @@ setlocal softtabstop=2
 
 iabbrev a_c add_column
 iabbrev r_c remove_column
+setlocal noballooneval

@@ -89,3 +89,5 @@ if [[ -f $HOME/.keychain/$HOST-sh ]] {
 
 alias gemi='gem install --no-ri --no-rdoc'
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

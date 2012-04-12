@@ -4,3 +4,4 @@
 .vim/.VimballRecord
 .vim/undo
 .vim/backup
+.emacs.d/swank

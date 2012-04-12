@@ -1,14 +1,17 @@
+;; fix exec-path
+(setq exec-path (append exec-path '("/home/brian/local/bin")))
+
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
         '("~/.emacs.d"
           "~/.emacs.d/clojure-mode"
-          "~/.emacs.d/slime"
-          "~/.emacs.d/swank-clojure-extra"
           "~/.emacs.d/haskell-mode"
           "~/.emacs.d/org/lisp"
           "~/.emacs.d/org/contrib/lisp"))
 
 (defun require-all (packages)
     (mapcar #'require packages))
+
+(setq inferior-lisp-program "java -cp clojure-1.3.0.jar clojure.main")
 
 (require-all '(
                mwe-log-commands
@@ -23,8 +26,8 @@
                bar-cursor
                browse-kill-ring
                smart-tab
-               clojure-test-mode
                undo-tree
+               clojure-mode
                ))
 
 (defun code-mode (x)
@@ -201,15 +204,6 @@
 
 (global-set-key [C-tab] 'indent-according-to-mode)
 
-;; Auto-wrap isearch
-;;(defadvice isearch-search (after isearch-no-fail activate)
-;;  (unless isearch-success
-;;    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
-;;    (ad-activate 'isearch-search)
-;;    (isearch-repeat (if isearch-forward 'forward))
-;;    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
-;;    (ad-activate 'isearch-repeat)))
-
 (setq isearch-search-fun-function 'wrapping-search-fun)
 
 (defun wrapping-search-fun ()
@@ -372,28 +366,35 @@ Also moves point to the beginning of the text you just yanked."
         (list "native/linux/x86_64")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
 
+(defun clojure () (interactive) (clojure-jack-in))
+(defun restart-clojure () (interactive) (slime-quit-lisp) (kill-matching-buffers "slime-repl") (clojure-jack-in))
+(defun playground () (interactive) (cd "~/code/playground") (clojure-jack-in))
+
+(defun no-catch-slime-compile-error ()
+  "Redefine compile-file-for-emacs NOT to catch Throwable, so that the debugger is initiated
+   for compile errors.  This makes compiler-notes fail to work, but I don't use those anyways."
+  (slime-eval-async `(swank:eval-and-grab-output "(in-ns 'swank.commands.basic)(defn- compile-file-for-emacs*
+  \"MONKEY PATCH\"
+  ([file-name]
+   (let [start (System/nanoTime)]
+     (try
+      (let [ret (clojure.core/load-file file-name)
+                delta (- (System/nanoTime) start)]
+        `(:compilation-result nil ~(pr-str ret) ~(/ delta 1000000000.0)))))))
+(defslimefn compile-file-for-emacs
+  ([file-name load? & compile-options]
+   (when load?
+     (compile-file-for-emacs* file-name))))")))
+
+(add-hook 'slime-connected-hook 'no-catch-slime-compile-error)
+
 (eval-after-load "slime"
   '(progn
-     (require 'swank-clojure-extra)
-     
+     (add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
      (add-hook 'slime-indentation-update-hooks 'swank-clojure-update-indentation)
      (add-hook 'slime-repl-mode-hook 'swank-clojure-slime-repl-modify-syntax t)
      (add-hook 'clojure-mode-hook 'swank-clojure-slime-mode-hook t)
      (setq slime-highlight-compiler-notes nil)))
-
-(defun clojure ()
-  (interactive)
-  (setq swank-clojure-classpath
-        (if (file-exists-p "lib")
-            (list "~/.clojure" "." "src" "src/clj" "src/cljs" "test" "lib/*" "lib/dev/*" "classes" "native" "/usr/local/lib/*")
-          (list "~/.clojure" "~/code/playground/lib/*" "~/code/playground/lib/dev/*" "/usr/share/java/*")))
-  (add-to-list 'slime-lisp-implementations
-               `(clojure ,(swank-clojure-cmd)
-                         :init swank-clojure-init)
-               t)
-  (swank-clojure-project default-directory))
-
-(add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
 
 (defvar slime-override-map (make-keymap))
 (define-minor-mode slime-override-mode
@@ -404,12 +405,11 @@ Also moves point to the beginning of the text you just yanked."
 (define-key slime-override-map (kbd "}") 'paredit-close-curly)
 (define-key slime-override-map [delete] 'paredit-forward-delete)
 (define-key slime-override-map [backspace] 'paredit-backward-delete)
-;;(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
-;;(define-key slime-override-map "\C-j" 'slime-repl-return)
+(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
+(define-key slime-override-map "\C-j" 'slime-repl-newline-and-indent)
 
 (add-hook 'slime-repl-mode-hook (lambda ()
                                   (slime-override-mode t)
-                                  (slime-redirect-inferior-output)
                                   (modify-syntax-entry ?\[ "(]")
                                   (modify-syntax-entry ?\] ")[")
                                   (modify-syntax-entry ?\{ "(}")
@@ -420,9 +420,6 @@ Also moves point to the beginning of the text you just yanked."
             auto-mode-alist))
 
 (set-language-environment "UTF-8")
-(setq slime-net-coding-system 'utf-8-unix) 
-(slime-setup '(slime-repl))
-(add-hook 'slime-connected-hook 'slime-redirect-inferior-output) 
 
 (defmacro defclojureface (name color desc &optional others)
   `(defface ,name '((((class color)) (:foreground ,color ,@others))) ,desc :group 'faces))

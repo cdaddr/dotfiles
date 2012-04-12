@@ -15,6 +15,7 @@
      (font-lock-comment-face ((((class color) (min-colors 88) (background dark)) (:foreground "grey30" :slant italic))))
      (font-lock-function-name-face ((((class color) (min-colors 88) (background dark)) (:foreground "#4cbbd1"))))
      (font-lock-keyword-face ((((class color) (min-colors 88) (background dark)) (:foreground "#9a383a"))))
+     (font-lock-type-face ((((class color) (min-colors 88) (background dark)) (:foreground "#9a383a"))))
      (font-lock-string-face ((((class color) (min-colors 88) (background dark)) (:background "#0f291a" :foreground "#5dff9e"))))
      (hi-blue ((((background dark)) (:background "grey20"))))
      (ido-first-match ((t (:background "#361d45" :foreground "#cf7dff" :weight bold))))

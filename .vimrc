@@ -316,7 +316,7 @@ nnoremap q? <Nop>
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
 
-nnoremap <Leader>l :call CountLines()<CR>
+" nnoremap <Leader>l :call CountLines()<CR>
 
 " Window movements; I do this often enough to warrant using up M-arrows
 nnoremap <M-Right> <C-W><Right>
@@ -357,7 +357,6 @@ vnoremap <silent> <Leader>i( <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align 
 vnoremap <silent> <Leader>i@ <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align @<CR>:AlignPop<CR>
 
 nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
-nnoremap <silent> <Leader>ss :set foldmethod=syntax<CR>
 nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
 vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
 
@@ -375,8 +374,8 @@ nnoremap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
 nnoremap <Leader>db :%g/^$/d<CR>\h
 
 " Surround every line in the file with quotes
-nnoremap <Leader>m' :%s/.*/'\0'<CR>\h
-nnoremap <Leader>m" :%s/.*/"\0"<CR>\h
+nnoremap <Leader>'' :%s/.*/'\0'<CR>:setlocal nohls<CR>
+nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 
 vnoremap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
@@ -443,4 +442,8 @@ ruby << EOF
       buf[lnum] = lines[lnum-firstnum]
     end
 EOF
+endfunction
+
+function! AppendSingleLetter()
+    rubydo $_ = $_ + ('A'..'Z').to_a[rand(26)]
 endfunction

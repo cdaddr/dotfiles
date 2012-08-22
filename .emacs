@@ -366,6 +366,10 @@ Also moves point to the beginning of the text you just yanked."
         (list "native/linux/x86_64")))
 (setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
 
+(defun cljs ()
+  (interactive)
+  (setq inferior-lisp-program "cljs-browser-repl"))
+
 (defun clojure () (interactive) (clojure-jack-in))
 (defun restart-clojure () (interactive) (slime-quit-lisp) (kill-matching-buffers "slime-repl") (clojure-jack-in))
 (defun playground () (interactive) (cd "~/code/playground") (clojure-jack-in))
@@ -387,6 +391,15 @@ Also moves point to the beginning of the text you just yanked."
      (compile-file-for-emacs* file-name))))")))
 
 (add-hook 'slime-connected-hook 'no-catch-slime-compile-error)
+
+(defun switch-scratch-buffer-mode ()
+  (save-excursion
+    (window-configuration-to-register ?a)
+    (switch-to-buffer (get-buffer-create "*scratch*"))
+    (clojure-mode)
+    (jump-to-register ?a)))
+
+(add-hook 'slime-connected-hook 'switch-scratch-buffer-mode)
 
 (eval-after-load "slime"
   '(progn
@@ -446,13 +459,9 @@ Also moves point to the beginning of the text you just yanked."
 
 ;; from https://gist.github.com/337280
 (defun clojure-font-lock-setup ()
+  "Configures font-lock for editing Clojure code."
   (interactive)
-  (set (make-local-variable 'lisp-indent-function)
-       'clojure-indent-function)
-  (set (make-local-variable 'lisp-doc-string-elt-property)
-       'clojure-doc-string-elt)
   (set (make-local-variable 'font-lock-multiline) t)
-
   (add-to-list 'font-lock-extend-region-functions
                'clojure-font-lock-extend-region-def t)
 
@@ -465,7 +474,7 @@ Also moves point to the beginning of the text you just yanked."
     (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil))
 
   (setq font-lock-defaults
-        '(clojure-font-lock-keywords ; keywords
+        '(clojure-font-lock-keywords    ; keywords
           nil nil
           (("+-*/.<>=!?$%_&~^:@" . "w")) ; syntax alist
           nil
@@ -493,7 +502,8 @@ Also moves point to the beginning of the text you just yanked."
 (add-hook 'slime-repl-mode-hook
           (lambda ()
             (clojure-font-lock-setup)
-            (tweak-clojure-syntax)))
+            (tweak-clojure-syntax)
+            (font-lock-mode t)))
 
 (add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
 

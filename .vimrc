@@ -35,25 +35,31 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 " see :h last-position-jump
 
 " Appearance
-colorscheme gentooish
-if has('win32')
-    "set guifont=Terminus:h12:w6
-    set guifont=Consolas:h11:w6
+if has('gui_running')
+    colorscheme gentooish
     hi StatusLine gui=NONE
     hi User1 gui=NONE
     hi User2 gui=NONE
     hi WildMenu gui=NONE
+    if has('win32')
+        "set guifont=Terminus:h12:w6
+        set guifont=Consolas:h11:w6
+    else
+        set guifont=Consolas\ 12
+    end
 else
+    colorscheme default
     set guifont=Consolas\ 12
 endif
 " Remove GUI menu and toolbar
 set guioptions-=T
 set guioptions-=m
 
-if(has("gui_running"))
-    set cursorline
-    set cursorcolumn
-endif
+" Disabled because of slow redraws
+" if(has("gui_running"))
+"     set cursorline
+"     set cursorcolumn
+" endif
 
 set backspace=indent,eol,start
 set ruler
@@ -76,7 +82,11 @@ set expandtab
 "set smartindent
 
 set foldtext=FoldText()
-set fillchars=fold:·
+if has("gui_running")
+    set fillchars=fold:·
+else
+    set fillchars=fold:-
+endif
 set foldcolumn=0
 set foldmethod=syntax
 set foldlevelstart=1
@@ -106,7 +116,7 @@ if (&termencoding == "utf-8") || has("gui_running")
     if v:version >= 700
         set list listchars=eol:\ ,tab:»-,trail:·,precedes:…,extends:…,nbsp:‗
     else
-        set list listchars=eol:\ ,tab:»·,trail:·,extends:…
+        set list listchars=eol:\ ,tab:>-,trail:.,extends:>
     endif
 else
     if v:version >= 700
@@ -136,7 +146,11 @@ function! FoldText()
     let numlines = v:foldend - v:foldstart
     let firstline = getline(v:foldstart)
     "let spaces = 60 - len(firstline)
-    return printf("%3d » %s ", numlines, firstline)
+    if has("gui_running")
+        return printf("%3d » %s ", numlines, firstline)
+    else
+        return printf("%3d > %s ", numlines, firstline)
+    endif
 endfunction
 
 function! IsDiff(col)
@@ -446,4 +460,19 @@ endfunction
 
 function! AppendSingleLetter()
     rubydo $_ = $_ + ('A'..'Z').to_a[rand(26)]
+endfunction
+
+function! CursorPing()
+    set cursorline cursorcolumn
+    redraw
+    sleep 50m
+    set nocursorline nocursorcolumn
+endfunction
+
+nmap <Leader>x :set cursorline! cursorcolumn!<CR>
+nmap <C-Space> :call CursorPing()<CR>
+
+function! FindLongerLines()
+    let @/ = '^.\{' . col('$') . '}'
+    norm n$
 endfunction

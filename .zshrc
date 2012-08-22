@@ -63,16 +63,18 @@ colors
 
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' stagedstr '%F{28}*'
-zstyle ':vcs_info:*' unstagedstr '%F{11}*'
+zstyle ':vcs_info:*' stagedstr '%F{green}S'
+zstyle ':vcs_info:*' unstagedstr '%F{red}M'
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
+zstyle ':vcs_info:(svn|bzr):*' branchformat '%b%F{green}:%F{red}%r'
 zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' disable bzr cdv darcs mtn svk tla git-p4 git-svn hg-git hg-hgsubversion hg-hgsvn
+# list untracked files
 precmd () {
     if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
-        zstyle ':vcs_info:*' formats ' [%F{green}%b%c%u%F{blue}]'
+        zstyle ':vcs_info:*' formats '%%b%F{blue}[git:%F{green}%b%F{blue}:%%B%c%u%%b%F{blue}]'
     } else {
-        zstyle ':vcs_info:*' formats ' [%F{green}%b%c%u%F{red}*%F{blue}]'
+        zstyle ':vcs_info:*' formats '%%b%F{blue}[git:%F{green}%b%F{blue}:%%B%c%u%F{red}?%%b%F{blue}]'
     }
 
     vcs_info
@@ -80,7 +82,7 @@ precmd () {
 
 setopt prompt_subst
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %F{reset}'
-PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})$ %F{reset}%b'
+PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset}%b'
 
 /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
 if [[ -f $HOME/.keychain/$HOST-sh ]] {

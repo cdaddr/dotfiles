@@ -5,3 +5,5 @@
 .vim/undo
 .vim/backup
 .emacs.d/swank
+.emacs.d/ac-comphist.dat
+.irbrc

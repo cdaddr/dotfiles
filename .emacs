@@ -3,8 +3,11 @@
 
 (mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
         '("~/.emacs.d"
+          "~/.emacs.d/auto-complete"
           "~/.emacs.d/clojure-mode"
+          "~/.emacs.d/nrepl.el"
           "~/.emacs.d/haskell-mode"
+          "~/.emacs.d/smart-tab"
           "~/.emacs.d/org/lisp"
           "~/.emacs.d/org/contrib/lisp"))
 
@@ -16,7 +19,6 @@
 (require-all '(
                mwe-log-commands
                uniquify
-               light-symbol
                linum 
                color-theme
                gentooish
@@ -25,18 +27,67 @@
                point-undo
                bar-cursor
                browse-kill-ring
-               smart-tab
                undo-tree
                clojure-mode
+               package
+               nrepl
+               ac-nrepl
+               auto-complete
+               paredit
                ))
+
+(add-hook 'paredit-mode-hook
+          (lambda ()
+            ;; Some paredit keybindings conflict with windmove and SLIME
+            (define-key paredit-mode-map (kbd "<M-up>") nil)
+            (define-key paredit-mode-map (kbd "<M-down>") nil)
+            (define-key paredit-mode-map "\M-r" nil)
+            (define-key paredit-mode-map "{" 'paredit-open-curly)
+            (define-key paredit-mode-map "}" 'paredit-close-curly)
+            (define-key paredit-mode-map "\M-[" 'paredit-wrap-square)
+            (define-key paredit-mode-map "\M-{" 'paredit-wrap-curly)
+            (modify-syntax-entry ?\{ "(}")
+            (modify-syntax-entry ?\} "){")
+            ))
+
+(add-hook 'auto-complete-mode-hook
+          (lambda ()
+            (define-key ac-complete-mode-map [down] nil)
+            (define-key ac-complete-mode-map [up] nil)))
+
+(add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
+;;(add-hook 'nrepl-mode-hook (lambda () (eldoc-mode 0)))
+(add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'nrepl-mode))
+(setq ac-auto-show-menu nil)
+(setq ac-use-quick-help nil)
+(setq ac-auto-start 1)
+(setq ac-delay 0.0)
+
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+;; (when (not (package-installed-p 'nrepl))
+;;   (package-refresh-contents)
+;;   (package-install 'nrepl))
 
 (defun code-mode (x)
   (mapcar (lambda (hook) (add-hook hook x))
           '(ruby-mode
             clojure-mode-hook
             lisp-mode-hook
-            slime-repl-mode-hook
             emacs-lisp-mode-hook)))
+
+(mapcar #'code-mode
+        '(
+          auto-complete-mode
+          ;;smart-tab-mode
+          enable-paredit-mode
+          linum-on))
+
+(mapcar (lambda (mode) (add-hook 'nrepl-mode-hook mode))
+        '(auto-complete-mode enable-paredit-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode
@@ -55,7 +106,6 @@
 (load "~/.emacs.d/haskell-mode/haskell-site-file")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;;(add-hook 'haskell-mode-hook (lambda () (smart-tab-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
@@ -69,17 +119,7 @@
     (color-theme-gentooish)
     (color-theme-dark-laptop))
 
-;; from http://joost.zeekat.nl/2010/06/03/slime-hints-3-interactive-completions-and-smart-tabs/
-
-(setq hippie-expand-try-functions-list
-      (append hippie-expand-try-functions-list '(slime-complete-symbol)))
-(setq smart-tab-completion-functions-alist
-      '((emacs-lisp-mode . lisp-complete-symbol)
-        (text-mode . dabbrev-completion)
-        (slime-repl-mode . slime-complete-symbol)))
-
 (global-undo-tree-mode 1)
-(code-mode 'smart-tab-mode)
 
 (global-set-key "\C-R" 'undo-tree-redo)
 (add-hook 'undo-mode-visualizer-mode
@@ -157,7 +197,6 @@
 
 (delete-selection-mode t)
 (tool-bar-mode 0)
-(code-mode 'linum-on)
 (setq linum-format "%3d ")
 (setq-default indent-tabs-mode nil)
 (setq indent-tabs-mode nil)
@@ -311,20 +350,6 @@ Also moves point to the beginning of the text you just yanked."
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Paredit
-
-(require 'paredit)
-
-(eval-after-load 'paredit
-  '(progn
-     ;; Some paredit keybindings conflict with windmove and SLIME
-     (define-key paredit-mode-map (kbd "<M-up>") nil)
-     (define-key paredit-mode-map (kbd "<M-down>") nil)
-     (define-key paredit-mode-map "\M-r" nil)))
-
-(code-mode 'enable-paredit-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby
 
 ;(require 'ruby-mode)
@@ -360,78 +385,6 @@ Also moves point to the beginning of the text you just yanked."
 (autoload 'clojure-test-maybe-enable "clojure-test-mode" "" t)
 (add-hook 'clojure-mode-hook 'clojure-test-maybe-enable)
 
-(setq swank-clojure-library-paths
-      (if (string= window-system "w32")
-          (list "native/windows/x86_64")
-        (list "native/linux/x86_64")))
-(setq swank-clojure-extra-vm-args (list "-Dfile.encoding=UTF8"))
-
-(defun cljs ()
-  (interactive)
-  (setq inferior-lisp-program "cljs-browser-repl"))
-
-(defun clojure () (interactive) (clojure-jack-in))
-(defun restart-clojure () (interactive) (slime-quit-lisp) (kill-matching-buffers "slime-repl") (clojure-jack-in))
-(defun playground () (interactive) (cd "~/code/playground") (clojure-jack-in))
-
-(defun no-catch-slime-compile-error ()
-  "Redefine compile-file-for-emacs NOT to catch Throwable, so that the debugger is initiated
-   for compile errors.  This makes compiler-notes fail to work, but I don't use those anyways."
-  (slime-eval-async `(swank:eval-and-grab-output "(in-ns 'swank.commands.basic)(defn- compile-file-for-emacs*
-  \"MONKEY PATCH\"
-  ([file-name]
-   (let [start (System/nanoTime)]
-     (try
-      (let [ret (clojure.core/load-file file-name)
-                delta (- (System/nanoTime) start)]
-        `(:compilation-result nil ~(pr-str ret) ~(/ delta 1000000000.0)))))))
-(defslimefn compile-file-for-emacs
-  ([file-name load? & compile-options]
-   (when load?
-     (compile-file-for-emacs* file-name))))")))
-
-(add-hook 'slime-connected-hook 'no-catch-slime-compile-error)
-
-(defun switch-scratch-buffer-mode ()
-  (save-excursion
-    (window-configuration-to-register ?a)
-    (switch-to-buffer (get-buffer-create "*scratch*"))
-    (clojure-mode)
-    (jump-to-register ?a)))
-
-(add-hook 'slime-connected-hook 'switch-scratch-buffer-mode)
-
-(eval-after-load "slime"
-  '(progn
-     (add-to-list 'slime-lisp-implementations '(sbcl ("/usr/bin/sbcl")))
-     (add-hook 'slime-indentation-update-hooks 'swank-clojure-update-indentation)
-     (add-hook 'slime-repl-mode-hook 'swank-clojure-slime-repl-modify-syntax t)
-     (add-hook 'clojure-mode-hook 'swank-clojure-slime-mode-hook t)
-     (setq slime-highlight-compiler-notes nil)))
-
-(defvar slime-override-map (make-keymap))
-(define-minor-mode slime-override-mode
-  "Fix SLIME REPL keybindings"
-  nil " SLIME-override" slime-override-map)
-(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
-(define-key slime-override-map (kbd "{") 'paredit-open-curly)
-(define-key slime-override-map (kbd "}") 'paredit-close-curly)
-(define-key slime-override-map [delete] 'paredit-forward-delete)
-(define-key slime-override-map [backspace] 'paredit-backward-delete)
-(define-key slime-override-map (kbd "<C-return>") 'paredit-newline)
-(define-key slime-override-map "\C-j" 'slime-repl-newline-and-indent)
-
-(add-hook 'slime-repl-mode-hook (lambda ()
-                                  (slime-override-mode t)
-                                  (modify-syntax-entry ?\[ "(]")
-                                  (modify-syntax-entry ?\] ")[")
-                                  (modify-syntax-entry ?\{ "(}")
-                                  (modify-syntax-entry ?\} "){")))
-
-(setq auto-mode-alist
-      (cons '("\\.clj$" . clojure-mode)
-            auto-mode-alist))
-
 (set-language-environment "UTF-8")
 
 (defmacro defclojureface (name color desc &optional others)
@@ -445,6 +398,10 @@ Also moves point to the beginning of the text you just yanked."
 (defclojureface clojure-java-call    "#4bcf68"   "Clojure Java calls")
 (defclojureface clojure-special      "#b8bb00"   "Clojure special")
 (defclojureface clojure-double-quote "#b8bb00"   "Clojure special" (:background "unspecified"))
+
+;; NREPL
+
+(defun clojure () (interactive) (nrepl-jack-in nil))
 
 (defun tweak-clojure-syntax ()
   (mapcar (lambda (x) (font-lock-add-keywords nil x))
@@ -482,38 +439,17 @@ Also moves point to the beginning of the text you just yanked."
           (font-lock-syntactic-face-function
            . lisp-font-lock-syntactic-face-function))))
 
-(defadvice slime-repl-emit (after sr-emit-ad activate)
-  (with-current-buffer (slime-output-buffer)
-    (add-text-properties slime-output-start slime-output-end
-                         '(font-lock-face slime-repl-output-face
-                                          rear-nonsticky (font-lock-face)))))
-
-(defadvice slime-repl-insert-prompt (after sr-prompt-ad activate)
-  (with-current-buffer (slime-output-buffer)
-    (let ((inhibit-read-only t))
-      (add-text-properties slime-repl-prompt-start-mark (point-max)
-                           '(font-lock-face slime-repl-prompt-face
-                                            rear-nonsticky
-                                            (slime-repl-prompt
-                                             read-only
-                                             font-lock-face
-                                             intangible))))))
-
-(add-hook 'slime-repl-mode-hook
-          (lambda ()
-            (clojure-font-lock-setup)
-            (tweak-clojure-syntax)
-            (font-lock-mode t)))
-
 (add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu nil)
+ '(ac-show-menu-immediately-on-auto-complete nil)
  '(case-fold-search t)
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
@@ -537,12 +473,10 @@ Also moves point to the beginning of the text you just yanked."
  '(scroll-step 1)
  '(scroll-up-aggressively 0.0)
  '(show-paren-mode t nil (paren))
- '(slime-compilation-finished-hook nil)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(org-hide ((((background dark)) (:foreground "#171717"))))
- '(slime-highlight-edits-face ((((class color) (background dark)) (:background "#202020")))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-hide ((((background dark)) (:foreground "#171717")))))

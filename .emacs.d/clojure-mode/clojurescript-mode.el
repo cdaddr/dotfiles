@@ -39,6 +39,12 @@
 
 (require 'clojure-mode)
 
+(eval-when-compile
+  (defvar paredit-mode)
+  (defvar paredit-version))
+
+(declare-function slime-mode "slime.el")
+
 (defvar clojurescript-home
   (getenv "CLOJURESCRIPT_HOME")
   "Path to ClojureScript home directory")
@@ -63,6 +69,17 @@
     (error "CLOJURESCRIPT_HOME not configured. See ClojureScript docs."))
   (comint-send-string (inferior-lisp-proc) (clojurescript-repl-init-commands)))
 
+(defun clojurescript-eval-last-expression ()
+  (interactive)
+  (let ((expr (buffer-substring-no-properties
+               (save-excursion (backward-sexp) (point))
+               (point))))
+    (comint-send-string (inferior-lisp-proc) (concat expr "\n"))))
+
+(defun clojurescript-compile-and-load-file ()
+  (interactive)
+  (comint-send-string (inferior-lisp-proc) (buffer-string)))
+
 ;;;###autoload
 (define-derived-mode clojurescript-mode clojure-mode "ClojureScript"
   "Major mode for ClojureScript"
@@ -73,7 +90,11 @@
     (define-key clojurescript-mode-map "{" 'paredit-open-curly)
     (define-key clojurescript-mode-map "}" 'paredit-close-curly))
   (when (functionp 'slime-mode)
-    (slime-mode -1)))
+    (slime-mode -1))
+  (define-key clojurescript-mode-map "\C-x\C-e" 'clojurescript-eval-last-expression)
+  (define-key clojurescript-mode-map "\C-c\C-k" 'clojurescript-compile-and-load-file))
+
+(put-clojure-indent 'this-as 'defun)
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojurescript-mode))

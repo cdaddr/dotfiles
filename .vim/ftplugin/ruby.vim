@@ -17,3 +17,7 @@ iabbrev e_d elog_definition
 iabbrev e_ds elog_definitions
 iabbrev e_d_id elog_definition_id
 iabbrev r_c_i reset_column_information
+iabbrev ACS AssessmentCompletionStatus
+iabbrev a_c_s assessment_completion_status
+iabbrev a_c_s_id assessment_completion_status_id
+iabbrev f_b_d find_by_description

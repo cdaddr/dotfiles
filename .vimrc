@@ -45,7 +45,7 @@ if has('gui_running')
         "set guifont=Terminus:h12:w6
         set guifont=Consolas:h11:w6
     else
-        set guifont=Consolas\ 12
+        set guifont=Consolas\ 14
     end
 else
     colorscheme default
@@ -458,8 +458,15 @@ ruby << EOF
 EOF
 endfunction
 
-function! AppendSingleLetter()
-    rubydo $_ = $_ + ('A'..'Z').to_a[rand(26)]
+function! AppendRandomLetter(n)
+    if a:n > 0
+        let n = a:n
+    else
+        let n = 1
+    end
+    for _ in range(0, n)
+        rubydo $_ = $_ + (('A'..'Z').to_a.reject{|x| %w{I O}.include?(x)})[rand 24]
+    endfor
 endfunction
 
 function! CursorPing()
@@ -476,3 +483,11 @@ function! FindLongerLines()
     let @/ = '^.\{' . col('$') . '}'
     norm n$
 endfunction
+
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+" fat fingers :(
+" cabbrev E e
+cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>

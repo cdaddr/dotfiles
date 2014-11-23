@@ -25,6 +25,8 @@ else
 endif
 execute "set backupdir=" . s:homedir . "/backup"
 
+runtime macros/matchit.vim
+
 if has('persistent_undo')
     set undofile
     execute "set undodir=" . s:homedir .  "/undo"
@@ -193,6 +195,8 @@ function! FixInvisiblePunctuation()
     silent! %s/\%u201D/"/g
     silent! %s/\%u0052\%u20ac\%u2122/'/g
     silent! %s/\%ua0/ /g
+    silent! %s/\%u93/'/g
+    silent! %s/\%u94/'/g
     retab
 endfunction
 
@@ -355,6 +359,9 @@ nmap <C-M-Left> <C-w>V
 nnoremap <C-S-Right> zL
 nnoremap <C-S-Left> zH
 
+" select text that was just pasted
+nnoremap gp `[v`]
+
 " I used this to record all of my :w's over the course of a day, for fun
 "cabbrev w <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'W' : 'w')<CR>
 "command! -nargs=* W :execute("silent !echo " . strftime("%Y-%m-%d %H:%M:%S") . " >> ~/timestamps")|w <args>
@@ -386,6 +393,7 @@ nnoremap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
 
 " Delete blank lines
 nnoremap <Leader>db :%g/^$/d<CR>\h
+vnoremap <Leader>db :g/^$/d<CR>\h
 
 " Surround every line in the file with quotes
 nnoremap <Leader>'' :%s/.*/'\0'<CR>:setlocal nohls<CR>
@@ -491,3 +499,42 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 " fat fingers :(
 " cabbrev E e
 cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>
+
+function! GLO()
+    %s/\[dbo\]\.//g
+    %s/\v\[([^]]+)\]/\1/g
+    %s/INSERT INTO.*/\0 VALUES/g
+    %s/\vSELECT (.{-})( UNION ALL)?$/(\1),
+    %s/),\n*COMMIT;/);
+    g/\v^(RAISERROR|GO|BEGIN|SET|USE)/d
+endfunction
+
+" quickfix-do
+" Define a command to make it easier to use
+command! -nargs=+ QFDo call QFDo(<q-args>)
+
+" Function that does the work
+function! QFDo(command)
+    " Create a dictionary so that we can
+    " get the list of buffers rather than the
+    " list of lines in buffers (easy way
+    " to get unique entries)
+    let buffer_numbers = {}
+    " For each entry, use the buffer number as 
+    " a dictionary key (won't get repeats)
+    for fixlist_entry in getqflist()
+        let buffer_numbers[fixlist_entry['bufnr']] = 1
+    endfor
+    " Make it into a list as it seems cleaner
+    let buffer_number_list = keys(buffer_numbers)
+
+    " For each buffer
+    for num in buffer_number_list
+        " Select the buffer
+        exe 'buffer' num
+        " Run the command that's passed as an argument
+        exe a:command
+        " Save if necessary
+        update
+    endfor
+endfunction

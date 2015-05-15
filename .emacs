@@ -1,40 +1,38 @@
 ;; fix exec-path
 (setq exec-path (append exec-path '("/home/brian/local/bin")))
 
-(mapcar (lambda (x) (add-to-list 'load-path (expand-file-name x)))
-        '("~/.emacs.d"
-          "~/.emacs.d/auto-complete"
-          "~/.emacs.d/clojure-mode"
-          "~/.emacs.d/nrepl.el"
-          "~/.emacs.d/haskell-mode"
-          "~/.emacs.d/smart-tab"
-          "~/.emacs.d/org/lisp"
-          "~/.emacs.d/org/contrib/lisp"))
+(require 'package)
+(add-to-list 'package-archives
+             ;;'("marmalade" . "http://marmalade-repo.org/packages/")
+             '("melpa-stable" . "http://melpa.org/packages/"))
+(package-initialize)
+
+(add-to-list 'load-path "~/.emacs.d")
 
 (defun require-all (packages)
     (mapcar #'require packages))
 
-(setq inferior-lisp-program "java -cp clojure-1.3.0.jar clojure.main")
-
 (require-all '(
+               auto-complete
+               paredit
                mwe-log-commands
                uniquify
                linum 
-               color-theme
                gentooish
-               ido
                parenface
                point-undo
                bar-cursor
                browse-kill-ring
                undo-tree
-               clojure-mode
-               package
-               nrepl
-               ac-nrepl
-               auto-complete
-               paredit
+               cider
+               ido-ubiquitous
+               markdown-mode
+               ;; ac-nrepl
                ))
+
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+(require 'auto-complete-config)
+(ac-config-default)
 
 (add-hook 'paredit-mode-hook
           (lambda ()
@@ -55,22 +53,11 @@
             (define-key ac-complete-mode-map [down] nil)
             (define-key ac-complete-mode-map [up] nil)))
 
-(add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-;;(add-hook 'nrepl-mode-hook (lambda () (eldoc-mode 0)))
-(add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'nrepl-mode))
 (setq ac-auto-show-menu nil)
+(setq ac-show-menu-immediately-on-auto-complete nil)
 (setq ac-use-quick-help nil)
 (setq ac-auto-start 1)
 (setq ac-delay 0.0)
-
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
-;; (when (not (package-installed-p 'nrepl))
-;;   (package-refresh-contents)
-;;   (package-install 'nrepl))
 
 (defun code-mode (x)
   (mapcar (lambda (hook) (add-hook hook x))
@@ -82,12 +69,8 @@
 (mapcar #'code-mode
         '(
           auto-complete-mode
-          ;;smart-tab-mode
-          enable-paredit-mode
+          paredit-mode
           linum-on))
-
-(mapcar (lambda (mode) (add-hook 'nrepl-mode-hook mode))
-        '(auto-complete-mode enable-paredit-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode
@@ -101,19 +84,12 @@
 (setq org-mobile-inbox-for-pull "~/Dropbox/Org/inbox.org")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Haskell
-
-(load "~/.emacs.d/haskell-mode/haskell-site-file")
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
 (color-theme-initialize)
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))
 (if (string= window-system "w32")
     (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
-    (set-default-font "Consolas-12" t))
+    (set-default-font "Consolas-14" t))
 
 (if window-system
     (color-theme-gentooish)
@@ -222,7 +198,7 @@
          (my-height (- (frame-height) other-heights)))
     (setf (window-height) (- my-height 1))))
 
-(add-hook 'term-setup-hook (lambda () (windmove-default-keybindings 'meta)))
+(windmove-default-keybindings 'meta)
 ;(defadvice windmove-up (after maximize activate) (maximize-window))
 ;(defadvice windmove-down (after maximize activate) (maximize-window))
 
@@ -345,6 +321,10 @@ Also moves point to the beginning of the text you just yanked."
 (global-set-key "\M-O" 'open-line-above)
 (global-set-key "\M-o" 'open-line-below)
 
+;; Javascript
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-hook 'js2-mode-hook 'linum-on)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminals
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -381,10 +361,6 @@ Also moves point to the beginning of the text you just yanked."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure
 
-(autoload 'clojure-test-mode "clojure-test-mode" "Clojure test mode" t)
-(autoload 'clojure-test-maybe-enable "clojure-test-mode" "" t)
-(add-hook 'clojure-mode-hook 'clojure-test-maybe-enable)
-
 (set-language-environment "UTF-8")
 
 (defmacro defclojureface (name color desc &optional others)
@@ -399,9 +375,35 @@ Also moves point to the beginning of the text you just yanked."
 (defclojureface clojure-special      "#b8bb00"   "Clojure special")
 (defclojureface clojure-double-quote "#b8bb00"   "Clojure special" (:background "unspecified"))
 
-;; NREPL
+;; CIDER
 
-(defun clojure () (interactive) (nrepl-jack-in nil))
+(setq cider-stacktrace-frames-background-color "#171717")
+(add-hook 'clojure-mode-hook 'auto-complete-mode)
+
+(setq cider-repl-history-file "~/.emacs.d/cider-history.log")
+(add-hook 'cider-repl-mode-hook 'subword-mode)
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(setq nrepl-hide-special-buffers t)
+(setq cider-prefer-local-resources t)
+;; (setq cider-repl-pop-to-buffer-on-connect nil)
+(setq cider-show-error-buffer nil)
+(setq cider-stacktrace-default-filters '(tooling dup repl java))
+(setq cider-repl-display-in-current-window t)
+(setq cider-prompt-save-file-on-load nil)
+(setq cider-repl-history-size 10000)
+
+(add-hook 'cider-mode-hook 'paredit-mode)
+;; (add-hook 'cider-mode-hook 'auto-complete-mode)
+;; (add-hook 'cider-mode-hook 'ac-nrepl-setup)
+
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+;; (add-hook 'cider-repl-mode-hook 'auto-complete-mode)
+;; (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
+
+(eval-after-load "auto-complete"
+                   '(add-to-list 'ac-modes 'cider-repl-mode))
+
+(defun clojure () (interactive) (cider-jack-in nil))
 
 (defun tweak-clojure-syntax ()
   (mapcar (lambda (x) (font-lock-add-keywords nil x))
@@ -415,29 +417,29 @@ Also moves point to the beginning of the text you just yanked."
             )))
 
 ;; from https://gist.github.com/337280
-(defun clojure-font-lock-setup ()
-  "Configures font-lock for editing Clojure code."
-  (interactive)
-  (set (make-local-variable 'font-lock-multiline) t)
-  (add-to-list 'font-lock-extend-region-functions
-               'clojure-font-lock-extend-region-def t)
-
-  (when clojure-mode-font-lock-comment-sexp
-    (add-to-list 'font-lock-extend-region-functions
-                 'clojure-font-lock-extend-region-comment t)
-    (make-local-variable 'clojure-font-lock-keywords)
-    (add-to-list 'clojure-font-lock-keywords
-                 'clojure-font-lock-mark-comment t)
-    (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil))
-
-  (setq font-lock-defaults
-        '(clojure-font-lock-keywords    ; keywords
-          nil nil
-          (("+-*/.<>=!?$%_&~^:@" . "w")) ; syntax alist
-          nil
-          (font-lock-mark-block-function . mark-defun)
-          (font-lock-syntactic-face-function
-           . lisp-font-lock-syntactic-face-function))))
+;;(defun clojure-font-lock-setup ()
+;;  "Configures font-lock for editing Clojure code."
+;;  (interactive)
+;;  (set (make-local-variable 'font-lock-multiline) t)
+;;  (add-to-list 'font-lock-extend-region-functions
+;;               'clojure-font-lock-extend-region-def t)
+;; 
+;;  (when clojure-mode-font-lock-comment-sexp
+;;    (add-to-list 'font-lock-extend-region-functions
+;;                 'clojure-font-lock-extend-region-comment t)
+;;    (make-local-variable 'clojure-font-lock-keywords)
+;;    (add-to-list 'clojure-font-lock-keywords
+;;                 'clojure-font-lock-mark-comment t)
+;;    (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil))
+;; 
+;;  (setq font-lock-defaults
+;;        '(clojure-font-lock-keywords    ; keywords
+;;          nil nil
+;;          (("+-*/.<>=!?$%_&~^:@" . "w")) ; syntax alist
+;;          nil
+;;          (font-lock-mark-block-function . mark-defun)
+;;          (font-lock-syntactic-face-function
+;;           . lisp-font-lock-syntactic-face-function))))
 
 (add-hook 'clojure-mode-hook 'tweak-clojure-syntax)
 
@@ -448,9 +450,8 @@ Also moves point to the beginning of the text you just yanked."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-auto-show-menu nil)
- '(ac-show-menu-immediately-on-auto-complete nil)
  '(case-fold-search t)
+ '(cider-stacktrace-default-filters (quote (tooling dup java repl)))
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
  '(fancy-splash-image "")
@@ -462,7 +463,7 @@ Also moves point to the beginning of the text you just yanked."
  '(lisp-simple-loop-indentation 6)
  '(mode-line-format (quote ("%e--[" mode-line-buffer-identification "]" (vc-mode vc-mode) "  " mode-line-modes global-mode-string " %-")))
  '(mode-line-in-non-selected-windows t)
- '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")))
+ '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")) t)
  '(mouse-wheel-progressive-speed nil)
  '(require-final-newline t)
  '(savehist-mode t nil (savehist))
@@ -479,4 +480,6 @@ Also moves point to the beginning of the text you just yanked."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cider-stacktrace-filter-hidden-face ((t (:foreground "red" :underline nil :weight normal))))
+ '(hl-line ((t (:background "#202020"))))
  '(org-hide ((((background dark)) (:foreground "#171717")))))

@@ -6,7 +6,8 @@
 " experimental stuff in here.
 "
 
-call pathogen#runtime_append_all_bundles()
+execute pathogen#infect()
+" call pathogen#runtime_append_all_bundles()
 
 set nocompatible
 syntax on
@@ -116,7 +117,7 @@ set cmdheight=1
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
     if v:version >= 700
-        set list listchars=eol:\ ,tab:»-,trail:·,precedes:…,extends:…,nbsp:‗
+        set list listchars=eol:\ ,tab:▸·,trail:·,precedes:…,extends:…,nbsp:‗
     else
         set list listchars=eol:\ ,tab:>-,trail:.,extends:>
     endif
@@ -401,6 +402,8 @@ nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 
 vnoremap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
 
+vmap <Enter> <Plug>(EasyAlign)
+
 function! ToggleNumber()
     if &nu
         set rnu
@@ -537,4 +540,9 @@ function! QFDo(command)
         " Save if necessary
         update
     endfor
+endfunction
+
+function! RenumberPages()
+    let i = 1
+    g/\v^\s+(end)?page \zs\d+\s+\{/s//\=i.' {'/ | let i=i+1
 endfunction

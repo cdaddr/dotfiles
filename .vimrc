@@ -47,6 +47,8 @@ if has('gui_running')
     if has('win32')
         "set guifont=Terminus:h12:w6
         set guifont=Consolas:h11:w6
+    elseif has('mac')
+        set guifont=Monaco:h14
     else
         set guifont=Consolas\ 14
     end
@@ -97,7 +99,9 @@ set foldlevelstart=1
 set laststatus=2
 set wildmenu
 
-set noballooneval
+if has('balloon_eval')
+    set noballooneval
+endif
 set ttyfast
 
 " Bouncy parens

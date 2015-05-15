@@ -6,4 +6,9 @@
 .vim/backup
 .emacs.d/swank
 .emacs.d/ac-comphist.dat
+.emacs.d/.smex-items
 .irbrc
+.emacs.d/cider-history.log
+.emacs.d/places
+.emacs.d/session*
+.emacs.d/url

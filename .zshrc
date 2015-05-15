@@ -1,4 +1,6 @@
-eval `dircolors ~/.dir_colors`
+if whence dircolors >/dev/null; then
+    eval `dircolors ~/.dir_colors`
+fi
 export PATH="$HOME/local/bin:$PATH"
 export EDITOR="vim"
 export PAGER="less"
@@ -84,7 +86,7 @@ setopt prompt_subst
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %F{reset}'
 PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset}%b'
 
-/usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
+keychain -Q -q --nogui ~/.ssh/id_rsa
 if [[ -f $HOME/.keychain/$HOST-sh ]] {
     source $HOME/.keychain/$HOST-sh
 }

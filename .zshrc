@@ -84,10 +84,10 @@ setopt prompt_subst
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %F{reset}'
 PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset}%b'
 
-/usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
-if [[ -f $HOME/.keychain/$HOST-sh ]] {
-    source $HOME/.keychain/$HOST-sh
-}
+# /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
+# if [[ -f $HOME/.keychain/$HOST-sh ]] {
+#     source $HOME/.keychain/$HOST-sh
+# }
 
 alias gemi='gem install --no-ri --no-rdoc'
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
@@ -103,3 +103,6 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+# eval $(ssh-agent) > /dev/null

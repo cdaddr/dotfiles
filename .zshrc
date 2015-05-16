@@ -51,7 +51,7 @@ setopt sharehistory
 
 alias info=pinfo
 alias grep="grep --color=auto"
-alias ls="ls --color=auto"
+ls --color=auto &>/dev/null && alias ls="ls --color=auto" || alias ls="ls -G"
 alias la="ls -alh"
 alias ll="ls -lh"
 alias lss="ls -lh --sort=size -r"

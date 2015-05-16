@@ -12,3 +12,4 @@
 .emacs.d/places
 .emacs.d/session*
 .emacs.d/url
+.DS_Store

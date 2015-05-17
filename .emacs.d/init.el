@@ -1,5 +1,5 @@
 ;; fix exec-path
-(setq exec-path (append exec-path '("/home/brian/local/bin")))
+(setq exec-path (append exec-path '("~/local/bin")))
 
 (require 'package)
 (add-to-list 'package-archives
@@ -7,7 +7,7 @@
              '("melpa-stable" . "http://melpa.org/packages/"))
 (package-initialize)
 
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -33,6 +33,9 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 (require 'auto-complete-config)
 (ac-config-default)
+
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'control)
 
 (add-hook 'paredit-mode-hook
           (lambda ()
@@ -451,19 +454,34 @@ Also moves point to the beginning of the text you just yanked."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(case-fold-search t)
+ '(cider-lein-command "~/local/bin/lein")
  '(cider-stacktrace-default-filters (quote (tooling dup java repl)))
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
  '(fancy-splash-image "")
- '(ido-decorations (quote ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+ '(ido-decorations
+   (quote
+    ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
  '(ido-everywhere t)
  '(inhibit-startup-screen t)
  '(lisp-loop-forms-indentation 6)
  '(lisp-loop-keyword-indentation 6)
  '(lisp-simple-loop-indentation 6)
- '(mode-line-format (quote ("%e--[" mode-line-buffer-identification "]" (vc-mode vc-mode) "  " mode-line-modes global-mode-string " %-")))
+ '(mode-line-format
+   (quote
+    ("%e--[" mode-line-buffer-identification "]"
+     (vc-mode vc-mode)
+     "  " mode-line-modes global-mode-string " %-")))
  '(mode-line-in-non-selected-windows t)
- '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")) t)
+ '(mode-line-modes
+   (quote
+    ("%[" "("
+     (:propertize
+      ("" mode-name))
+     ("" mode-line-process)
+     (:propertize
+      ("" minor-mode-alist))
+     "%n" ")" "%]")) t)
  '(mouse-wheel-progressive-speed nil)
  '(require-final-newline t)
  '(savehist-mode t nil (savehist))

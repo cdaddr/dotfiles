@@ -84,7 +84,7 @@ precmd () {
 
 setopt prompt_subst
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %F{reset}'
-PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset}%b'
+PROMPT='%F{blue}%B%m %~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset}%b'
 
 # /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
 # if [[ -f $HOME/.keychain/$HOST-sh ]] {

@@ -28,6 +28,10 @@ setopt nobeep
 zstyle :compinstall filename "$HOME/.zshrc"
 zstyle ":completion:*:commands" rehash 1
 
+if [[ "$OSTYPE"=~"darwin" ]]; then
+    fpath=(/usr/local/share/zsh-completions $fpath)
+fi
+
 autoload -Uz compinit
 compinit
 
@@ -91,15 +95,12 @@ PROMPT='%F{blue}%B%~${vcs_info_msg_0_}%F{blue}%B %(?/%F{blue}/%F{red})$ %F{reset
 #     source $HOME/.keychain/$HOST-sh
 # }
 
-alias gemi='gem install --no-ri --no-rdoc'
-[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 CLOJURESCRIPT_HOME="$HOME/local/clojurescript"
 PATH=$PATH:$CLOJURESCRIPT_HOME/bin
 
 PATH=/opt/java/jre/bin:$PATH
+export JENV_ROOT=/usr/local/opt/jenv
+if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -107,4 +108,8 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-# eval $(ssh-agent) > /dev/null
+
+alias gemi='gem install --no-ri --no-rdoc'
+[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

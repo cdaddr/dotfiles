@@ -550,3 +550,8 @@ function! RenumberPages()
     let i = 1
     g/\v^\s+(end)?page \zs\d+\s+\{/s//\=i.' {'/ | let i=i+1
 endfunction
+
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>

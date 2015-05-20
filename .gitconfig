@@ -38,6 +38,7 @@
 	rewindall = reset --hard HEAD
 	rewind = checkout
 	update = add -u
+	update-submodules = "!f(){ git pull --recurse-submodules; git submodule update; };f"
 
 [credential]
 	helper = cache --timeout=3600

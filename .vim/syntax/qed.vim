@@ -4,7 +4,8 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-syntax keyword QEDTypes include types questions rules page otherspecify scale multi string num label open if else
+syntax keyword QEDTypes include types questions rules page endpage otherspecify scale multi string num label open if else defaults
+syntax region QEDString start=+#define+ end=+$+
 syntax region QEDString start=+"+ end=+"+
 syntax region QEDComment start=+#+ end=+$+
 hi link QEDTypes keyword

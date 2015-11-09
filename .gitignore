@@ -13,3 +13,4 @@
 .emacs.d/session*
 .emacs.d/url
 .DS_Store
+.emacs.d/ido.last

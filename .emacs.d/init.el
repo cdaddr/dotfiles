@@ -10,7 +10,6 @@
              '("melpa-stable" . "http://melpa.org/packages/"))
 (package-initialize)
 
-;(add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
 (defun require-all (packages)
@@ -39,6 +38,9 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 (require 'auto-complete-config)
 (ac-config-default)
+
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'control)
 
 (add-hook 'paredit-mode-hook
           (lambda ()
@@ -94,7 +96,7 @@
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))
 (if (string= window-system "w32")
     (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
-    (set-default-font "Consolas-14" t))
+    (set-default-font "Consolas-16" t))
 
 (global-undo-tree-mode 1)
 
@@ -452,6 +454,7 @@ Also moves point to the beginning of the text you just yanked."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(case-fold-search t)
+ '(cider-lein-command "~/local/bin/lein")
  '(cider-stacktrace-default-filters (quote (tooling dup java repl)))
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)

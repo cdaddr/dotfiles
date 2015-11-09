@@ -28,6 +28,8 @@ execute "set backupdir=" . s:homedir . "/backup"
 
 runtime macros/matchit.vim
 
+let macvim_skip_cmd_opt_movement = 1
+
 if has('persistent_undo')
     set undofile
     execute "set undodir=" . s:homedir .  "/undo"
@@ -346,6 +348,10 @@ nnoremap <M-Right> <C-W><Right>
 nnoremap <M-Left> <C-W><Left>
 nnoremap <M-Up> <C-W><Up><C-W>_
 nnoremap <M-Down> <C-W><Down><C-W>_
+nnoremap <M-l> <C-W><Right>
+nnoremap <M-h> <C-W><Left>
+nnoremap <M-k> <C-W><Up><C-W>_
+nnoremap <M-j> <C-W><Down><C-W>_
 
 " Open window below instead of above
 nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
@@ -405,6 +411,9 @@ nnoremap <Leader>'' :%s/.*/'\0'<CR>:setlocal nohls<CR>
 nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 
 vnoremap <Leader>nn :s/.*/"1": "\0"/<CR>'<l<C-V>'>_l:I<CR>:nohls<CR>
+
+map <C-L> 40zl
+map <C-H> 40zh
 
 vmap <Enter> <Plug>(EasyAlign)
 
@@ -550,3 +559,12 @@ function! RenumberPages()
     let i = 1
     g/\v^\s+(end)?page \zs\d+\s+\{/s//\=i.' {'/ | let i=i+1
 endfunction
+
+function! FixLineEndings()
+    %s/\n/  /g
+endfunction
+
+" nnoremap <Up> <Nop>
+" nnoremap <Down> <Nop>
+" nnoremap <Left> <Nop>
+" nnoremap <Right> <Nop>

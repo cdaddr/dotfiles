@@ -1,5 +1,8 @@
 ;; fix exec-path
 (setq exec-path (append exec-path '("/home/brian/local/bin")))
+(if (string= system-type "gnu/linux")
+    (setenv "PATH" (concat (getenv "PATH")
+                           ":/home/brian/local/bin")))
 
 (require 'package)
 (add-to-list 'package-archives
@@ -7,7 +10,8 @@
              '("melpa-stable" . "http://melpa.org/packages/"))
 (package-initialize)
 
-(add-to-list 'load-path "~/.emacs.d")
+;(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (defun require-all (packages)
     (mapcar #'require packages))
@@ -18,7 +22,6 @@
                mwe-log-commands
                uniquify
                linum 
-               gentooish
                parenface
                point-undo
                bar-cursor
@@ -29,6 +32,9 @@
                markdown-mode
                ;; ac-nrepl
                ))
+
+(add-to-list 'custom-theme-load-path "/home/brian/.emacs.d/themes/")
+(load-theme 'gentooish t)
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 (require 'auto-complete-config)
@@ -85,15 +91,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GLOBAL
-(color-theme-initialize)
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))
 (if (string= window-system "w32")
     (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
     (set-default-font "Consolas-14" t))
-
-(if window-system
-    (color-theme-gentooish)
-    (color-theme-dark-laptop))
 
 (global-undo-tree-mode 1)
 
@@ -454,16 +455,33 @@ Also moves point to the beginning of the text you just yanked."
  '(cider-stacktrace-default-filters (quote (tooling dup java repl)))
  '(clojure-mode-use-backtracking-indent t)
  '(comint-scroll-to-bottom-on-input t)
+ '(custom-safe-themes
+   (quote
+    ("28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" default)))
  '(fancy-splash-image "")
- '(ido-decorations (quote ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+ '(ido-decorations
+   (quote
+    ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
  '(ido-everywhere t)
  '(inhibit-startup-screen t)
  '(lisp-loop-forms-indentation 6)
  '(lisp-loop-keyword-indentation 6)
  '(lisp-simple-loop-indentation 6)
- '(mode-line-format (quote ("%e--[" mode-line-buffer-identification "]" (vc-mode vc-mode) "  " mode-line-modes global-mode-string " %-")))
+ '(mode-line-format
+   (quote
+    ("%e--[" mode-line-buffer-identification "]"
+     (vc-mode vc-mode)
+     "  " mode-line-modes global-mode-string " %-")))
  '(mode-line-in-non-selected-windows t)
- '(mode-line-modes (quote ("%[" "(" (:propertize ("" mode-name)) ("" mode-line-process) (:propertize ("" minor-mode-alist)) "%n" ")" "%]")) t)
+ '(mode-line-modes
+   (quote
+    ("%[" "("
+     (:propertize
+      ("" mode-name))
+     ("" mode-line-process)
+     (:propertize
+      ("" minor-mode-alist))
+     "%n" ")" "%]")) t)
  '(mouse-wheel-progressive-speed nil)
  '(require-final-newline t)
  '(savehist-mode t nil (savehist))

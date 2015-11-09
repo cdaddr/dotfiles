@@ -16,6 +16,8 @@ bindkey '\e[1;3C' emacs-forward-word
 bindkey '\e[3~' delete-char
 bindkey '\e[3;3~' delete-word
 bindkey -s '\e[' '\\\C-v['
+bindkey '\e[1~' beginning-of-line
+bindkey '\e[4~' end-of-line
 
 HISTFILE=~/.zsh_history
 HISTSIZE=100000

@@ -48,7 +48,10 @@ hi Ignore gui=NONE   guifg=#555555 ctermfg=240 ctermfg=240
 hi Number gui=NONE   guifg=#ddaa66   guibg=NONE ctermfg=179 ctermfg=179
 hi PreProc gui=NONE   guifg=#9a383a   guibg=NONE term=underline ctermfg=95 term=underline ctermfg=95
 hi Special gui=NONE   guifg=#ffcd8b   guibg=NONE term=bold ctermfg=222 term=bold ctermfg=222
+hi Delimiter gui=NONE   guifg=#9999cc   guibg=NONE term=bold ctermfg=222 term=bold ctermfg=222
 hi Statement gui=NONE   guifg=#4cd169   guibg=NONE term=bold ctermfg=77 term=bold ctermfg=77
+hi Conditional gui=NONE   guifg=#D14CB4   guibg=NONE term=bold ctermfg=77 term=bold ctermfg=77
+hi Keyword gui=NONE   guifg=#4C72D1   guibg=NONE term=bold ctermfg=77 term=bold ctermfg=77
 hi Todo gui=NONE   guifg=#cccccc   guibg=#863132 term=standout ctermfg=252 ctermbg=95 term=standout ctermfg=252 ctermbg=95
 hi Type gui=NONE   guifg=#c476f1   guibg=NONE term=underline ctermfg=177 term=underline ctermfg=177
 hi Underlined gui=UNDERLINE   guifg=#cccccc   guibg=NONE term=underline cterm=underline ctermfg=252 term=underline cterm=underline ctermfg=252

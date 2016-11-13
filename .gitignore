@@ -16,3 +16,4 @@
 .DS_Store
 .emacs.d/ido.last
 .lein/self-installs/
+network-security.data

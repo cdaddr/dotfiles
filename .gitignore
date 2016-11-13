@@ -15,3 +15,4 @@
 .emacs.d/elpa
 .DS_Store
 .emacs.d/ido.last
+.lein/self-installs/

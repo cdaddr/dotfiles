@@ -12,6 +12,7 @@
 .emacs.d/places
 .emacs.d/session*
 .emacs.d/url
+.emacs.d/elpa
 .DS_Store
 .emacs.d/ido.last
 
@@ -32,3 +33,5 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+
+.lein/self-installs/

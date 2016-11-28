@@ -21,6 +21,14 @@
         (kill-region (point-at-bol) (point))
       (backward-kill-word 1))))
 
+(global-set-key "\C-\M-j" 'copy-sexp)
+(defun copy-sexp (&optional arg)
+  (interactive "p")
+  (save-excursion
+    (let ((opoint (point)))
+      (forward-sexp (or arg 1))
+      (kill-ring-save opoint (point)))))
+
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (setq mac-command-modifier 'meta)
@@ -62,15 +70,18 @@
   (windmove-default-keybindings))
 (windmove-default-keybindings 'meta)
 
-(ido-mode 1)
-(ido-everywhere 1)
-(ido-ubiquitous-mode 1)
+
+
+(tooltip-mode nil)
+
 (tooltip-mode nil)
 (tool-bar-mode 0)
 (delete-selection-mode t)
 (winner-mode t)
 (cua-mode t)
 (global-linum-mode t)
+(global-undo-tree-mode)
+
 
 (global-set-key "\C-xK" 'kill-all-buffers)
 (defun kill-all-buffers ()
@@ -100,8 +111,28 @@
     ("" minor-mode-alist))
    "%n" ")" "%]")))
 
-(setq show-paren-mode t)
+(show-paren-mode 1)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ido
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(ido-mode 1)
+(ido-everywhere 1)
+(ido-ubiquitous-mode 1)
+(setq ido-decorations
+      (quote
+       ("" "" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; scrolling
@@ -243,20 +274,22 @@ Also moves point to the beginning of the text you just yanked."
 (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
 (eval-after-load "auto-complete"
   '(progn
+     (define-key ac-completing-map [down] nil)
+     (define-key ac-completing-map [up] nil)
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
 
-(defun set-auto-complete-as-completion-at-point-function ()
-  (setq completion-at-point-functions '(auto-complete)))
-
-(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
-(add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
-
-(setq ac-auto-show-menu nil)
-(setq ac-show-menu-immediately-on-auto-complete nil)
-(setq ac-use-quick-help nil)
-(setq ac-auto-start 1)
-(setq ac-delay 0.0)
+;; (defun set-auto-complete-as-completion-at-point-function ()
+;;   (setq completion-at-point-functions '(auto-complete)))
+;;  
+;; (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;; (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;;  
+;; (setq ac-auto-show-menu nil)
+;; (setq ac-show-menu-immediately-on-auto-complete nil)
+;; (setq ac-use-quick-help nil)
+;; (setq ac-auto-start 1)
+;; (setq ac-delay 0.0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; paredit
@@ -282,7 +315,7 @@ Also moves point to the beginning of the text you just yanked."
 ;; bar-cursor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(bar-cursor-mode 1)
+(setq-default cursor-type 'bar)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; cider

@@ -22,9 +22,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu nil)
+ '(ac-auto-start t)
+ '(ac-show-menu-immediately-on-auto-complete nil)
+ '(ac-trigger-key "TAB")
+ '(ac-use-fuzzy t)
+ '(cider-show-error-buffer (quote only-in-repl))
  '(package-selected-packages
    (quote
-    (rainbow-delimiters paredit ido-ubiquitous bar-cursor ac-cider))))
+    (org-ac org undo-tree rainbow-delimiters paredit ido-ubiquitous bar-cursor ac-cider))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

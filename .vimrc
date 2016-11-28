@@ -6,10 +6,46 @@
 " experimental stuff in here.
 "
 
-execute pathogen#infect()
+" execute pathogen#infect()
 " call pathogen#runtime_append_all_bundles()
 
 set nocompatible
+
+if has('win32')
+    let s:homedir = "~/Documents/GitHub/dotfiles/.vim"
+else
+    let s:homedir = "~/.vim"
+endif
+execute "set rtp+=" . s:homedir . "/bundle/Vundle.vim"
+
+let s:vundle_path = s:homedir . '/bundle'
+call vundle#begin(s:vundle_path)
+
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'kana/vim-textobj-user'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'sjl/gundo.vim'
+Plugin 'junegunn/vim-easy-align'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'godlygeek/tabular'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'chrisbra/NrrwRgn'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
+Plugin 'Shougo/neocomplete.vim'
+" Plugin 'xolox/vim-lua-inspect'
+" Plugin 'bling/vim-bufferline'
+
+call vundle#end()
+
 syntax on
 filetype on
 filetype plugin indent on
@@ -17,13 +53,55 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
+let g:ctrlp_max_depth = 5
+
+let g:UltiSnipsSnippetsDir = s:homedir . "/Ultisnips"
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+
+let g:airline_theme = 'bubblegum'
+let g:airline_powerline_fonts = 1
+let g:airline_inactive_collapse = 0
+let g:airline_skip_empty_sections = 0
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#nrrwrgn#enabled = 1
+let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+"let g:airline#extensions#ycm#enabled = 1
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_lua_checkers = ["luac", "luacheck"]
+let g:syntastic_lua_luacheck_args = "--no-unused-args --globals love"
+
+let g:gitgutter_override_sign_column_highlight = 0
+
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'lua' : s:homedir.'/love.dict'
+    \ }
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+"let g:ycm_seed_identifiers_with_syntax = 1
+"let g:ycm_collect_identifiers_from_tags_files = 1
+
+nmap <Leader>gp <Plug>GitGutterPreviewHunk
+nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
+nmap <Leader>gu <Plug>GitGutterUndoHunk
+nmap <Leader>gs <Plug>GitGutterStageHunk
+
+set updatetime=250
+
 set backup
 " I want all my backups in one directory
-if has('win32')
-    let s:homedir = "$HOME/vimfiles"
-else
-    let s:homedir = "$HOME/.vim"
-endif
 execute "set backupdir=" . s:homedir . "/backup"
 
 runtime macros/matchit.vim
@@ -41,14 +119,17 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 
 " Appearance
 if has('gui_running')
-    colorscheme gentooish
+    colorscheme bubblegum-256-dark
     hi StatusLine gui=NONE
     hi User1 gui=NONE
     hi User2 gui=NONE
     hi WildMenu gui=NONE
     if has('win32')
         "set guifont=Terminus:h12:w6
-        set guifont=Consolas:h11:w6
+        "set guifont=Droid\ Sans\ Mono\ Dotted\ for\ Powe:h12
+        "set guifont=Sauce\ Code\ Powerline:h12
+        set guifont=InputMono:h14
+        " 0oO 1lLi /\ '" {} [] ()
     elseif has('mac')
         set guifont=Monaco:h14
     else
@@ -59,8 +140,7 @@ else
     set guifont=Consolas\ 12
 endif
 " Remove GUI menu and toolbar
-set guioptions-=T
-set guioptions-=m
+set guioptions=Ace
 
 " Disabled because of slow redraws
 " if(has("gui_running"))
@@ -120,23 +200,13 @@ let c_curly_error=1
 
 set cmdheight=1
 
+set showbreak=\¬
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
-    if v:version >= 700
-        set list listchars=eol:\ ,tab:▸·,trail:·,precedes:…,extends:…,nbsp:‗
-    else
-        set list listchars=eol:\ ,tab:>-,trail:.,extends:>
-    endif
+    set list listchars=eol:¬,tab:│›,trail:·,precedes:…,extends:…,nbsp:‗
 else
-    if v:version >= 700
-        set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
-    else
-        set list listchars=eol:\ ,tab:>-,trail:.,extends:>
-    endif
+    set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 endif
-
-" Inspired by http://github.com/ciaranm/dotfiles-ciaranm/tree/master
-set statusline=%f\ %2*%m\ %1*%h%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}\ %{getfperm(@%)}]\ 0x%B\ %12.(%c:%l/%L%)
 
 if has("win32")
     set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
@@ -334,9 +404,9 @@ noremap! <C-A> <Home>
 noremap! <C-E> <End>
 
 " Annoying
-nnoremap q: <Nop>
-nnoremap q/ <Nop>
-nnoremap q? <Nop>
+silent! unmap q:
+silent! unmap q/
+silent! unmap q?
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
@@ -396,7 +466,7 @@ vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v
 nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
 nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
 
-vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa 
+vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa
 
 " Lines of strings => a paren-surrounded list of comma-separated strings on
 " one line
@@ -536,7 +606,7 @@ function! QFDo(command)
     " list of lines in buffers (easy way
     " to get unique entries)
     let buffer_numbers = {}
-    " For each entry, use the buffer number as 
+    " For each entry, use the buffer number as
     " a dictionary key (won't get repeats)
     for fixlist_entry in getqflist()
         let buffer_numbers[fixlist_entry['bufnr']] = 1
@@ -563,6 +633,24 @@ endfunction
 function! FixLineEndings()
     %s/\n/  /g
 endfunction
+
+function! SetLovePrefs()
+    let dir = "$HOME/Documents/GitHub/dotfiles/.vim/love.dict"
+    if has("win32") || has("win64")
+        exe 'setlocal dictionary-=' . dir . ' dictionary+=' . dir
+        setlocal dictionary-=~/vimfiles/lua.dict dictionary+=~/vimfiles/lua.dict
+        setlocal iskeyword+=.
+        setlocal iskeyword+=:
+    end
+endfunction
+" autocmd FileType lua setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType lua call SetLovePrefs()
+if has("win32") || has("win64")
+  " command! -nargs=* Lua   !"C:\lua\luarocks\lua5.1.exe" %:p
+  command! -nargs=* Love  :silent !"C:\Program Files (x86)\LOVE\love.exe" . <args>
+  " nmap <F11> = :Lua<CR>
+  nnoremap <F12> = :Love<CR>
+end
 
 " nnoremap <Up> <Nop>
 " nnoremap <Down> <Nop>

@@ -2,6 +2,16 @@
 ;; my custom stuff
 ;; (add-to-list 'load-path "~/.emacs.d/lisp")
 
+(setq package-list '(ac-cider bar-cursor cider clojure-mode ido-ubiquitous ido-completing-read+ org org-ac auto-complete-pcmp log4e auto-complete paredit pkg-info epl popup queue rainbow-delimiters seq spinner undo-tree yaxception))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 (set-language-environment "UTF-8")
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")

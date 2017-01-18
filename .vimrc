@@ -131,7 +131,8 @@ if has('gui_running')
         set guifont=InputMono:h14
         " 0oO 1lLi /\ '" {} [] ()
     elseif has('mac')
-        set guifont=Monaco:h14
+        set guifont=InputMono:h14
+        "set guifont=Monaco:h14
     else
         set guifont=Consolas\ 14
     end

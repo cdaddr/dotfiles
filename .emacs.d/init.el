@@ -6,10 +6,10 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq exec-path (append exec-path '("/home/brian/local/bin")))
+(setq exec-path (append exec-path '("~/local/bin")))
 (if (string= system-type "gnu/linux")
     (setenv "PATH" (concat (getenv "PATH")
-                           ":/home/brian/local/bin")))
+                           ":~/local/bin")))
 
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")

@@ -4,7 +4,7 @@
 
 (set-language-environment "UTF-8")
 
-(add-to-list 'custom-theme-load-path "/home/brian/.emacs.d/themes/")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'gentooish t)
 
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))

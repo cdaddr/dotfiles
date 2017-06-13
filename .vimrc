@@ -4,10 +4,6 @@
 " Don't just copy this.  It has screwy stuff and depends on other stuff.
 " There's always a good possibility of there being broken or
 " experimental stuff in here.
-"
-
-" execute pathogen#infect()
-" call pathogen#runtime_append_all_bundles()
 
 set nocompatible
 
@@ -41,6 +37,9 @@ Plugin 'chrisbra/NrrwRgn'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
 Plugin 'Shougo/neocomplete.vim'
+Plugin 'cdaddr/gentooish.vim'
+Plugin 'luochen1990/rainbow'
+" Plugin 'blueyed/vim-diminactive'
 " Plugin 'xolox/vim-lua-inspect'
 " Plugin 'bling/vim-bufferline'
 
@@ -60,7 +59,7 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger = "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 
-let g:airline_theme = 'bubblegum'
+let g:airline_theme = 'db32'
 let g:airline_powerline_fonts = 1
 let g:airline_inactive_collapse = 0
 let g:airline_skip_empty_sections = 0
@@ -68,6 +67,7 @@ let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#nrrwrgn#enabled = 1
 let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+let g:airline_detect_modified=1
 "let g:airline#extensions#ycm#enabled = 1
 
 let g:syntastic_always_populate_loc_list = 1
@@ -76,6 +76,8 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_lua_checkers = ["luac", "luacheck"]
 let g:syntastic_lua_luacheck_args = "--no-unused-args --globals love"
+
+let g:rainbow_active = 1
 
 let g:gitgutter_override_sign_column_highlight = 0
 
@@ -118,8 +120,9 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 " see :h last-position-jump
 
 " Appearance
+colorscheme db32
 if has('gui_running')
-    colorscheme bubblegum-256-dark
+    "colorscheme bubblegum-256-dark
     hi StatusLine gui=NONE
     hi User1 gui=NONE
     hi User2 gui=NONE
@@ -204,7 +207,7 @@ set cmdheight=1
 set showbreak=\¬
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
-    set list listchars=eol:¬,tab:│›,trail:·,precedes:…,extends:…,nbsp:‗
+    set list listchars=tab:│›,trail:·,precedes:…,extends:…,nbsp:‗
 else
     set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 endif
@@ -220,6 +223,7 @@ if !exists("autocommands_loaded")
     au VimEnter * :call FixVimpager()
     au BufWritePost *vimrc so %
 endif
+au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
 
 " The text to return for a fold
 function! FoldText()
@@ -657,3 +661,4 @@ end
 " nnoremap <Down> <Nop>
 " nnoremap <Left> <Nop>
 " nnoremap <Right> <Nop>
+

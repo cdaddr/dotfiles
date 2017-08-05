@@ -14,6 +14,10 @@ else
 endif
 execute "set rtp+=" . s:homedir . "/bundle/Vundle.vim"
 
+if ! has("gui_running")
+    let g:loaded_airline = 1
+endif
+
 let s:vundle_path = s:homedir . '/bundle'
 call vundle#begin(s:vundle_path)
 
@@ -24,8 +28,7 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'sjl/gundo.vim'
 Plugin 'junegunn/vim-easy-align'
-"Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
+"Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'godlygeek/tabular'
 Plugin 'vim-airline/vim-airline'
@@ -35,13 +38,21 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'chrisbra/NrrwRgn'
 Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+" Plugin 'xolox/vim-easytags'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'cdaddr/gentooish.vim'
 Plugin 'luochen1990/rainbow'
+" Plugin 'ervandew/supertab'
 " Plugin 'blueyed/vim-diminactive'
 " Plugin 'xolox/vim-lua-inspect'
 " Plugin 'bling/vim-bufferline'
+
+Plugin 'guns/vim-sexp'
+Plugin 'tpope/vim-sexp-mappings-for-regular-people'
+Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-salve'
+Plugin 'guns/vim-clojure-static'
+Plugin 'guns/vim-clojure-highlight'
 
 call vundle#end()
 
@@ -52,61 +63,76 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
-let g:ctrlp_max_depth = 5
-
-let g:UltiSnipsSnippetsDir = s:homedir . "/Ultisnips"
-let g:UltiSnipsExpandTrigger = "<c-j>"
-let g:UltiSnipsJumpForwardTrigger = "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
-
-let g:airline_theme = 'db32'
-let g:airline_powerline_fonts = 1
-let g:airline_inactive_collapse = 0
-let g:airline_skip_empty_sections = 0
-let g:airline#extensions#syntastic#enabled = 1
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#nrrwrgn#enabled = 1
-let g:airline#extensions#ctrlp#show_adjacent_modes = 1
-let g:airline_detect_modified=1
-"let g:airline#extensions#ycm#enabled = 1
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_lua_checkers = ["luac", "luacheck"]
-let g:syntastic_lua_luacheck_args = "--no-unused-args --globals love"
-
-let g:rainbow_active = 1
-
-let g:gitgutter_override_sign_column_highlight = 0
-
 let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'lua' : s:homedir.'/love.dict'
-    \ }
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
-"let g:ycm_seed_identifiers_with_syntax = 1
-"let g:ycm_collect_identifiers_from_tags_files = 1
+au VimEnter * call s:PluginSetup()
+function! s:PluginSetup()
+    let g:clojure_align_multiline_strings = 1
+    let g:clojure_align_subforms = 1
 
-nmap <Leader>gp <Plug>GitGutterPreviewHunk
-nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
-nmap <Leader>gu <Plug>GitGutterUndoHunk
-nmap <Leader>gs <Plug>GitGutterStageHunk
+    let g:ctrlp_max_depth = 5
+
+    if exists('did_plugin_ultisnips')
+        let g:UltiSnipsSnippetsDir = s:homedir . "/Ultisnips"
+        let g:UltiSnipsExpandTrigger = "<c-j>"
+        let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+        let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+    endif
+
+    let g:airline_theme = 'db32'
+    let g:airline_powerline_fonts = 1
+    let g:airline_inactive_collapse = 0
+    let g:airline_skip_empty_sections = 0
+    let g:airline#extensions#syntastic#enabled = 1
+    let g:airline#extensions#branch#enabled = 1
+    let g:airline#extensions#nrrwrgn#enabled = 1
+    let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+    let g:airline_detect_modified=1
+    "let g:airline#extensions#ycm#enabled = 1
+
+    if exists('g:loaded_syntastic_plugin')
+        let g:syntastic_always_populate_loc_list = 1
+        let g:syntastic_auto_loc_list = 1
+        let g:syntastic_check_on_open = 1
+        let g:syntastic_check_on_wq = 0
+        let g:syntastic_lua_checkers = ["luac", "luacheck"]
+        let g:syntastic_lua_luacheck_args = "--no-unused-args --globals love"
+    endif
+
+    let g:rainbow_active = 1
+
+    if exists('g:loaded_gitgutter')
+        let g:gitgutter_override_sign_column_highlight = 0
+
+        nmap <Leader>gp <Plug>GitGutterPreviewHunk
+        nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
+        nmap <Leader>gu <Plug>GitGutterUndoHunk
+        nmap <Leader>gs <Plug>GitGutterStageHunk
+    endif
+
+    if exists('g:loaded_neocomplete')
+        let g:neocomplete#enable_smart_case = 1
+        let g:neocomplete#sources#dictionary#dictionaries = {
+                    \ 'default' : '',
+                    \ 'lua' : s:homedir.'/love.dict'
+                    \ }
+        " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+        inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+        inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    else
+        autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+        autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
+    endif
+
+    let g:SuperTabDefaultCompletionType = "context"
+endfunction
 
 set updatetime=250
 
 set backup
 " I want all my backups in one directory
 execute "set backupdir=" . s:homedir . "/backup"
-
-runtime macros/matchit.vim
 
 let macvim_skip_cmd_opt_movement = 1
 
@@ -137,7 +163,7 @@ if has('gui_running')
         set guifont=InputMono:h14
         "set guifont=Monaco:h14
     else
-        set guifont=Consolas\ 14
+        set guifont=InputMono\ 14
     end
 else
     colorscheme default
@@ -180,7 +206,7 @@ else
 endif
 set foldcolumn=0
 set foldmethod=syntax
-set foldlevelstart=1
+set foldlevelstart=99
 
 set laststatus=2
 set wildmenu
@@ -455,13 +481,8 @@ nnoremap gp `[v`]
 " Cut all lines matching a pattern and move them to the end of the file
 nnoremap <Leader>fg :execute 'g/'.input("Search term: > ").'/norm ddGp'<CR>
 
-" Lining up code into columns using the nice Align plugin
-let g:loaded_alignmaps=1
-vnoremap <silent> <Leader>i" <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align "<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i= <ESC>:AlignPush<CR>:AlignCtrl lp1P1<CR>:'<,'>Align =<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i, <ESC>:AlignPush<CR>:AlignCtrl lp0P1<CR>:'<,'>Align ,<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i( <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align (<CR>:AlignPop<CR>
-vnoremap <silent> <Leader>i@ <ESC>:AlignPush<CR>:AlignCtrl lp0P0<CR>:'<,'>Align @<CR>:AlignPop<CR>
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
 nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
@@ -491,15 +512,6 @@ map <C-L> 40zl
 map <C-H> 40zh
 
 vmap <Enter> <Plug>(EasyAlign)
-
-function! ToggleNumber()
-    if &nu
-        set rnu
-    else
-        set nu
-    endif
-endfunction
-nnoremap <silent> <leader>r :call ToggleNumber()<CR>
 
 "nnoremap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
 "nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>

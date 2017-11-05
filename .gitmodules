@@ -1,6 +1,3 @@
-[submodule ".vim/bundle/Valloric/YouCompleteMe"]
-        path = .vim/bundle/YouCompleteMe
-        url = https://github.com/Valloric/YouCompleteMe
 [submodule ".vim/bundle/VundleVim/Vundle.vim"]
         path = .vim/bundle/Vundle.vim
         url = https://github.com/VundleVim/Vundle.vim
@@ -22,9 +19,6 @@
 [submodule ".vim/bundle/vim-easy-align"]
         path = .vim/bundle/vim-easy-align
         url = https://github.com/junegunn/vim-easy-align.git
-[submodule ".vim/bundle/ultisnips"]
-        path = .vim/bundle/ultisnips
-        url = https://github.com/SirVer/ultisnips.git
 [submodule ".vim/bundle/vim-snippets"]
         path = .vim/bundle/vim-snippets
         url = https://github.com/honza/vim-snippets.git
@@ -49,36 +43,18 @@
 [submodule ".vim/bundle/vim-misc"]
         path = .vim/bundle/vim-misc
         url = https://github.com/xolox/vim-misc.git
-[submodule ".vim/bundle/vim-easytags"]
-        path = .vim/bundle/vim-easytags
-        url = https://github.com/xolox/vim-easytags.git
 [submodule ".vim/bundle/neocomplete.vim"]
         path = .vim/bundle/neocomplete.vim
         url = https://github.com/Shougo/neocomplete.vim.git
 [submodule ".vim/bundle/rainbow"]
         path = .vim/bundle/rainbow
         url = https://github.com/luochen1990/rainbow.git
-[submodule ".vim/bundle/vim-diminactive"]
-        path = .vim/bundle/vim-diminactive
-        url = https://github.com/blueyed/vim-diminactive.git
-[submodule ".vim/bundle/vim-lua-inspect"]
-        path = .vim/bundle/vim-lua-inspect
-        url = https://github.com/xolox/vim-lua-inspect.git
-[submodule ".vim/bundle/vim-bufferline"]
-        path = .vim/bundle/vim-bufferline
-        url = https://github.com/bling/vim-bufferline.git
 [submodule ".vim/bundle/vim-salve"]
 	path = .vim/bundle/vim-salve
 	url = https://github.com/tpope/vim-salve.git
 [submodule ".vim/Lokaltog/vim-powerline"]
         path = .vim/bundle/vim-powerline
         url = https://github.com/Lokaltog/vim-powerline.git
-[submodule ".vim/bundle/vim-jekyll"]
-	path = .vim/bundle/vim-jekyll
-	url = https://github.com/parkr/vim-jekyll
-[submodule ".vim/bundle/vim-liquid"]
-	path = .vim/bundle/vim-liquid
-	url = https://github.com/tpope/vim-liquid
 [submodule ".vim/bundle/vim-virtualenv"]
 	path = .vim/bundle/vim-virtualenv
 	url = https://github.com/jmcantrell/vim-virtualenv

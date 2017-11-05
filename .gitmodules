@@ -58,9 +58,6 @@
 [submodule ".vim/bundle/rainbow"]
         path = .vim/bundle/rainbow
         url = https://github.com/luochen1990/rainbow.git
-[submodule ".vim/bundle/supertab"]
-        path = .vim/bundle/supertab
-        url = https://github.com/ervandew/supertab.git
 [submodule ".vim/bundle/vim-diminactive"]
         path = .vim/bundle/vim-diminactive
         url = https://github.com/blueyed/vim-diminactive.git
@@ -70,28 +67,12 @@
 [submodule ".vim/bundle/vim-bufferline"]
         path = .vim/bundle/vim-bufferline
         url = https://github.com/bling/vim-bufferline.git
-[submodule ".vim/bundle/vim-sexp"]
-        path = .vim/bundle/vim-sexp
-        url = https://github.com/guns/vim-sexp.git
-[submodule ".vim/bundle/vim-sexp-mappings-for-regular-people"]
-        path = .vim/bundle/vim-sexp-mappings-for-regular-people
-        url = https://github.com/tpope/vim-sexp-mappings-for-regular-people.git
-[submodule ".vim/bundle/vim-fireplace"]
-        path = .vim/bundle/vim-fireplace
-        url = https://github.com/tpope/vim-fireplace.git
 [submodule ".vim/bundle/vim-salve"]
-        path = .vim/bundle/vim-salve
-        url = https://github.com/tpope/vim-salve.git
-[submodule ".vim/bundle/vim-clojure-static"]
-        path = .vim/bundle/vim-clojure-static
-        url = https://github.com/guns/vim-clojure-static.git
-[submodule ".vim/bundle/vim-clojure-highlight"]
-        path = .vim/bundle/vim-clojure-highlight
-        url = https://github.com/guns/vim-clojure-highlight.git
+	path = .vim/bundle/vim-salve
+	url = https://github.com/tpope/vim-salve.git
 [submodule ".vim/Lokaltog/vim-powerline"]
         path = .vim/bundle/vim-powerline
         url = https://github.com/Lokaltog/vim-powerline.git
-
 [submodule ".vim/bundle/vim-jekyll"]
 	path = .vim/bundle/vim-jekyll
 	url = https://github.com/parkr/vim-jekyll
@@ -104,3 +85,21 @@
 [submodule ".vim/bundle/gundo.vim"]
 	path = .vim/bundle/gundo.vim
 	url = https://github.com/sjl/gundo.vim.git
+[submodule ".vim/bundle/vim-go"]
+	path = .vim/bundle/vim-go
+	url = https://github.com/fatih/vim-go
+[submodule ".vim/bundle/supertab"]
+	path = .vim/bundle/supertab
+	url = https://github.com/ervandew/supertab
+[submodule ".vim/bundle/vim-toml"]
+	path = .vim/bundle/vim-toml
+	url = https://github.com/cespare/vim-toml.git
+[submodule ".vim/bundle/vim-mustache-handlebars"]
+	path = .vim/bundle/vim-mustache-handlebars
+	url = https://github.com/mustache/vim-mustache-handlebars.git
+[submodule ".vim/bundle/vim-hugo-helper"]
+	path = .vim/bundle/vim-hugo-helper
+	url = https://github.com/robertbasic/vim-hugo-helper.git
+[submodule ".vim/bundle/gentooish.vim"]
+	path = .vim/bundle/gentooish.vim
+	url = https://github.com/cdaddr/gentooish.vim.git

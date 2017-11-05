@@ -33,7 +33,6 @@ Plugin 'honza/vim-snippets'
 Plugin 'godlygeek/tabular'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-syntastic/syntastic'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'chrisbra/NrrwRgn'
@@ -42,7 +41,7 @@ Plugin 'xolox/vim-misc'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'cdaddr/gentooish.vim'
 Plugin 'luochen1990/rainbow'
-" Plugin 'ervandew/supertab'
+Plugin 'ervandew/supertab'
 " Plugin 'blueyed/vim-diminactive'
 " Plugin 'xolox/vim-lua-inspect'
 " Plugin 'bling/vim-bufferline'
@@ -53,6 +52,14 @@ Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-salve'
 Plugin 'guns/vim-clojure-static'
 Plugin 'guns/vim-clojure-highlight'
+
+Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'mustache/vim-mustache-handlebars'
+
+Plugin 'fatih/vim-go'
+Plugin 'cespare/vim-toml'
+
+Plugin 'robertbasic/vim-hugo-helper'
 
 call vundle#end()
 
@@ -65,69 +72,68 @@ set fileencoding=utf-8
 
 let g:neocomplete#enable_at_startup = 1
 
-au VimEnter * call s:PluginSetup()
-function! s:PluginSetup()
-    let g:clojure_align_multiline_strings = 1
-    let g:clojure_align_subforms = 1
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
-    let g:ctrlp_max_depth = 5
+let s:rst2pseudoxml = $HOME . "/local/bin/rst2pseudoxml.py"
 
-    if exists('did_plugin_ultisnips')
-        let g:UltiSnipsSnippetsDir = s:homedir . "/Ultisnips"
-        let g:UltiSnipsExpandTrigger = "<c-j>"
-        let g:UltiSnipsJumpForwardTrigger = "<c-j>"
-        let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
-    endif
+let g:virtualenv_directory = $HOME . '/local/'
 
-    let g:airline_theme = 'db32'
-    let g:airline_powerline_fonts = 1
-    let g:airline_inactive_collapse = 0
-    let g:airline_skip_empty_sections = 0
-    let g:airline#extensions#syntastic#enabled = 1
-    let g:airline#extensions#branch#enabled = 1
-    let g:airline#extensions#nrrwrgn#enabled = 1
-    let g:airline#extensions#ctrlp#show_adjacent_modes = 1
-    let g:airline_detect_modified=1
-    "let g:airline#extensions#ycm#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'db32'
+let g:airline_inactive_collapse = 0
+let g:airline_skip_empty_sections = 0
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#nrrwrgn#enabled = 1
+let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+let g:ctrlp_cmd = 'CtrlPMRU'
+let g:ctrlp_match_current_file = 1
 
-    if exists('g:loaded_syntastic_plugin')
-        let g:syntastic_always_populate_loc_list = 1
-        let g:syntastic_auto_loc_list = 1
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 0
-        let g:syntastic_lua_checkers = ["luac", "luacheck"]
-        let g:syntastic_lua_luacheck_args = "--no-unused-args --globals love"
-    endif
+let g:airline#extensions#virtualenv#enabled = 1
+let g:airline_detect_modified=1
+"let g:airline#extensions#ycm#enabled = 1
 
-    let g:rainbow_active = 1
+let g:clojure_align_multiline_strings = 1
+let g:clojure_align_subforms = 1
 
-    if exists('g:loaded_gitgutter')
-        let g:gitgutter_override_sign_column_highlight = 0
+let g:ctrlp_max_depth = 8
 
-        nmap <Leader>gp <Plug>GitGutterPreviewHunk
-        nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
-        nmap <Leader>gu <Plug>GitGutterUndoHunk
-        nmap <Leader>gs <Plug>GitGutterStageHunk
-    endif
+let g:mustache_abbreviations = 1
 
-    if exists('g:loaded_neocomplete')
-        let g:neocomplete#enable_smart_case = 1
-        let g:neocomplete#sources#dictionary#dictionaries = {
-                    \ 'default' : '',
-                    \ 'lua' : s:homedir.'/love.dict'
-                    \ }
-        " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-        inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-        inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-    else
-        autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-        autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
-    endif
+if exists('did_plugin_ultisnips')
+    let g:UltiSnipsSnippetsDir = s:homedir . "/Ultisnips"
+    let g:UltiSnipsExpandTrigger = "<c-j>"
+    let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+    let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+endif
 
-    let g:SuperTabDefaultCompletionType = "context"
-endfunction
+let g:rainbow_active = 1
 
+let g:gitgutter_highlight_lines = 0
+let g:gitgutter_override_sign_column_highlight = 0
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 0
+
+nmap <Leader>gp <Plug>GitGutterPreviewHunk
+nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
+nmap <Leader>gu <Plug>GitGutterUndoHunk
+nmap <Leader>gs <Plug>GitGutterStageHunk
+
+if exists('g:loaded_neocomplete')
+    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#sources#dictionary#dictionaries = {
+                \ 'default' : '',
+                \ 'lua' : s:homedir.'/love.dict'
+                \ }
+    " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+else
+    autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+    autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
+endif
+
+" set shell=zsh\ -i
 set updatetime=250
 
 set backup
@@ -139,6 +145,9 @@ let macvim_skip_cmd_opt_movement = 1
 if has('persistent_undo')
     set undofile
     execute "set undodir=" . s:homedir .  "/undo"
+    if ! isdirectory(&undodir)
+        call mkdir(&undodir)
+    endif
 endif
 
 set history=5000
@@ -427,6 +436,9 @@ nnoremap <Leader>h :nohls<CR>
 " Close quickfix
 nnoremap <Leader>q :cclose<CR>
 
+" open location list
+nnoremap <Leader>l :lopen<CR>
+
 " Emacs-ish keybindings, oops
 noremap! <M-Backspace> <C-W>
 noremap! <M-Left> <C-Left>
@@ -517,6 +529,8 @@ vmap <Enter> <Plug>(EasyAlign)
 "nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
 
 vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
+
+iab <expr> dts strftime("%Y-%m-%dT%I:%M:%S")
 
 " Nasty, I used these at work for something.  I forget why, but I may need them again
 "nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
@@ -669,6 +683,26 @@ if has("win32") || has("win64")
   nnoremap <F12> = :Love<CR>
 end
 
+function! s:isHugoDir()
+    if getftype('config.toml') ==# 'file'
+        return 1
+    end
+endfunction
+
+" Hugo project editing
+function! s:maybeHugoHtml()
+    if s:isHugoDir()
+        setlocal filetype=gohtmltmpl
+    end
+endfunction
+autocmd Filetype html call s:maybeHugoHtml()
+
+function! s:maybeHugoIgnore()
+    if s:isHugoDir()
+        let g:ctrlp_custom_ignore = '\v(dev|static|public)'
+    end
+endfunction
+autocmd BufReadPre * call s:maybeHugoIgnore()
 " nnoremap <Up> <Nop>
 " nnoremap <Down> <Nop>
 " nnoremap <Left> <Nop>

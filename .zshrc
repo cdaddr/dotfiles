@@ -37,6 +37,9 @@ fi
 autoload -Uz compinit
 compinit
 
+# autoload -Uz promptinit
+# promptinit
+
 setopt autopushd
 setopt noclobber
 setopt rc_quotes
@@ -89,20 +92,12 @@ precmd () {
 }
 
 setopt prompt_subst
-#PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %F{reset}'
-PROMPT='%F{blue}%n@%m %B%F{green}%~ ${vcs_info_msg_0_}%F{blue}%B%(?/%F{blue}/%F{red})$ %F{reset}%b'
-
-# /usr/bin/keychain -Q -q --nogui ~/.ssh/id_rsa
-# if [[ -f $HOME/.keychain/$HOST-sh ]] {
-#     source $HOME/.keychain/$HOST-sh
-# }
-
-CLOJURESCRIPT_HOME="$HOME/local/clojurescript"
-PATH=$PATH:$CLOJURESCRIPT_HOME/bin
-
-PATH=/opt/java/jre/bin:$PATH
-export JENV_ROOT=/usr/local/opt/jenv
-if which jenv > /dev/null; then eval "$(jenv init -)"; fi
+if [ $HOST = 'saber' ]
+then
+    PROMPT='%F{magenta}%n@%M %B%F{green}%~ ${vcs_info_msg_0_}%F{blue}%B%(?/%F{blue}/%F{red})$ %F{reset}%b';
+else
+    PROMPT='%F{blue}%n@%M %B%F{green}%~ ${vcs_info_msg_0_}%F{blue}%B%(?/%F{blue}/%F{red})$ %F{reset}%b';
+fi
 
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -112,6 +107,13 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 
 alias gemi='gem install --no-ri --no-rdoc'
-[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+if [[ -f /usr/local/share/chruby/chruby.sh ]] {
+    source /usr/local/share/chruby/chruby.sh
+    chruby ruby-2.4.1
+}
+
+# export VIRTUAL_ENV_DISABLE_PROMPT=1
+# source ~/mypython/bin/activate
+
+alias ls="LC_COLLATE=POSIX ls --group-directories-first --color"

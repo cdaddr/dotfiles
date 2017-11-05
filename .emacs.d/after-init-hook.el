@@ -20,7 +20,7 @@
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name)))
 (if (string= window-system "w32")
     (set-default-font "-outline-Consolas-normal-r-normal-normal-14-97-96-96-c-*-iso859-1")
-    (set-default-font "Consolas-16" t))
+    (set-default-font "Consolas-14" t))
 
 (defun my-backward-kill-word ()
   "Kill words backward my way."

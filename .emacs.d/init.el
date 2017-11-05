@@ -27,10 +27,10 @@
  '(ac-show-menu-immediately-on-auto-complete nil)
  '(ac-trigger-key "TAB")
  '(ac-use-fuzzy t)
- '(cider-show-error-buffer (quote only-in-repl))
+ '(cider-show-error-buffer t)
  '(package-selected-packages
    (quote
-    (org-ac org undo-tree rainbow-delimiters paredit ido-ubiquitous bar-cursor ac-cider))))
+    (ac-cider cider which-key org-ac org undo-tree rainbow-delimiters paredit ido-ubiquitous bar-cursor))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

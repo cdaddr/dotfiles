@@ -19,9 +19,6 @@
 [submodule ".vim/bundle/vim-textobj-rubyblock"]
         path = .vim/bundle/vim-textobj-rubyblock
         url = https://github.com/nelstrom/vim-textobj-rubyblock.git
-[submodule ".vim/bundle/gundo.vim"]
-        path = .vim/bundle/gundo.vim
-        url = https://github.com/sjl/gundo.vim.git
 [submodule ".vim/bundle/vim-easy-align"]
         path = .vim/bundle/vim-easy-align
         url = https://github.com/junegunn/vim-easy-align.git
@@ -107,3 +104,6 @@
 [submodule ".vim/bundle/vim-virtualenv"]
 	path = .vim/bundle/vim-virtualenv
 	url = https://github.com/jmcantrell/vim-virtualenv
+[submodule ".vim/bundle/gundo.vim"]
+	path = .vim/bundle/gundo.vim
+	url = https://github.com/sjl/gundo.vim.git

@@ -79,3 +79,9 @@
 [submodule ".vim/bundle/gentooish.vim"]
 	path = .vim/bundle/gentooish.vim
 	url = https://github.com/cdaddr/gentooish.vim.git
+[submodule ".vim/bundle/ale"]
+	path = .vim/bundle/ale
+	url = https://github.com/w0rp/ale
+[submodule ".vim/bundle/splitjoin.vim"]
+	path = .vim/bundle/splitjoin.vim
+	url = https://github.com/AndrewRadev/splitjoin.vim

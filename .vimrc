@@ -46,6 +46,8 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'fatih/vim-go'
 Plugin 'cespare/vim-toml'
 Plugin 'robertbasic/vim-hugo-helper'
+Plugin 'w0rp/ale'
+Plugin 'AndrewRadev/splitjoin.vim'
 
 call vundle#end()
 
@@ -98,6 +100,20 @@ let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 0
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 0
+
+let g:ale_sign_column_always = 1
+let g:airline#extensions#ale#enabled = 1
+
+let g:go_fmt_command = "goimports"
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+" let g:go_metalinter_autosave = 1
+let g:go_auto_type_info = 1
 
 nmap <Leader>gp <Plug>GitGutterPreviewHunk
 nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
@@ -214,6 +230,8 @@ set ttyfast
 " Bouncy parens
 set showmatch
 
+set autowrite
+
 " Visual bells give me seizures
 set t_vb=''
 
@@ -228,7 +246,7 @@ set cmdheight=1
 set showbreak=\¬
 " Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
 if (&termencoding == "utf-8") || has("gui_running")
-    set list listchars=tab:│›,trail:·,precedes:…,extends:…,nbsp:‗
+    set list listchars=tab:┆\ ,trail:·,precedes:…,extends:…,nbsp:‗
 else
     set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 endif

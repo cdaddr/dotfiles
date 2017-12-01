@@ -162,18 +162,6 @@ let g:NERDTreeIndicatorMapCustom = {
     \ 'Ignored'   : 'I',
     \ "Unknown"   : "?"
     \ }
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
 let NERDTreeMinimalUI=1
 let NERDTreeHighlightCursorline = 1
 

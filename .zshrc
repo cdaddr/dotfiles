@@ -117,3 +117,4 @@ if [[ -f /usr/local/share/chruby/chruby.sh ]] {
 # source ~/mypython/bin/activate
 
 alias ls="LC_COLLATE=POSIX ls --group-directories-first --color"
+export PATH="$HOME/go/bin:$PATH"

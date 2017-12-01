@@ -18,6 +18,26 @@ if ! has("gui_running")
     let g:loaded_airline = 1
 endif
 
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'db32'
+let g:airline_inactive_collapse = 1
+let g:airline_skip_empty_sections = 0
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#hunks#non_zero_only = 0
+let g:airline#extensions#nrrwrgn#enabled = 1
+let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+let g:airline#extensions#default#section_truncate_width = {}
+let airline#extensions#default#section_use_groupitems = 0
+"let g:airline_section_b = '%{getcwd()}'
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+let g:airline_symbols.notexists = ' ⁇'
+" let g:airline_left_sep = "\ue0c0  "
+" let g:airline_right_sep = " \ue0c2"
+let g:airline_detect_modified=1
+let g:airline#extensions#virtualenv#enabled = 1
+
 let s:vundle_path = s:homedir . '/bundle'
 call vundle#begin(s:vundle_path)
 
@@ -39,7 +59,7 @@ Plugin 'xolox/vim-misc'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'cdaddr/gentooish.vim'
 Plugin 'luochen1990/rainbow'
-Plugin 'ervandew/supertab'
+" Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-salve'
 Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'mustache/vim-mustache-handlebars'
@@ -48,6 +68,11 @@ Plugin 'cespare/vim-toml'
 Plugin 'robertbasic/vim-hugo-helper'
 Plugin 'w0rp/ale'
 Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'vim-scripts/paredit.vim'
+
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+"Plugin 'ryanoasis/vim-devicons' " make sure this is last
 
 call vundle#end()
 
@@ -58,7 +83,27 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
+let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
+
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" AutoComplPop like behavior.
+let g:neocomplete#enable_auto_select = 1
 
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
@@ -66,19 +111,8 @@ let s:rst2pseudoxml = $HOME . "/local/bin/rst2pseudoxml.py"
 
 let g:virtualenv_directory = $HOME . '/local/'
 
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'db32'
-let g:airline_inactive_collapse = 0
-let g:airline_skip_empty_sections = 0
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#nrrwrgn#enabled = 1
-let g:airline#extensions#ctrlp#show_adjacent_modes = 1
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_match_current_file = 1
-
-let g:airline#extensions#virtualenv#enabled = 1
-let g:airline_detect_modified=1
-"let g:airline#extensions#ycm#enabled = 1
 
 let g:clojure_align_multiline_strings = 1
 let g:clojure_align_subforms = 1
@@ -114,6 +148,37 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_build_constraints = 1
 " let g:go_metalinter_autosave = 1
 let g:go_auto_type_info = 1
+let g:go_info_mode = 'guru'
+
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "M",
+    \ "Staged"    : "S",
+    \ "Untracked" : "U",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "=",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : "×",
+    \ "Clean"     : "ok",
+    \ 'Ignored'   : 'I',
+    \ "Unknown"   : "?"
+    \ }
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+let NERDTreeMinimalUI=1
+let NERDTreeHighlightCursorline = 1
+
+
+map <C-n> :NERDTreeToggle<CR>
 
 nmap <Leader>gp <Plug>GitGutterPreviewHunk
 nmap <Leader>gr <Plug>GitGutterUndoHunk:echomsg '\hr is deprecated. Use \hu'<CR>
@@ -122,6 +187,8 @@ nmap <Leader>gs <Plug>GitGutterStageHunk
 
 if exists('g:loaded_neocomplete')
     let g:neocomplete#enable_smart_case = 1
+	let g:neocomplete#sources#omni#functions.go =
+                \ 'gocomplete#Complete'
     let g:neocomplete#sources#dictionary#dictionaries = {
                 \ 'default' : '',
                 \ 'lua' : s:homedir.'/love.dict'
@@ -174,7 +241,8 @@ if has('gui_running')
         set guifont=InputMono:h14
         "set guifont=Monaco:h14
     else
-        set guifont=InputMono\ 14
+        set guifont=InconsolataGo\ Nerd\ Font\ 16
+        set guifontwide=InputMono\ 32
     end
 else
     colorscheme default
@@ -255,14 +323,52 @@ if has("win32")
     set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
 endif
 
-if !exists("autocommands_loaded")
-    let autocommands_loaded = 1
+augroup custom
+    au!
     au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
     autocmd QuickFixCmdPost * :copen
     au VimEnter * :call FixVimpager()
     au BufWritePost *vimrc so %
-endif
-au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
+
+    " autocmd FileType lua setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType lua call SetLovePrefs()
+    if has("win32") || has("win64")
+      " command! -nargs=* Lua   !"C:\lua\luarocks\lua5.1.exe" %:p
+      command! -nargs=* Love  :silent !"C:\Program Files (x86)\LOVE\love.exe" . <args>
+      " nmap <F11> = :Lua<CR>
+      nnoremap <F12> = :Love<CR>
+    end
+
+    function! s:buildGo()
+        let fn = expand('%:r')
+        let &cmdheight = 10
+        if fn =~ '_test'
+            GoTestCompile
+        else
+            GoBuild
+        endif
+        let &cmdheight = 1
+    endfunction
+
+    autocmd BufWritePost *.go call s:buildGo()
+    au FileType go call PareditInitBuffer()
+    au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
+
+    " Hugo project editing
+    function! s:maybeHugoHtml()
+        if s:isHugoDir()
+            setlocal filetype=gohtmltmpl
+        end
+    endfunction
+    autocmd Filetype html call s:maybeHugoHtml()
+    autocmd BufReadPre * call s:maybeHugoIgnore()
+
+    " open NERDTree on startup and move the cursor out of it
+    autocmd VimEnter * NERDTreeToggle
+    autocmd VimEnter * wincmd p
+    " close NERDTree if it's the last/only buffer
+    "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " The text to return for a fold
 function! FoldText()
@@ -500,7 +606,6 @@ nnoremap <Leader>fg :execute 'g/'.input("Search term: > ").'/norm ddGp'<CR>
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
 nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
 vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
 
@@ -678,37 +783,14 @@ function! SetLovePrefs()
         setlocal iskeyword+=:
     end
 endfunction
-" autocmd FileType lua setlocal tabstop=2 shiftwidth=2 softtabstop=2
-autocmd FileType lua call SetLovePrefs()
-if has("win32") || has("win64")
-  " command! -nargs=* Lua   !"C:\lua\luarocks\lua5.1.exe" %:p
-  command! -nargs=* Love  :silent !"C:\Program Files (x86)\LOVE\love.exe" . <args>
-  " nmap <F11> = :Lua<CR>
-  nnoremap <F12> = :Love<CR>
-end
-
 function! s:isHugoDir()
     if getftype('config.toml') ==# 'file'
         return 1
     end
 endfunction
 
-" Hugo project editing
-function! s:maybeHugoHtml()
-    if s:isHugoDir()
-        setlocal filetype=gohtmltmpl
-    end
-endfunction
-autocmd Filetype html call s:maybeHugoHtml()
-
 function! s:maybeHugoIgnore()
     if s:isHugoDir()
         let g:ctrlp_custom_ignore = '\v(dev|static|public)'
     end
 endfunction
-autocmd BufReadPre * call s:maybeHugoIgnore()
-" nnoremap <Up> <Nop>
-" nnoremap <Down> <Nop>
-" nnoremap <Left> <Nop>
-" nnoremap <Right> <Nop>
-

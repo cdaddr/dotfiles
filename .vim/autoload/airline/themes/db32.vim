@@ -9,26 +9,32 @@ let s:cterm_orange = 179
 let s:cterm_pink = 182
 let s:cterm_purple = 146
 let s:cterm_red = 174
+let s:gui_white = '#FFFFFF'
+let s:gui_black = '#000000'
 let s:gui_blue = '#5fcde4'
 let s:gui_blue2 = '#5b6ee1'
-let s:gui_green = '#99e550'
-let s:gui_green2 = '#6abe30'
+let s:gui_green = '#4b692f'
+let s:gui_green2 = '#99e550'
 let s:gui_light_gray = '#9badb7'
 let s:gui_dark_gray = '#000000'
+let s:gui_gray = '#060509'
 let s:gui_orange = '#df7126'
+let s:gui_orange2 = '#8f563b'
+let s:gui_light_orange = '#d9a066'
 let s:gui_pink = '#d77bba'
 let s:gui_pink2 = '#d95763'
 let s:gui_purple = '#76428a'
 let s:gui_purple2 = '#45283c'
 let s:gui_red = '#d95763'
 let s:gui_red2 = '#ac3232'
+let s:gui_maroon = '#663931'
 
 let g:airline#themes#db32#palette = {}
 
 " Normal mode
-let s:N1 = [s:gui_dark_gray, s:gui_green2, s:cterm_dark_gray, s:cterm_green]
-let s:N2 = [s:gui_dark_gray, s:gui_green, s:cterm_light_gray, s:cterm_med_gray_lo]
-let s:N3 = [s:gui_green, s:gui_dark_gray, s:cterm_green, s:cterm_med_gray_hi]
+let s:N1 = [s:gui_black, s:gui_red2, s:cterm_dark_gray, s:cterm_green]
+let s:N2 = [s:gui_black, s:gui_orange, s:cterm_light_gray, s:cterm_med_gray_lo]
+let s:N3 = [s:gui_white, s:gui_dark_gray, s:cterm_green, s:cterm_med_gray_hi]
 let g:airline#themes#db32#palette.normal = airline#themes#generate_color_map(s:N1, s:N2, s:N3)
 let g:airline#themes#db32#palette.normal_modified = {
       \ 'airline_c': [s:gui_orange, s:gui_dark_gray, s:cterm_orange, s:cterm_med_gray_hi, ''],
@@ -60,7 +66,7 @@ let g:airline#themes#db32#palette.visual = airline#themes#generate_color_map(s:V
 let g:airline#themes#db32#palette.visual_modified = copy(g:airline#themes#db32#palette.insert_modified)
 
 " Inactive window
-let s:IA = [s:gui_light_gray, s:gui_dark_gray, s:cterm_light_gray, s:cterm_med_gray_hi, '']
+let s:IA = [s:gui_light_gray, s:gui_gray, s:cterm_light_gray, s:cterm_med_gray_hi, '']
 let g:airline#themes#db32#palette.inactive = airline#themes#generate_color_map(s:IA, s:IA, s:IA)
 let g:airline#themes#db32#palette.inactive_modified = {
       \ 'airline_c': [s:gui_orange, '', s:cterm_orange, '', ''],

@@ -266,11 +266,6 @@ set expandtab
 "set smartindent
 
 set foldtext=FoldText()
-if has("gui_running")
-    set fillchars=fold:·
-else
-    set fillchars=fold:-
-endif
 set foldcolumn=0
 set foldmethod=syntax
 set foldlevelstart=99
@@ -300,12 +295,7 @@ let c_curly_error=1
 set cmdheight=1
 
 set showbreak=\¬
-" Stolen from http://github.com/ciaranm/dotfiles-ciaranm/tree/master
-if (&termencoding == "utf-8") || has("gui_running")
-    set list listchars=tab:┆\ ,trail:·,precedes:…,extends:…,nbsp:‗
-else
-    set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
-endif
+set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 
 if has("win32")
     set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi

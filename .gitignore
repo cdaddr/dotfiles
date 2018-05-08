@@ -4,6 +4,7 @@
 .vim/.VimballRecord
 .vim/undo
 .vim/backup
+.vim/plugged
 .emacs.d/swank
 .emacs.d/ac-comphist.dat
 .emacs.d/.smex-items

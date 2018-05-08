@@ -12,7 +12,6 @@ if has('win32')
 else
     let s:homedir = "~/.vim"
 endif
-execute "set rtp+=" . s:homedir . "/bundle/Vundle.vim"
 
 if ! has("gui_running")
     let g:loaded_airline = 1
@@ -38,43 +37,37 @@ let g:airline_symbols.notexists = ' ⁇'
 let g:airline_detect_modified=1
 let g:airline#extensions#virtualenv#enabled = 1
 
-let s:vundle_path = s:homedir . '/bundle'
-call vundle#begin(s:vundle_path)
-
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'kana/vim-textobj-user'
-Plugin 'nelstrom/vim-textobj-rubyblock'
-Plugin 'sjl/gundo.vim'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'honza/vim-snippets'
-Plugin 'godlygeek/tabular'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'chrisbra/NrrwRgn'
-Plugin 'xolox/vim-misc'
-Plugin 'Shougo/neocomplete.vim'
-Plugin 'cdaddr/gentooish.vim'
-Plugin 'luochen1990/rainbow'
-" Plugin 'ervandew/supertab'
-Plugin 'tpope/vim-salve'
-Plugin 'jmcantrell/vim-virtualenv'
-Plugin 'mustache/vim-mustache-handlebars'
-Plugin 'fatih/vim-go'
-Plugin 'cespare/vim-toml'
-Plugin 'robertbasic/vim-hugo-helper'
-Plugin 'w0rp/ale'
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'vim-scripts/paredit.vim'
-
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-"Plugin 'ryanoasis/vim-devicons' " make sure this is last
-
-call vundle#end()
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'kana/vim-textobj-user'
+Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'sjl/gundo.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'honza/vim-snippets'
+Plug 'godlygeek/tabular'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'chrisbra/NrrwRgn'
+Plug 'xolox/vim-misc'
+Plug 'cdaddr/gentooish.vim'
+Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-salve'
+Plug 'jmcantrell/vim-virtualenv'
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'fatih/vim-go'
+Plug 'cespare/vim-toml'
+Plug 'robertbasic/vim-hugo-helper'
+Plug 'w0rp/ale'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'vim-scripts/paredit.vim'
+Plug 'Shougo/deoplete.nvim'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+call plug#end()
 
 syntax on
 filetype on
@@ -83,27 +76,10 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
-let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
+" let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
 
-let g:neocomplete#enable_at_startup = 0
-let g:neocomplete#enable_smart_case = 1
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-" AutoComplPop like behavior.
-let g:neocomplete#enable_auto_select = 1
 
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
@@ -335,7 +311,6 @@ augroup custom
     endfunction
 
     autocmd BufWritePost *.go call s:buildGo()
-    au FileType go call PareditInitBuffer()
     au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
 
     " Hugo project editing

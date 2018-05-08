@@ -30,6 +30,9 @@ let s:gui_red2 = '#ac3232'
 let s:gui_maroon = '#663931'
 
 let g:airline#themes#db32#palette = {}
+let g:airline#themes#db32#palette.accents = {
+      \ 'red': [ s:gui_red2, '' , 231 , '' , '' ],
+      \ }
 
 " Normal mode
 let s:N1 = [s:gui_black, s:gui_red2, s:cterm_dark_gray, s:cterm_green]
@@ -70,6 +73,21 @@ let s:IA = [s:gui_light_gray, s:gui_gray, s:cterm_light_gray, s:cterm_med_gray_h
 let g:airline#themes#db32#palette.inactive = airline#themes#generate_color_map(s:IA, s:IA, s:IA)
 let g:airline#themes#db32#palette.inactive_modified = {
       \ 'airline_c': [s:gui_orange, '', s:cterm_orange, '', ''],
+      \ }
+
+let g:airline#themes#db32#palette.tabline = {
+      \ 'airline_tab':  [s:gui_black, s:gui_orange,  231, 29, ''],
+      \ 'airline_tabsel':  [s:gui_black, s:gui_red2,  231, 36, 'bold'],
+      \ 'airline_tablabel': [s:gui_white, s:gui_black,  231, 36, ''],
+      \ 'airline_tabfill':  ['#ffffff', s:gui_dark_gray,  231, 23, ''],
+      \ 'airline_tabmod':  [s:gui_black, s:gui_red2,  231, 88, 'bold'],
+      \ 'airline_tabmod_unsel':  [s:gui_black, s:gui_red2,  231, 88, 'bold'],
+      \ 'airline_tab_right':  [s:gui_black, s:gui_orange,  231, 29, ''],
+      \ 'airline_tabsel_right':  [s:gui_black, s:gui_red2,  231, 36, 'bold'],
+      \ 'airline_tablabel_right': [s:gui_white, s:gui_black,  231, 36, ''],
+      \ 'airline_tabfill_right':  ['#ffffff', s:gui_dark_gray,  231, 23, ''],
+      \ 'airline_tabmod_right':  [s:gui_black, s:gui_red2,  231, 88, 'bold'],
+      \ 'airline_tabmod_unsel_right':  [s:gui_black, s:gui_red2,  231, 88, 'bold'],
       \ }
 
 " CtrlP

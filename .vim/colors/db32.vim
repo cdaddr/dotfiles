@@ -72,9 +72,9 @@ hi Todo           ctermfg=244 ctermbg=235 cterm=none guifg=#cbdbfc guibg=#11101a
 hi StatusLine     ctermfg=249 ctermbg=237 cterm=none guifg=#847e87 guibg=#000000 gui=none
 hi StatusLineNC   ctermfg=244 ctermbg=237 cterm=none guifg=#08080d guibg=#000000  gui=none
 hi VertSplit      ctermfg=237 ctermbg=237 cterm=none guifg=#3A3A3A guibg=#000000 gui=none
-" hi TabLine ctermfg=249 ctermbg=237 cterm=none guifg=#B2B2B2 guibg=#3A3A3A gui=none
-" hi TabLineSel ctermfg=253 ctermbg=238 cterm=none guifg=#DADADA guibg=#444444 gui=none
-" hi TabLineFill ctermbg=237 cterm=none guibg=#3A3A3A gui=none
+hi TabLine        ctermfg=249 ctermbg=237 cterm=none guifg=#847e87 guibg=#000000 gui=none
+hi TabLineSel     ctermfg=253 ctermbg=238 cterm=none guifg=#11101a guibg=#df7126 gui=none
+hi TabLineFill    ctermfg=253 ctermbg=237 cterm=none guifg=#00ff00 guibg=#000000 gui=none
 
 " Menu
 hi Pmenu          ctermfg=249 ctermbg=237 cterm=none guifg=#847e87 guibg=#222034 gui=none

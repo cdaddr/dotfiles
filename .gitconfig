@@ -39,6 +39,9 @@
 	rewind = checkout
 	update = add -u
 	update-submodules = "!f(){ git pull --recurse-submodules; git submodule update; };f"
+	sba = "!f() { git subtree add --prefix $2 $1 master --squash; }; f"
+	sbu = "!f() { git subtree pull --prefix $2 $1 master --squash; }; f"
+	ls-subtrees = !"git log | grep git-subtree-dir | awk '{ print $2 }'"
 
 [credential]
 	helper = cache --timeout=3600

@@ -64,9 +64,9 @@ Plug 'robertbasic/vim-hugo-helper'
 Plug 'w0rp/ale'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'vim-scripts/paredit.vim'
-Plug 'Shougo/deoplete.nvim'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ervandew/supertab'
 call plug#end()
 
 syntax on

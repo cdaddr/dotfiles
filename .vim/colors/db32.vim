@@ -8,7 +8,7 @@
 "
 " #08080d #222034 #45283c #663931 #8f563b #df7126 #d9a066 #eec39a
 " #fbf236 #99e550 #6abe30 #37946e #4b692f #524b24 #323c39 #3f3f74
-" #306082 #5b6ee1 #639bff #5fcde4 #cbdbfc #ffffff #9badb7 #847e87
+" #306082 #5b6ee1 #639bff #5fcde4 #cbdbfc #f3f3f3 #9badb7 #847e87
 " #696a6a #595652 #76428a #ac3232 #d95763 #d77bba #8f974a #8a6f30
 
 hi clear
@@ -20,13 +20,13 @@ endif
 let g:colors_name="db32"
 
 " Main
-hi Normal         ctermfg=249 ctermbg=235 cterm=none guifg=#847e87 guibg=#11101a gui=none
+hi Normal         ctermfg=249 ctermbg=235 cterm=none guifg=#f3f3f3 guibg=#11101a gui=none
 hi Comment        ctermfg=244 ctermbg=235 cterm=none guifg=#595652 guibg=#11101a gui=italic
 
 " Constant
 hi Constant       ctermfg=186 ctermbg=235 cterm=none guifg=#76428a guibg=#11101a gui=none
 hi String         ctermfg=187 ctermbg=235 cterm=none guifg=#8f563b guibg=#11101a gui=none
-hi Character      ctermfg=187 ctermbg=235 cterm=none guifg=#847e87 guibg=#191826 gui=none
+hi Character      ctermfg=187 ctermbg=235 cterm=none guifg=#f3f3f3 guibg=#191826 gui=none
 hi Boolean        ctermfg=187 ctermbg=235 cterm=none guifg=#d77bba guibg=#11101a gui=bold
 hi Number         ctermfg=180 ctermbg=235 cterm=none guifg=#d77bba guibg=#11101a gui=none
 hi Float          ctermfg=180 ctermbg=235 cterm=none guifg=#d77bba guibg=#11101a gui=none
@@ -61,11 +61,11 @@ hi Special        ctermfg=174 ctermbg=235 cterm=none guifg=#639bff guibg=#11101a
 hi SpecialChar    ctermfg=174 ctermbg=235 cterm=none guifg=#eec39a guibg=#11101a gui=none
 hi Tag            ctermfg=174 ctermbg=235 cterm=none guifg=#fbf236 guibg=#191826 gui=none
 hi Delimiter      ctermfg=174 ctermbg=235 cterm=none guifg=#8f563b guibg=#11101a gui=none
-hi SpecialComment ctermfg=174 ctermbg=235 cterm=none guifg=#ffffff guibg=#ac3232 gui=none
-hi Debug          ctermfg=174 ctermbg=235 cterm=none guifg=#ffffff guibg=#11101a gui=none
+hi SpecialComment ctermfg=174 ctermbg=235 cterm=none guifg=#f3f3f3 guibg=#ac3232 gui=none
+hi Debug          ctermfg=174 ctermbg=235 cterm=none guifg=#f3f3f3 guibg=#11101a gui=none
 hi Underlined     ctermfg=249 ctermbg=235 cterm=underline guifg=#639bff guibg=#11101a gui=underline
 hi Ignore         ctermfg=235 ctermbg=235 cterm=none guifg=#11101a guibg=#08080d gui=none
-hi Error          ctermfg=231 ctermbg=167 cterm=none guifg=#ffffff guibg=#ac3232 gui=none
+hi Error          ctermfg=231 ctermbg=167 cterm=none guifg=#f3f3f3 guibg=#ac3232 gui=none
 hi Todo           ctermfg=244 ctermbg=235 cterm=none guifg=#cbdbfc guibg=#11101a gui=bold,italic
 
 " Window
@@ -78,7 +78,7 @@ hi VertSplit      ctermfg=237 ctermbg=237 cterm=none guifg=#3A3A3A guibg=#000000
 
 " Menu
 hi Pmenu          ctermfg=249 ctermbg=237 cterm=none guifg=#847e87 guibg=#222034 gui=none
-hi PmenuSel       ctermfg=231 ctermbg=244 cterm=none guifg=#ffffff guibg=#222034 gui=none
+hi PmenuSel       ctermfg=231 ctermbg=244 cterm=none guifg=#f3f3f3 guibg=#222034 gui=none
 hi PmenuSbar      ctermbg=59 cterm=none guibg=#222034 gui=none
 hi PmenuThumb     ctermbg=246 cterm=none guibg=#847e87 gui=none
 hi WildMenu       ctermfg=232 ctermbg=98 cterm=none guifg=#d9a066 guibg=#08080d gui=none
@@ -100,10 +100,10 @@ hi FoldColumn     ctermfg=79 ctermbg=237 cterm=none guifg=#d9a066 guibg=#08080d 
 hi SignColumn     ctermfg=184 ctermbg=237 cterm=none guifg=#d9a066 guibg=#08080d gui=none
 hi ColorColumn    ctermbg=237 cterm=none guibg=#08080d gui=none
 hi LineNr         ctermfg=244 ctermbg=237 cterm=none guifg=#847e87 guibg=#08080d gui=none
-hi MatchParen     ctermfg=16 ctermbg=215 cterm=none guifg=NONE guibg=#000000 gui=none
+hi MatchParen     ctermfg=16 ctermbg=215 cterm=none guifg=#11101a guibg=#df7126 gui=none
 
 " Search
-hi Search         ctermfg=16 ctermbg=179 cterm=none guifg=NONE guibg=#000000 gui=none
+hi Search         ctermfg=16 ctermbg=179 cterm=none guifg=#f3f3f3 guibg=#08080d gui=bold
 hi IncSearch      ctermfg=231 ctermbg=168 cterm=none guifg=#fbf236 guibg=#08080d gui=none
 
 " Diff Mode
@@ -128,7 +128,7 @@ hi Conceal        ctermfg=77 ctermbg=235 cterm=none guifg=#5FD75F guibg=#11101a 
 " Cursor
 hi CursorColumn   ctermbg=237 cterm=none guibg=#000000 gui=none
 hi CursorLine     ctermbg=237 cterm=none guibg=#08080d gui=none
-hi CursorLineNr   ctermfg=249 ctermbg=237 cterm=none guifg=#ffffff guibg=#08080d gui=none
+hi CursorLineNr   ctermfg=249 ctermbg=237 cterm=none guifg=#f3f3f3 guibg=#08080d gui=none
 
 hi Cursor         guifg=#08080d guibg=#99e550
 hi User1          guifg=#fff000
@@ -139,6 +139,8 @@ hi rubyStringEscape guifg=#df7126 guibg=#222034 gui=italic
 hi rubyInterpolationDelimiter guifg=#8f563b guibg=#191826
 
 hi htmlTagName ctermfg=174 ctermbg=235 cterm=none guifg=#639bff guibg=#11101a gui=none
+
+hi link vimHiKeyList Operator
 
 " for Plugin 'luochen1990/rainbow'
 let g:rainbow_conf = {

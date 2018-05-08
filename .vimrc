@@ -85,7 +85,7 @@ set fileencoding=utf-8
 
 let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
 
-let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 0
 let g:neocomplete#enable_smart_case = 1
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
@@ -146,9 +146,16 @@ let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_build_constraints = 1
+let g:go_list_autoclose = 1
 " let g:go_metalinter_autosave = 1
 let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
+
+au FileType go nmap <leader>bb <Plug>(go-build)
+au FileType go nmap <leader>rr <Plug>(go-run)
+au FileType go nmap <leader>tt <Plug>(go-test)
+au FileType go nmap <leader>tf <Plug>(go-test-func)
+au FileType go nmap <leader>aa <Plug>(go-alternate-vertical)
 
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "M",
@@ -164,6 +171,7 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 let NERDTreeMinimalUI=1
 let NERDTreeHighlightCursorline = 1
+let NerdTreeChDirMode = 1
 
 
 map <C-n> :NERDTreeToggle<CR>
@@ -175,8 +183,6 @@ nmap <Leader>gs <Plug>GitGutterStageHunk
 
 if exists('g:loaded_neocomplete')
     let g:neocomplete#enable_smart_case = 1
-	let g:neocomplete#sources#omni#functions.go =
-                \ 'gocomplete#Complete'
     let g:neocomplete#sources#dictionary#dictionaries = {
                 \ 'default' : '',
                 \ 'lua' : s:homedir.'/love.dict'
@@ -340,12 +346,6 @@ augroup custom
     endfunction
     autocmd Filetype html call s:maybeHugoHtml()
     autocmd BufReadPre * call s:maybeHugoIgnore()
-
-    " open NERDTree on startup and move the cursor out of it
-    autocmd VimEnter * NERDTreeToggle
-    autocmd VimEnter * wincmd p
-    " close NERDTree if it's the last/only buffer
-    "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 augroup END
 
 " The text to return for a fold

@@ -13,3 +13,9 @@ hi link QEDString string
 hi link QEDComment comment
 
 let b:current_syntax = "qed"
+
+function! RenumberPages()
+    let i = 1
+    g/\v^\s+(end)?page \zs\d+\s+\{/s//\=i.' {'/ | let i=i+1
+endfunction
+

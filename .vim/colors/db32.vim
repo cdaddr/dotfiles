@@ -20,7 +20,7 @@ endif
 let g:colors_name="db32"
 
 " Main
-hi Normal         ctermfg=249 ctermbg=235 cterm=none guifg=#f3f3f3 guibg=#11101a gui=none
+hi Normal         ctermfg=249 ctermbg=235 cterm=none guifg=#aaaaaa guibg=#11101a gui=none
 hi Comment        ctermfg=244 ctermbg=235 cterm=none guifg=#595652 guibg=#11101a gui=italic
 
 " Constant
@@ -103,8 +103,8 @@ hi LineNr         ctermfg=244 ctermbg=237 cterm=none guifg=#847e87 guibg=#08080d
 hi MatchParen     ctermfg=16 ctermbg=215 cterm=none guifg=#11101a guibg=#df7126 gui=none
 
 " Search
-hi Search         ctermfg=16 ctermbg=179 cterm=none guifg=#f3f3f3 guibg=#08080d gui=bold
-hi IncSearch      ctermfg=231 ctermbg=168 cterm=none guifg=#fbf236 guibg=#08080d gui=none
+hi Search         ctermfg=16 ctermbg=179 cterm=none guifg=#000000 guibg=#fbf236 gui=bold
+hi IncSearch      ctermfg=231 ctermbg=168 cterm=none guifg=#000000 guibg=#aaaa00 gui=none
 
 " Diff Mode
 hi DiffAdd        ctermfg=16 ctermbg=149 cterm=none guifg=#08080d guibg=#4b692f gui=none

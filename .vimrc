@@ -17,10 +17,8 @@ Plug 'sjl/gundo.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'honza/vim-snippets'
 Plug 'godlygeek/tabular'
-if has("gui_running")
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-end
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chrisbra/NrrwRgn'
@@ -39,6 +37,21 @@ Plug 'vim-scripts/paredit.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ervandew/supertab'
+Plug 'udalov/kotlin-vim'
+Plug 'morhetz/gruvbox'
+Plug 'rust-lang/rust.vim'
+Plug 'posva/vim-vue'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', {'do': './install.sh' }
+Plug 'mattn/emmet-vim' 
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'kshenoy/vim-signature'
+Plug 'cespare/vim-toml'
 call plug#end()
 
 syntax on
@@ -48,7 +61,13 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
+set background=dark
+colorscheme db32
+set termguicolors
+
 "" plugin configs
+let g:deoplete#enable_at_startup = 1
+
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_chan_whitespace_error = 1
 let g:go_highlight_extra_types = 1
@@ -66,7 +85,7 @@ let g:go_highlight_string_spellcheck = 1
 let g:go_highlight_format_strings = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_highlight_variable_assignments = 1
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command = "/Users/brian/Code/go/bin/goimports"
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
@@ -78,23 +97,25 @@ let g:go_list_autoclose = 1
 let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
 
-if has("gui_running")
-    let g:airline_powerline_fonts = 1
-    let g:airline_theme = 'db32'
-    let g:airline_inactive_collapse = 1
-    let g:airline_skip_empty_sections = 0
-    let g:airline#extensions#branch#enabled = 1
-    let g:airline#extensions#hunks#non_zero_only = 0
-    let g:airline#extensions#nrrwrgn#enabled = 1
-    let g:airline#extensions#ctrlp#show_adjacent_modes = 1
-    let g:airline#extensions#default#section_truncate_width = {}
-    let airline#extensions#default#section_use_groupitems = 0
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
-    endif
-    let g:airline_symbols.notexists = ' ⁇'
-    let g:airline_detect_modified=1
-    let g:airline#extensions#virtualenv#enabled = 1
+let python_highlight_all = 1
+
+" let g:airline_powerline_fonts = 1
+let g:airline_theme = 'db32'
+let g:airline_inactive_collapse = 1
+let g:airline_skip_empty_sections = 0
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#hunks#non_zero_only = 0
+let g:airline#extensions#nrrwrgn#enabled = 1
+let g:airline#extensions#ctrlp#show_adjacent_modes = 1
+let g:airline#extensions#default#section_truncate_width = {}
+let airline#extensions#default#section_use_groupitems = 0
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.notexists = ' ⁇'
+let g:airline_detect_modified=1
+let g:airline#extensions#virtualenv#enabled = 1
+if exists('airline#section#create')
     let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
 end
 
@@ -118,6 +139,7 @@ let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 0
 
 let g:ale_sign_column_always = 1
+let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
 
 
@@ -137,11 +159,13 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
+imap <C-y><C-y> <C-y>,
 
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 vmap <Enter> <Plug>(EasyAlign)
 
+set hidden
 set updatetime=250
 set backup
 execute "set backupdir=" . $HOME . "/.vim/backup"
@@ -162,33 +186,37 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 " see :h last-position-jump
 
 " Appearance
-colorscheme db32
 if has('gui_running')
     "colorscheme bubblegum-256-dark
     hi StatusLine gui=NONE
     hi User1 gui=NONE
     hi User2 gui=NONE
     hi WildMenu gui=NONE
-    if has('win32')
-        set guifont=InputMono:h14
-        " 0oO 1lLi /\ '" {} [] ()
-    elseif has('mac')
-        set guifont=InputMono:h14
-    else
-        set guifont=Droid\ Sans\ Mono\ 13
+    if !has('nvim')
+        if has('win32')
+            set guifont=InputMono:h14
+            " 0oO 1lLi /\ '" {} [] ()
+        elseif has('mac')
+            set guifont=Menlo:h16
+        else
+            set guifont=Droid\ Sans\ Mono\ 13
+        end
     end
 else
-    colorscheme default
-    set guifont=Consolas\ 12
+    if !has('nvim')
+        colorscheme default
+        set guifont=Consolas\ 12
+    end
 endif
 " Remove GUI menu and toolbar
-set guioptions=Ace
+set guioptions=Ac
 
 set backspace=indent,eol,start
 set ruler
 set showcmd
 set number
 set wrap
+set mouse=a
 
 " Search
 set incsearch
@@ -227,12 +255,15 @@ set wildmenu
 set autowrite
 set splitright
 set ttyfast
-set noballooneval
+if !has('nvim')
+    set noballooneval
+end
+
+set completeopt-=preview
+set completeopt+=noinsert
 
 " Visual bells give me seizures
 set t_vb=''
-
-" 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 
 
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
@@ -246,6 +277,9 @@ augroup custom
     au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
     au QuickFixCmdPost * :copen
     au BufWritePost ~/.vimrc so ~/.vimrc
+
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+    set completeopt=noinsert,menuone,noselect
 
     function! s:buildGo()
         let fn = expand('%:r')
@@ -472,6 +506,24 @@ nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
 
 iab <expr> dts strftime("%Y-%m-%dT%I:%M:%S")
+
+" MacOS mappings
+if has('mac')
+    noremap <D-Up> <PageUp>
+    noremap <D-Down> <PageDown>
+    noremap <D-Left> _
+    noremap <D-Right> $
+
+    noremap <D-k> <PageUp>
+    noremap <D-j> <PageDown>
+    noremap <D-h> _
+    noremap <D-l> $
+
+    inoremap <D-k> <PageUp>
+    inoremap <D-j> <PageDown>
+    inoremap <D-h> <Esc>I
+    inoremap <D-l> <Esc>A
+end
 
 " Nasty, I used these at work for something.  I forget why, but I may need them again
 "nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>

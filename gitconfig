@@ -1,0 +1,44 @@
+[core]
+	excludesfile = ~/.gitignore
+	pager = less -FRSX
+[color]
+	status = auto
+	branch = auto
+	ui = auto
+	pager = 1
+# [diff]
+# 	external = git_diff_wrapper
+# [pager]
+# 	diff = true
+[alias]
+	last = log -1 HEAD
+	co = checkout
+	st = status -s
+	stat = diff --stat
+	ci = commit
+	ca = commit -a
+	br = branch -a
+	logstat = log --stat
+	logf = log --pretty=fuller
+	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr)'
+	unadd = reset --mixed
+	ls = ls-tree -rt --abbrev
+	di = diff --cached
+	ignore = !echo $1 >> .gitignore
+	amend = commit --amend
+	history = log --follow -p
+	com = commit
+	stageall = add -A
+	stage = add -u
+	unstage = reset HEAD --
+	unstageall = reset HEAD
+	rewindall = reset --hard HEAD
+	rewind = checkout
+	update = add -u
+	update-submodules = "!f(){ git pull --recurse-submodules; git submodule update; };f"
+	sba = "!f() { git subtree add --prefix $2 $1 master --squash; }; f"
+	sbu = "!f() { git subtree pull --prefix $2 $1 master --squash; }; f"
+	ls-subtrees = !"git log | grep git-subtree-dir | awk '{ print $2 }'"
+
+[credential]
+	helper = cache --timeout=3600

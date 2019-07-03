@@ -31,6 +31,7 @@
 Session.vim
 # temporary
 .netrwhist
+.netrwbook
 *~
 # auto-generated tag files
 tags

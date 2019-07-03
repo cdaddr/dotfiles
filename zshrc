@@ -65,6 +65,7 @@ if [[ `uname` == 'Darwin' ]]; then
     if [[ -d $findbin ]]; then
         export PATH="${findbin}:$PATH"
     fi
+    export PATH="/usr/local/bin:$PATH"
 fi
 
 

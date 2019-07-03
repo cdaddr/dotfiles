@@ -15,7 +15,6 @@ Plug 'kana/vim-textobj-user'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'sjl/gundo.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'honza/vim-snippets'
 Plug 'godlygeek/tabular'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
@@ -30,8 +29,8 @@ Plug 'robertbasic/vim-hugo-helper'
 Plug 'w0rp/ale'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'vim-scripts/paredit.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'scrooloose/nerdtree'
+" Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ervandew/supertab'
 Plug 'udalov/kotlin-vim'
 Plug 'morhetz/gruvbox'
@@ -48,6 +47,22 @@ Plug 'fatih/vim-go'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-vinegar'
+
+" for deoplete
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
+" for snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
 call plug#end()
 
 syntax on
@@ -59,10 +74,10 @@ set fileencoding=utf-8
 
 set background=light
 set termguicolors
-colorscheme PaperColor
+colorscheme db32
+
 
 "" plugin configs
-let g:deoplete#enable_at_startup = 1
 
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_chan_whitespace_error = 1
@@ -94,7 +109,7 @@ let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
 
 let python_highlight_all = 1
-let g:lightline = {'colorscheme': 'PaperColor'}
+let g:lightline = {'colorscheme': 'powerline'}
 
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -248,6 +263,9 @@ set completeopt+=noinsert
 " Visual bells give me seizures
 set t_vb=''
 
+let g:netrw_fastbrowse = 0
+let g:netrw_liststyle = 3
+
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 
@@ -260,6 +278,8 @@ augroup custom
     au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
     au QuickFixCmdPost * :copen
     au BufWritePost ~/.vimrc so ~/.vimrc
+
+    autocmd FileType netrw setl bufhidden=wipe
 
     function! s:buildGo()
         let fn = expand('%:r')
@@ -307,8 +327,8 @@ augroup custom
     autocmd Filetype html call s:maybeHugoHtml()
     autocmd BufReadPre * call s:maybeHugoIgnore()
 
-    autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-    autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
+    " autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+    " autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
 
     au FileType go nmap <leader>bb <Plug>(go-build)
     au FileType go nmap <leader>rr <Plug>(go-run)

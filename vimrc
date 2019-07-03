@@ -17,15 +17,11 @@ Plug 'sjl/gundo.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'honza/vim-snippets'
 Plug 'godlygeek/tabular'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chrisbra/NrrwRgn'
 Plug 'xolox/vim-misc'
 Plug 'cdaddr/gentooish.vim'
-" Plug 'luochen1990/rainbow'
 Plug 'tpope/vim-salve'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'mustache/vim-mustache-handlebars'
@@ -47,7 +43,11 @@ Plug 'kshenoy/vim-signature'
 Plug 'cespare/vim-toml'
 Plug 'JikkuJose/vim-visincr'
 " Plug 'srcery-colors/srcery-vim'
-Plug 'romainl/flattened'
+" Plug 'romainl/flattened'
+Plug 'fatih/vim-go'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 syntax on
@@ -57,10 +57,9 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
-" set background=light
-"set termguicolors
-"let g:srcery_bold=0
-colorscheme flattened_light
+set background=light
+set termguicolors
+colorscheme PaperColor
 
 "" plugin configs
 let g:deoplete#enable_at_startup = 1
@@ -95,27 +94,7 @@ let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
 
 let python_highlight_all = 1
-let g:lightline = {'colorscheme': 'solarized'}
-
-" let g:airline_powerline_fonts = 1
-" let g:airline_theme = 'flattened_light'
-" let g:airline_inactive_collapse = 1
-" let g:airline_skip_empty_sections = 0
-" let g:airline#extensions#branch#enabled = 1
-" let g:airline#extensions#hunks#non_zero_only = 0
-" let g:airline#extensions#nrrwrgn#enabled = 1
-" let g:airline#extensions#ctrlp#show_adjacent_modes = 1
-" let g:airline#extensions#default#section_truncate_width = {}
-" let airline#extensions#default#section_use_groupitems = 0
-" if !exists('g:airline_symbols')
-"     let g:airline_symbols = {}
-" endif
-" let g:airline_symbols.notexists = ' ⁇'
-" let g:airline_detect_modified=1
-" let g:airline#extensions#virtualenv#enabled = 1
-" if exists('airline#section#create')
-"     let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")} ' . "\uE0A3" . '%{col(".")}'])
-" end
+let g:lightline = {'colorscheme': 'PaperColor'}
 
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -138,7 +117,6 @@ let g:gitgutter_eager = 0
 
 let g:ale_sign_column_always = 1
 let g:ale_fix_on_save = 1
-let g:airline#extensions#ale#enabled = 1
 
 
 let NERDTreeMinimalUI=1
@@ -209,6 +187,27 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+
+let mapleader=" "
+nmap \ <Leader>
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>bb :Buffers<CR>
+nnoremap <Leader>rg :Rg<CR>
+
+let g:fzf_colors = {
+            \ 'fg':      ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Comment'],
+            \ 'fg+':     ['fg', 'DiffAdd', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'Normal', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'PreProc'],
+            \ 'border':  ['fg', 'Normal'],
+            \ 'prompt':  ['fg', 'Conditional'],
+            \ 'pointer': ['fg', 'Typedef'],
+            \ 'marker':  ['fg', 'Keyword'],
+            \ 'spinner': ['fg', 'Label'],
+            \ 'header':  ['fg', 'Normal'] }
 
 " The text to return for a fold
 function! FoldText()
@@ -589,4 +588,9 @@ endfunction
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+
+call lightline#init()
+call lightline#colorscheme()
+call lightline#update()
 

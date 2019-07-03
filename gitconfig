@@ -42,3 +42,6 @@
 
 [credential]
 	helper = cache --timeout=3600
+[user]
+	name = Brian Carper
+	email = brian@carper.ca

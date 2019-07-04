@@ -1,0 +1,3 @@
+[submodule "zfunctions/pure"]
+	path = zfunctions/pure
+	url = https://github.com/sindresorhus/pure

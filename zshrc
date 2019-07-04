@@ -35,7 +35,7 @@ setopt no_auto_remove_slash
 setopt auto_param_keys
 setopt prompt_subst
 
-fpath=("$HOME/.zshfunctions" $fpath)
+fpath=("$HOME/.zfunctions" $fpath)
 autoload -U promptinit && promptinit
 prompt pure
 

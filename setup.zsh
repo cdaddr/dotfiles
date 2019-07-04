@@ -12,7 +12,7 @@ DOTFILES="${0:a:h}"
 
 log "Linking..."
 mkdir -p ~/.config/kitty/
-lns "$DOTFILES/zfunctions/dircolors-solarized/dircolors.ansi-light"     $HOME/.dir_colors
+# lns "$DOTFILES/zfunctions/dircolors-solarized/dircolors.ansi-light"     $HOME/.dir_colors
 lns "$DOTFILES/gitconfig"               $HOME/.gitconfig
 lns "$DOTFILES/gitignore"               $HOME/.gitignore
 lns "$DOTFILES/spacemacs"               $HOME/.spacemacs

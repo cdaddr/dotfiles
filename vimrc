@@ -29,9 +29,8 @@ Plug 'robertbasic/vim-hugo-helper'
 Plug 'w0rp/ale'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'vim-scripts/paredit.vim'
-" Plug 'scrooloose/nerdtree'
-" Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'ervandew/supertab'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'udalov/kotlin-vim'
 Plug 'morhetz/gruvbox'
 Plug 'rust-lang/rust.vim'
@@ -44,10 +43,10 @@ Plug 'JikkuJose/vim-visincr'
 " Plug 'srcery-colors/srcery-vim'
 " Plug 'romainl/flattened'
 Plug 'fatih/vim-go'
-Plug 'NLKNguyen/papercolor-theme'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar'
+Plug 'plasticboy/vim-markdown'
 
 " for deoplete
 if has('nvim')
@@ -57,6 +56,10 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
+
+" themes
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'morhetz/gruvbox'
 let g:deoplete#enable_at_startup = 1
 
 " for snippets
@@ -72,12 +75,16 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 
-set background=light
+set background=dark
 set termguicolors
-colorscheme db32
+colorscheme gruvbox
 
 
 "" plugin configs
+
+let g:user_emmet_leader_key = '<C-h>'
+
+let g:gitgutter_map_keys = 0
 
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_chan_whitespace_error = 1
@@ -109,10 +116,7 @@ let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
 
 let python_highlight_all = 1
-let g:lightline = {'colorscheme': 'powerline'}
-
-let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:lightline = {'colorscheme': 'gruvbox'}
 
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_match_current_file = 1
@@ -150,7 +154,6 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
-imap <C-y><C-y> <C-y>,
 
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -166,6 +169,8 @@ endif
 
 let macvim_skip_cmd_opt_movement = 1
 
+set conceallevel=2
+
 set undofile
 execute "set undodir=" . $HOME .  "/.vim/undo"
 if ! isdirectory(&undodir)
@@ -178,7 +183,11 @@ set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
 
 " Appearance
 if !has('nvim')
-    set guifont=FiraCode-Regular:h16
+    if has('mac')
+        set guifont=SFMono-Regular:h16
+    else
+        set guifont=FiraCode-Regular:h14
+    endif
 end
 " Remove GUI menu and toolbar
 set guioptions=Ac
@@ -448,11 +457,32 @@ nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
 
 " nnoremap <Leader>l :call CountLines()<CR>
 
+" imap <expr><tab> pumvisible() ? "<C-y>" : "<tab>"
+inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
+
+inoremap <M-Up> <Esc>:m .-2<CR>==gi
+inoremap <M-Down> <Esc>:m .+1<CR>==gi
+nnoremap <M-Up> :m-2<CR>==
+nnoremap <M-Down> :m+<CR>==
+vnoremap <M-Up> :m '<-2<CR>gv=gv
+vnoremap <M-Down> :m '>+<CR>gv=gv
+inoremap <M-k> <Esc>:m .-2<CR>==gi
+inoremap <M-j> <Esc>:m .+1<CR>==gi
+nnoremap <M-k> :m-2<CR>==
+nnoremap <M-j> :m+<CR>==
+vnoremap <M-k> :m '<-2<CR>gv=gv
+vnoremap <M-j> :m '>+<CR>gv=gv
+" wtf
+if has('mac')
+    inoremap ˚ <Esc>:m .-2<CR>==gi
+    inoremap ∆ <Esc>:m .+1<CR>==gi
+    nnoremap ˚ :m-2<CR>==
+    nnoremap ∆ :m+<CR>==
+    vnoremap ˚ :m '<-2<CR>gv=gv
+    vnoremap ∆ :m '>+<CR>gv=gv
+endif
+
 " Window movements; I do this often enough to warrant using up M-arrows
-nnoremap <M-Right> <C-W><Right>
-nnoremap <M-Left> <C-W><Left>
-nnoremap <M-Up> <C-W><Up><C-W>_
-nnoremap <M-Down> <C-W><Down><C-W>_
 nnoremap <M-l> <C-W><Right>
 nnoremap <M-h> <C-W><Left>
 nnoremap <M-k> <C-W><Up><C-W>_

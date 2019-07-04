@@ -1,3 +1,6 @@
 [submodule "zfunctions/pure"]
 	path = zfunctions/pure
 	url = https://github.com/sindresorhus/pure
+[submodule "LS_COLORS"]
+	path = LS_COLORS
+	url = https://github.com/trapd00r/LS_COLORS

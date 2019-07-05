@@ -119,4 +119,10 @@ if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then
     eval $(dircolors "$HOME/.dir_colors")
 fi
 
-alias vim=nvim
+if [[ $(command nvim) ]]; then
+    alias vim=nvim
+fi
+
+# auto-generated stuff
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

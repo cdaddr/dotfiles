@@ -119,7 +119,7 @@ if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then
     eval $(dircolors "$HOME/.dir_colors")
 fi
 
-if [[ $(command nvim) ]]; then
+if [[ $(command nvimx -es &>/dev/null) ]]; then
     alias vim=nvim
 fi
 

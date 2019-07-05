@@ -35,10 +35,49 @@ setopt no_auto_remove_slash
 setopt auto_param_keys
 setopt prompt_subst
 
-fpath=("$HOME/.zfunctions" $fpath)
-autoload -U promptinit && promptinit
-prompt pure
+#           normal  bright
+#  black    0       8
+#  red      1       9
+#  green    2       10
+#  yellow   3       11
+#  blue     4       12
+#  magenta  5       13
+#  cyan     6       14
+#  white    7       15
+autoload -Uz vcs_info
 
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' check-for-staged-changes true
+zstyle ':vcs_info:*' stagedstr "%F{10}+%f"
+zstyle ':vcs_info:*' unstagedstr "%F{11}+%f"
+zstyle ':vcs_info:*' formats '%F{8}:%F{7}%b%c%u%f'
+zstyle ':vcs_info:*' actionformats '%F{8}:%F{7}%b|%a%c%u%f'
+function prompt() {
+
+    local PROMPT=''
+    # status of last command
+    PROMPT+="%(0?.%F{2}•.%B%F{1}✗%b)%f"
+    # root
+    PROMPT+="%(!.%F{1} root%f.)"
+    # hostname if ssh
+    if [[ ! -z "$SSH_CONNECTION" ]]; then
+        PROMPT+=" %F{6}@%m%f"
+    fi
+    # pwd
+    PROMPT+=" %F{12}%~%f"
+    # git
+    PROMPT+="${vcs_info_msg_0_}"
+    if [[ ! -z "$(git ls-files --other --directory --exclude-standard 2>/dev/null | sed q)" ]]; then
+        PROMPT+="%F{1}+%f"
+    fi
+    # end
+    PROMPT+=" %F{13}❯%f "
+
+    echo "$PROMPT"
+}
+
+precmd () { vcs_info }
+export PS1='$(prompt)'
 
 # keybinds
 bindkey -e
@@ -78,3 +117,5 @@ fi
 if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then
     eval $(dircolors "$HOME/.dir_colors")
 fi
+
+alias vim=nvim

@@ -13,15 +13,16 @@ DOTFILES="${0:a:h}"
 log "Linking..."
 mkdir -p ~/.config/kitty/
 # lns "$DOTFILES/zfunctions/dircolors-solarized/dircolors.ansi-light"     $HOME/.dir_colors
-lns "$DOTFILES/gitconfig"               $HOME/.gitconfig
-lns "$DOTFILES/gitignore"               $HOME/.gitignore
-lns "$DOTFILES/spacemacs"               $HOME/.spacemacs
-lns "$DOTFILES/tmux.conf"               $HOME/.tmux.conf
-lns "$DOTFILES/vim"                     $HOME/.vim
-lns "$DOTFILES/vimrc"                   $HOME/.vimrc
-lns "$DOTFILES/zfunctions"              $HOME/.zfunctions
-lns "$DOTFILES/zshrc"                   $HOME/.zshrc
-lns "$DOTFILES/config/kitty/kitty.conf" $HOME/.config/kitty/kitty.conf
+lns "$DOTFILES/gitconfig"               "$HOME/.gitconfig"
+lns "$DOTFILES/gitignore"               "$HOME/.gitignore"
+lns "$DOTFILES/ignore"                  "$HOME/.ignore"
+lns "$DOTFILES/spacemacs"               "$HOME/.spacemacs"
+lns "$DOTFILES/tmux.conf"               "$HOME/.tmux.conf"
+lns "$DOTFILES/vim"                     "$HOME/.vim"
+lns "$DOTFILES/vimrc"                   "$HOME/.vimrc"
+lns "$DOTFILES/zfunctions"              "$HOME/.zfunctions"
+lns "$DOTFILES/zshrc"                   "$HOME/.zshrc"
+lns "$DOTFILES/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 
 log "Sourcing zshrc..."
 source ~/.zshrc

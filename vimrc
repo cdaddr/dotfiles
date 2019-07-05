@@ -212,11 +212,10 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-let mapleader=" "
-nmap \ <Leader>
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>bb :Buffers<CR>
-nnoremap <Leader>rg :Rg<CR>
+nnoremap <Space> <PageDn>
+
+nnoremap <C-p> :Files<CR>
+nnoremap <C-g> :Rg<CR>
 
 let g:fzf_colors = {
             \ 'fg':      ['fg', 'Normal'],
@@ -451,6 +450,8 @@ silent! unmap q?
 
 " fat fingers :(
 cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>
+cabbrev W <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'w' : 'W')<CR>
+cabbrev Q <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'q' : 'Q')<CR>
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>

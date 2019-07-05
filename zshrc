@@ -3,6 +3,7 @@ export LANG=en_CA.UTF-8
 export EDITOR="vim"
 export PAGER="less"
 export GOPATH="$HOME/Documents/go"
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 
 # zsh options
 autoload -Uz colors && colors

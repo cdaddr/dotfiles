@@ -24,6 +24,7 @@ lns "$DOTFILES/zfunctions"              "$HOME/.zfunctions"
 lns "$DOTFILES/zshrc"                   "$HOME/.zshrc"
 lns "$DOTFILES/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 lns "$DOTFILES/config/nvim"             "$HOME/.config/nvim"
+lns "$DOTFILES/LS_COLORS/LS_COLORS"     "$HOME/.dir_colors"
 
 log "Sourcing zshrc..."
 source ~/.zshrc

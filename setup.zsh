@@ -42,7 +42,7 @@ fi
 log "Fetching Vim plugins..."
 vim +PlugInstall +qall
 # for deoplete
-pip3 install --user --upgrade pynvim
+python3 -m pip install --user --upgrade pynvim
 
 EMACS="$HOME/.emacs.d"
 if [[ -e $EMACS ]]; then

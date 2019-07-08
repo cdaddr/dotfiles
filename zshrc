@@ -47,12 +47,8 @@ setopt prompt_subst
 #  white    7       15
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' check-for-staged-changes true
-zstyle ':vcs_info:*' stagedstr "%F{10}+%f"
-zstyle ':vcs_info:*' unstagedstr "%F{11}+%f"
-zstyle ':vcs_info:*' formats '%F{8}:%F{7}%b%c%u%f'
-zstyle ':vcs_info:*' actionformats '%F{8}:%F{7}%b|%a%c%u%f'
+zstyle ':vcs_info:*' formats '%F{8}:%F{7}%b%f'
+zstyle ':vcs_info:*' actionformats '%F{8}:%F{7}%b|%a%f'
 function prompt() {
 
     local PROMPT=''
@@ -68,8 +64,8 @@ function prompt() {
     PROMPT+=" %F{12}%~%f"
     # git
     PROMPT+="${vcs_info_msg_0_}"
-    if [[ ! -z "$(git ls-files --other --directory --exclude-standard 2>/dev/null | sed q)" ]]; then
-        PROMPT+="%F{1}+%f"
+    if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
+        PROMPT+="%F{1}*%f"
     fi
     # end
     PROMPT+=" %F{13}❯%f "
@@ -110,7 +106,12 @@ fi
 
 
 if [[ `ls --color=auto 2>/dev/null` ]]; then
-    alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto"
+    if [[ ! -z "${WSL_DISTRO_NAME}" ]]; then
+        alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto 2>/dev/null"
+    else
+        alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto"
+    fi
+
     alias ll="ls -lh"
     alias la="la -a"
 fi

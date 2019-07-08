@@ -4,6 +4,9 @@ export EDITOR="nvim"
 export PAGER="less"
 export GOPATH="$HOME/Documents/go"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 
 # zsh options
 autoload -Uz colors && colors
@@ -114,6 +117,10 @@ if [[ `ls --color=auto 2>/dev/null` ]]; then
 
     alias ll="ls -lh"
     alias la="la -a"
+fi
+
+if type fdfind &>/dev/null && ! type fd &>/dev/null; then
+    alias fd=fdfind
 fi
 
 if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then

@@ -212,11 +212,6 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-nnoremap <Space> <PageDn>
-
-nnoremap <C-p> :Files<CR>
-nnoremap <C-g> :Rg<CR>
-
 let g:fzf_colors = {
             \ 'fg':      ['fg', 'Normal'],
             \ 'bg':      ['bg', 'Normal'],
@@ -413,6 +408,9 @@ vnoremap <S-Down> <Down>
 inoremap <S-Down> <Down>
 nnoremap <S-Down> <Down>
 
+nmap <Space> <PageDown>
+nmap <C-Space> <PageUp>
+
 " visual mode indenting
 vnoremap > >gv
 vnoremap < <gv
@@ -436,7 +434,7 @@ nnoremap <Leader>q :cclose<CR>
 " open location list
 nnoremap <Leader>l :lopen<CR>
 
-" Emacs-ish keybindings, oops
+" Emacs-ish keybindings
 noremap! <M-Backspace> <C-W>
 noremap! <M-Left> <C-Left>
 noremap! <M-Right> <C-Right>
@@ -483,7 +481,7 @@ if has('mac')
     vnoremap ∆ :m '>+<CR>gv=gv
 endif
 
-" Window movements; I do this often enough to warrant using up M-arrows
+" Window movements
 nnoremap <M-l> <C-W><Right>
 nnoremap <M-h> <C-W><Left>
 nnoremap <M-k> <C-W><Up><C-W>_
@@ -537,6 +535,10 @@ nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
 
 iab <expr> dts strftime("%Y-%m-%dT%I:%M:%S")
+
+" fzf
+nnoremap <C-p> :Files<CR>
+nnoremap <C-g> :Rg<CR>
 
 " MacOS mappings
 if has('mac')
@@ -618,16 +620,6 @@ function! AppendRandomLetter(n)
         rubydo $_ = $_ + (('A'..'Z').to_a.reject{|x| %w{I O}.include?(x)})[rand 24]
     endfor
 endfunction
-
-" flash a cross showing where the cursor is
-function! CursorPing()
-    set cursorline cursorcolumn
-    redraw
-    sleep 50m
-    set nocursorline nocursorcolumn
-endfunction
-nmap <C-Space> :call CursorPing()<CR>
-nmap <Leader>x :set cursorline! cursorcolumn!<CR>
 
 " find and highlight all lines longer than the current line
 function! FindLongerLines()

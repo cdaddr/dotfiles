@@ -58,8 +58,11 @@ else
 endif
 
 " themes
+Plug 'lifepillar/vim-colortemplate'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
+Plug 'lithammer/vim-eighties'
+
 let g:deoplete#enable_at_startup = 1
 
 " for snippets
@@ -272,10 +275,6 @@ let g:netrw_liststyle = 3
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 
-if has("win32")
-    set wildignore+=*.bpk,*.bjk,*.diw,*.bmi,*.bdm,*.bfi,*.bdb,*.bxi
-endif
-
 augroup custom
     au!
     au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
@@ -295,19 +294,6 @@ augroup custom
         let &cmdheight = 1
     endfunction
     autocmd BufWritePost *.go call s:buildGo()
-
-    function! SetLovePrefs()
-        let dir = "$HOME/Documents/GitHub/dotfiles/.vim/love.dict"
-        if has("win32") || has("win64")
-            command! -nargs=* Love  :silent !"C:\Program Files (x86)\LOVE\love.exe" . <args>
-            nnoremap <F12> = :Love<CR>
-            exe 'setlocal dictionary-=' . dir . ' dictionary+=' . dir
-            setlocal dictionary-=~/vimfiles/lua.dict dictionary+=~/vimfiles/lua.dict
-            setlocal iskeyword+=.
-            setlocal iskeyword+=:
-        end
-    endfunction
-    autocmd FileType lua call SetLovePrefs()
 
     au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
 
@@ -329,9 +315,6 @@ augroup custom
     endfunction
     autocmd Filetype html call s:maybeHugoHtml()
     autocmd BufReadPre * call s:maybeHugoIgnore()
-
-    " autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-    " autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
 
     au FileType go nmap <leader>bb <Plug>(go-build)
     au FileType go nmap <leader>rr <Plug>(go-run)

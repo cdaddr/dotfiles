@@ -71,7 +71,11 @@ function prompt() {
         PROMPT+="%F{1}*%f"
     fi
     # end
-    PROMPT+=" %F{13}❯%f "
+    if [[ ! -z "${WSL_DISTRO_NAME}" ]]; then
+        PROMPT+=" %F{13}>%f "
+    else
+        PROMPT+=" %F{13}❯%f "
+    fi
 
     echo "$PROMPT"
 }

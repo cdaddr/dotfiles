@@ -47,6 +47,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar'
 Plug 'plasticboy/vim-markdown'
+Plug 'tpope/vim-commentary'
 
 " for deoplete
 if has('nvim')

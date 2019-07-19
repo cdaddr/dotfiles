@@ -41,6 +41,7 @@ Plug 'kshenoy/vim-signature'
 Plug 'cespare/vim-toml'
 Plug 'JikkuJose/vim-visincr'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'farmergreg/vim-lastplace'
 " Plug 'srcery-colors/srcery-vim'
 " Plug 'romainl/flattened'
 Plug 'fatih/vim-go'
@@ -275,7 +276,6 @@ set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 
 augroup custom
     au!
-    au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm'\"")|else|exe "norm $"|endif|endif
     au QuickFixCmdPost * :copen
     au BufWritePost ~/.vimrc so ~/.vimrc
 

@@ -26,6 +26,10 @@ lns "$DOTFILES/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 lns "$DOTFILES/config/nvim"             "$HOME/.config/nvim"
 lns "$DOTFILES/LS_COLORS/LS_COLORS"     "$HOME/.dir_colors"
 
+tic -o ~/.terminfo xterm-256.terminfo
+tic -o ~/.terminfo tmux.terminfo
+tic -o ~/.terminfo tmux-256color.terminfo
+
 log "Sourcing zshrc..."
 source ~/.zshrc
 

@@ -17,7 +17,7 @@ Plug 'sjl/gundo.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'itchyny/lightline.vim'
-Plug 'airblade/vim-gitgutter'
+Plug 'mhinz/vim-signify'
 Plug 'chrisbra/NrrwRgn'
 Plug 'xolox/vim-misc'
 Plug 'cdaddr/gentooish.vim'
@@ -40,6 +40,7 @@ Plug 'mattn/emmet-vim'
 Plug 'kshenoy/vim-signature'
 Plug 'cespare/vim-toml'
 Plug 'JikkuJose/vim-visincr'
+Plug 'christoomey/vim-tmux-navigator'
 " Plug 'srcery-colors/srcery-vim'
 " Plug 'romainl/flattened'
 Plug 'fatih/vim-go'
@@ -80,14 +81,12 @@ set fileencoding=utf-8
 
 set background=dark
 set termguicolors
-colorscheme gruvbox
-
+colorscheme eighties
+set colorcolumn=80
 
 "" plugin configs
 
 let g:user_emmet_leader_key = '<C-h>'
-
-let g:gitgutter_map_keys = 0
 
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_chan_whitespace_error = 1
@@ -119,7 +118,7 @@ let g:go_auto_type_info = 1
 let g:go_info_mode = 'guru'
 
 let python_highlight_all = 1
-let g:lightline = {'colorscheme': 'gruvbox'}
+" let g:lightline = {'colorscheme': 'gruvbox'}
 
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_match_current_file = 1
@@ -132,14 +131,8 @@ let g:mustache_abbreviations = 1
 
 let g:rainbow_active = 1
 
-let g:gitgutter_highlight_lines = 0
-let g:gitgutter_override_sign_column_highlight = 0
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 0
-
 let g:ale_sign_column_always = 1
 let g:ale_fix_on_save = 1
-
 
 let NERDTreeMinimalUI=1
 let NERDTreeHighlightCursorline = 1
@@ -161,6 +154,10 @@ map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 vmap <Enter> <Plug>(EasyAlign)
+
+if has("patch-8.1.0360") || has("nvim")
+    set diffopt+=internal,algorithm:patience
+endif
 
 set hidden
 set updatetime=250
@@ -463,12 +460,6 @@ if has('mac')
     vnoremap ˚ :m '<-2<CR>gv=gv
     vnoremap ∆ :m '>+<CR>gv=gv
 endif
-
-" Window movements
-nnoremap <M-l> <C-W><Right>
-nnoremap <M-h> <C-W><Left>
-nnoremap <M-k> <C-W><Up><C-W>_
-nnoremap <M-j> <C-W><Down><C-W>_
 
 " Open window below instead of above
 nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>

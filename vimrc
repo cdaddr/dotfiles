@@ -86,6 +86,9 @@ set termguicolors
 colorscheme eighties
 set colorcolumn=80
 
+set textwidth=99
+set colorcolumn=100
+
 "" plugin configs
 
 let g:user_emmet_leader_key = '<C-h>'

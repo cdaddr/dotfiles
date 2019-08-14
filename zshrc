@@ -61,7 +61,27 @@ function prompt() {
     PROMPT+="%(!.%F{1} root%f.)"
     # hostname if ssh
     if [[ ! -z "$SSH_CONNECTION" ]]; then
-        PROMPT+=" %F{6}@%m%f"
+        case `hostname -s` in 
+            "shiro")
+                PCOLOR="%F{15}%B"
+                ;;
+            "kuro")
+                PCOLOR="%F{7}%B"
+                ;;
+            "ki")
+                PCOLOR="%F{3}%B"
+                ;;
+            "ao")
+                PCOLOR="%F{4}%B"
+                ;;
+            "aka")
+                PCOLOR="%F{1}%B"
+                ;;
+            *)
+                PCOLOR="%F{6}"
+                ;;
+        esac
+        PROMPT+=" ${PCOLOR}@%m%f%b"
     fi
     # pwd
     PROMPT+=" %F{12}%~%f"
@@ -136,3 +156,7 @@ $(command nvim -es &>/dev/null) && alias vim=nvim
 # auto-generated stuff
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if [[ `pyenv &>/dev/null` ]]; then
+    eval "$(pyenv init -)"
+fi

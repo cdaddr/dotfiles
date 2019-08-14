@@ -5,8 +5,16 @@
 " There's always a good possibility of there being broken or
 " experimental stuff in here.
 
+" welcome to vim {{{1 
 set nocompatible
 
+syntax on
+filetype on
+filetype plugin indent on
+
+set encoding=utf-8
+
+" plugins {{{1
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -50,6 +58,9 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-commentary'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'jiangmiao/auto-pairs'
+Plug 'dhruvasagar/vim-table-mode'
 
 " for deoplete
 if has('nvim')
@@ -65,128 +76,20 @@ Plug 'lifepillar/vim-colortemplate'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
 Plug 'lithammer/vim-eighties'
+Plug 'srcery-colors/srcery-vim'
+Plug 'kien/rainbow_parentheses.vim'
 
 let g:deoplete#enable_at_startup = 1
-
+let g:deoplete#custom#sources = {}
+let g:deoplete#custom#sources._ = ['file', 'buffer']
+let g:deoplete#custom#sources.html = ['omni', 'ultisnips']
 " for snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 call plug#end()
-
-syntax on
-filetype on
-filetype plugin indent on
-
-set encoding=utf-8
-set fileencoding=utf-8
-
-set background=dark
-set termguicolors
-colorscheme eighties
-set colorcolumn=80
-
-set textwidth=99
-set colorcolumn=100
-
-"" plugin configs
-
-let g:user_emmet_leader_key = '<C-h>'
-
-let g:go_highlight_array_whitespace_error = 1
-let g:go_highlight_chan_whitespace_error = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_space_tab_error = 1
-let g:go_highlight_trailing_whitespace_error = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_arguments = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_generate_tags = 1
-let g:go_highlight_string_spellcheck = 1
-let g:go_highlight_format_strings = 1
-let g:go_highlight_variable_declarations = 1
-let g:go_highlight_variable_assignments = 1
-let g:go_fmt_command = "/Users/brian/Code/go/bin/goimports"
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_build_constraints = 1
-let g:go_list_autoclose = 1
-let g:go_auto_type_info = 1
-let g:go_info_mode = 'guru'
-
-let python_highlight_all = 1
-" let g:lightline = {'colorscheme': 'gruvbox'}
-
-let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_match_current_file = 1
-let g:ctrlp_max_depth = 8
-
-let g:clojure_align_multiline_strings = 1
-let g:clojure_align_subforms = 1
-
-let g:mustache_abbreviations = 1
-
-let g:rainbow_active = 1
-
-let g:ale_sign_column_always = 1
-let g:ale_fix_on_save = 1
-
-let NERDTreeMinimalUI=1
-let NERDTreeHighlightCursorline = 1
-let NerdTreeChDirMode = 1
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "+",
-    \ "Staged"    : "++",
-    \ "Untracked" : "?",
-    \ "Renamed"   : "->",
-    \ "Unmerged"  : "=",
-    \ "Deleted"   : "D",
-    \ "Dirty"     : "×",
-    \ "Clean"     : "ok",
-    \ 'Ignored'   : 'I',
-    \ "Unknown"   : "?"
-    \ }
-map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
-
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-vmap <Enter> <Plug>(EasyAlign)
-
-if has("patch-8.1.0360") || has("nvim")
-    set diffopt+=internal,algorithm:patience
-endif
-
-set hidden
-set updatetime=250
-set backup
-execute "set backupdir=" . $HOME . "/.vim/backup"
-if ! isdirectory(&backupdir)
-    call mkdir(&backupdir)
-endif
-
-let macvim_skip_cmd_opt_movement = 1
-
-set conceallevel=2
-
-set undofile
-execute "set undodir=" . $HOME .  "/.vim/undo"
-if ! isdirectory(&undodir)
-    call mkdir(&undodir)
-endif
-
-set history=5000
-set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
-" see :h last-position-jump
-
-" Appearance
+" }}}
+" appearance {{{1
 if !has('nvim')
     if has('mac')
         set guifont=SFMono-Regular:h16
@@ -196,26 +99,39 @@ if !has('nvim')
 end
 " Remove GUI menu and toolbar
 set guioptions=Ac
-
-set backspace=indent,eol,start
 set ruler
 set showcmd
 set number
-set wrap
-set mouse=a
-
-" Search
+set conceallevel=2
 set incsearch
-set hls
-set noignorecase
-set nostartofline
+set hlsearch
 set showmatch
+set wildmenu
 
-" Sane defaults for tabs
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
+set background=dark
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+let g:eighties_italics=1
+let g:srcery_italic=1
+let g:srcery_bold=1
+let g:srcery_undercurl=1
+let g:srcery_inverse=1
+let g:srcery_inverse_matches=1
+let g:srcery_inverse_match_paren=1
+colorscheme srcery
+
+augroup appearance
+    au!
+    au VimEnter * RainbowParenthesesToggle
+    au Syntax * RainbowParenthesesLoadRound
+    au Syntax * RainbowParenthesesLoadSquare
+    au Syntax * RainbowParenthesesLoadBraces
+    au Syntax * RainbowParenthesesLoadChevrons
+augroup END
+
+" Visual bells give me seizures
+set t_vb=''
 
 let g:fzf_colors = {
             \ 'fg':      ['fg', 'Normal'],
@@ -232,51 +148,108 @@ let g:fzf_colors = {
             \ 'spinner': ['fg', 'Label'],
             \ 'header':  ['fg', 'Normal'] }
 
-" The text to return for a fold
-function! FoldText()
-    let numlines = v:foldend - v:foldstart
-    let firstline = getline(v:foldstart)
-    "let spaces = 60 - len(firstline)
-    if has("gui_running")
-        return printf("%3d » %s ", numlines, firstline)
-    else
-        return printf("%3d > %s ", numlines, firstline)
-    endif
-endfunction
-set foldtext=FoldText()
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors=0
+let g:indent_guides_guide_size=1
+let g:indent_guides_start_level=2
+hi IndentGuidesOdd  guibg=#1e1e1e
+hi IndentGuidesEven guibg=#1e1e1e
 
-set foldcolumn=0
-set foldmethod=syntax
-set foldlevelstart=99
+" wrapping {{{1
+set formatoptions+=tc
+set textwidth=99
+set colorcolumn=100
+set wrap
 
-if !has('gui_running')
-    set t_Co=256
-end
+" plugin configs {{{1
+let g:netrw_fastbrowse = 0
+let g:netrw_liststyle = 3
+let g:user_emmet_leader_key = '<C-e>'
+let g:lightline = {'colorscheme': 'Tomorrow_Night_Eighties'}
+let g:mustache_abbreviations = 1
+let g:rainbow_active = 1
+let g:ale_sign_column_always = 1
+let g:ale_fix_on_save = 1
+let NERDTreeMinimalUI=1
+let NERDTreeHighlightCursorline = 1
+let NERDTreeIgnore=['__pycache__']
+let NerdTreeChDirMode = 2
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "+",
+    \ "Staged"    : "++",
+    \ "Untracked" : "?",
+    \ "Renamed"   : "->",
+    \ "Unmerged"  : "=",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : "×",
+    \ "Clean"     : "ok",
+    \ 'Ignored'   : 'I',
+    \ "Unknown"   : "?"
+    \ }
+map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+vmap <Enter> <Plug>(EasyAlign)
+let g:AutoPairsShortcutFastWrap='<C-Right>'
+" }}}1
+" backup/undo/history/viminfo {{{1
+set backup
+set backupdir^=~/.vim/backup//,.//,/tmp//
 
-" misc
+set undofile
+set undodir^=~/.vim/undo//
+
+set history=5000
+if !has('nvim')
+    set shada='100,<50,s10,h,r/tmp,r/mnt
+else
+    set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
+endif
+
+set backspace=indent,eol,start
+set mouse=a
+
+" search {{{1
+set noignorecase
+set nostartofline
+
+" sane defaults for tabs {{{1
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+
+" folds {{{1
+set foldcolumn=1
+set foldmethod=marker
+set foldlevelstart=1
+
+" misc {{{1
 set cmdheight=1
 set laststatus=2
 set noshowmode
-set wildmenu
 set autowrite
 set splitright
-set ttyfast
 if !has('nvim')
+    set ttyfast
     set noballooneval
 end
+
+let macvim_skip_cmd_opt_movement = 1
+
+set hidden
+set updatetime=100
+if has("patch-8.1.0360") || has("nvim")
+    set diffopt+=internal,algorithm:patience
+endif
 
 set completeopt-=preview
 set completeopt+=noinsert
 
-" Visual bells give me seizures
-set t_vb=''
-
-let g:netrw_fastbrowse = 0
-let g:netrw_liststyle = 3
-
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 
+" autocommands {{{1
 augroup custom
     au!
     au QuickFixCmdPost * :copen
@@ -323,251 +296,9 @@ augroup custom
     au FileType go nmap <leader>tf <Plug>(go-test-func)
     au FileType go nmap <leader>aa <Plug>(go-alternate-vertical)
 augroup END
-
-function! IsDiff(col)
-endfunction
-
-" Jump to the position in a diff line where the difference starts
-function! FindDiffOnLine()
-    let c = 1
-    while c < col("$")
-        let hlID = diff_hlID(".", c)
-        if hlID == 24
-            call cursor(".", c)
-            return
-        endif
-        let c += 1
-    endwhile
-endfunction
-
-" Use `:match none` to turn off the matches afterwards.
-function! CountLines()
-    let i = 0
-    let s:regex = input("Regex>")
-    execute('silent g/' . s:regex . '/let i = i + 1')
-    execute("match Search /^.*" . s:regex . ".*$/")
-    echo i . " lines match."
-    norm ''
-endfunction
-
-" Copy/pasting from Word DOC files (uggggggh) results in a horrid mess
-function! FixInvisiblePunctuation()
-    silent! %s/\%u2018/'/g
-    silent! %s/\%u2019/'/g
-    silent! %s/\%u2026/.../g
-    silent! %s/\%uf0e0/->/g
-    silent! %s/\%u0092/'/g
-    silent! %s/\%u2013/--/g
-    silent! %s/\%u2014/--/g
-    silent! %s/\%u201C/"/g
-    silent! %s/\%u201D/"/g
-    silent! %s/\%u0052\%u20ac\%u2122/'/g
-    silent! %s/\%ua0/ /g
-    silent! %s/\%u93/'/g
-    silent! %s/\%u94/'/g
-    retab
-endfunction
-
-" Mark lines in current buffer that are exactly the same as a previous line
-function! MarkDuplicateLines()
-    let x = {}
-    let count_dupes = 0
-    for lnum in range(1, line('$'))
-        let line = getline(lnum)
-        if has_key(x, line)
-            exe lnum . 'norm I *****'
-            let count_dupes += 1
-        else
-            let x[line] = 1
-        endif
-    endfor
-    echomsg count_dupes . " dupe(s) found"
-endfunction
-
-"" Mappings
-vnoremap <S-Up> <Up>
-inoremap <S-Up> <Up>
-nnoremap <S-Up> <Up>
-vnoremap <S-Down> <Down>
-inoremap <S-Down> <Down>
-nnoremap <S-Down> <Down>
-
-nmap <Space> <PageDown>
-nmap <C-Space> <PageUp>
-
-" visual mode indenting
-vnoremap > >gv
-vnoremap < <gv
-vnoremap <Tab> >
-vnoremap <S-Tab> <
-
-" Delete all buffers
-nnoremap <Leader>bd :silent bufdo! bd<CR>
-nnoremap <Leader>BD :silent bufdo! bd!<CR>
-
-"Change cwd to the path of the current file
-nnoremap <Leader>c :lcd %:h<CR>
-
-" Toggle wrapping, highlights
-nnoremap <Leader>w :setlocal nowrap!<CR>
-nnoremap <Leader>h :nohls<CR>
-
-" Close quickfix
-nnoremap <Leader>q :cclose<CR>
-
-" open location list
-nnoremap <Leader>l :lopen<CR>
-
-" Emacs-ish keybindings
-noremap! <M-Backspace> <C-W>
-noremap! <M-Left> <C-Left>
-noremap! <M-Right> <C-Right>
-noremap! <C-A> <Home>
-noremap! <C-E> <End>
-
-" Annoying
-silent! unmap q:
-silent! unmap q/
-silent! unmap q?
-
-" fat fingers :(
-cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>
-cabbrev W <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'w' : 'W')<CR>
-cabbrev Q <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'q' : 'Q')<CR>
-
-nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
-nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
-
-" nnoremap <Leader>l :call CountLines()<CR>
-
-" imap <expr><tab> pumvisible() ? "<C-y>" : "<tab>"
-inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
-
-inoremap <M-Up> <Esc>:m .-2<CR>==gi
-inoremap <M-Down> <Esc>:m .+1<CR>==gi
-nnoremap <M-Up> :m-2<CR>==
-nnoremap <M-Down> :m+<CR>==
-vnoremap <M-Up> :m '<-2<CR>gv=gv
-vnoremap <M-Down> :m '>+<CR>gv=gv
-inoremap <M-k> <Esc>:m .-2<CR>==gi
-inoremap <M-j> <Esc>:m .+1<CR>==gi
-nnoremap <M-k> :m-2<CR>==
-nnoremap <M-j> :m+<CR>==
-vnoremap <M-k> :m '<-2<CR>gv=gv
-vnoremap <M-j> :m '>+<CR>gv=gv
-" wtf
-if has('mac')
-    inoremap ˚ <Esc>:m .-2<CR>==gi
-    inoremap ∆ <Esc>:m .+1<CR>==gi
-    nnoremap ˚ :m-2<CR>==
-    nnoremap ∆ :m+<CR>==
-    vnoremap ˚ :m '<-2<CR>gv=gv
-    vnoremap ∆ :m '>+<CR>gv=gv
-endif
-
-" Open window below instead of above
-nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
-
-" Vertical equivalent of C-w-n and C-w-N
-nnoremap <C-w>v :vnew<CR>
-nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
-
-" I open new windows to warrant using up C-M-arrows on this
-nmap <C-M-Up> <C-w>n
-nmap <C-M-Down> <C-w>N
-nmap <C-M-Right> <C-w>v
-nmap <C-M-Left> <C-w>V
-
-" Horizontal window scrolling
-nnoremap <C-S-Right> zL
-nnoremap <C-S-Left> zH
-
-" select text that was just pasted
-nnoremap gp `[v`]
-
-" I used this to record all of my :w's over the course of a day, for fun
-"cabbrev w <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'W' : 'w')<CR>
-"command! -nargs=* W :execute("silent !echo " . strftime("%Y-%m-%d %H:%M:%S") . " >> ~/timestamps")|w <args>
-
-vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
-nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
-nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
-
-vnoremap <Leader>ii >'>oENDIF<ESC><<'<OIF THEN<ESC><<<Up>_yiw<Down>_wPa
-
-" Lines of strings => a paren-surrounded list of comma-separated strings on one line
-nnoremap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
-
-" Delete blank lines
-nnoremap <Leader>db :%g/^$/d<CR>\h
-vnoremap <Leader>db :g/^$/d<CR>\h
-
-" Surround every line in the file with quotes
-nnoremap <Leader>'' :%s/.*/'\0'<CR>:setlocal nohls<CR>
-nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
-
-
-"nnoremap <Leader>rr :ruby x={}<CR>:rubydo x[$_] = true<CR>
-"nnoremap <Leader>rt :rubydo $_ += ' ****' if x[$_]<CR>
-
-vmap <Leader>y :s/^/    /<CR>gv"+ygv:s/^    //<CR>
-
-iab <expr> dts strftime("%Y-%m-%dT%I:%M:%S")
-
-" fzf
-nnoremap <C-p> :Files<CR>
-nnoremap <C-g> :Rg<CR>
-
-" MacOS mappings
-if has('mac')
-    noremap <D-Up> <PageUp>
-    noremap <D-Down> <PageDown>
-    noremap <D-Left> _
-    noremap <D-Right> $
-
-    noremap <D-k> <PageUp>
-    noremap <D-j> <PageDown>
-    noremap <D-h> _
-    noremap <D-l> $
-
-    inoremap <D-k> <PageUp>
-    inoremap <D-j> <PageDown>
-    inoremap <D-h> <Esc>I
-    inoremap <D-l> <Esc>A
-end
-
-" Nasty, I used these at work for something.  I forget why, but I may need them again
-"nnoremap <silent> <Leader>al vi(yo<ESC>p==:s/\</@/g<CR>A = <ESC>$p:nohls<CR>
-"nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
-"vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
-"vnoremap <Leader>n 99<:'<,'>g/^$/d<CR>'<<C-V>'>I1 <ESC>'<<C-V>'>:I<CR>:'<,'>s/\v^(\d+) (.*)/    "\1": "\2"/<CR>'<V'>><ESC>'<O:opts:<ESC><<
-"nnoremap <Leader>n :s/\v^(\d+\S{-})\.\s+(.*)/      :number: "\1"\r      :text: "\2"/<CR>
-"nnoremap <Leader>t :s/\v\s*(\S+)\s*(.*)/  - :name: \1\r    :text: "\2"/<CR>\h
-"nnoremap <Leader>"" :s/\v(^[^"]*)@<!"@<!""@!([^"]*$)@!/""/g<CR>
-"vnoremap <Leader>ra <ESC>:'<,'>s/\w\+/@\1 = \1/<CR>:set nohls<CR>
-
-function! Mirror(dict)
-    for [key, value] in items(a:dict)
-        let a:dict[value] = key
-    endfor
-    return a:dict
-endfunction
-
-function! SwapWords(dict, ...)
-    let words = keys(a:dict) + values(a:dict)
-    let words = map(words, 'escape(v:val, "|")')
-    if(a:0 == 1)
-        let delimiter = a:1
-    else
-        let delimiter = '/'
-    endif
-    let pattern = '\v(' . join(words, '|') . ')'
-    exe '%s' . delimiter . pattern . delimiter
-        \ . '\=' . string(Mirror(a:dict)) . '[S(0)]'
-        \ . delimiter . 'g'
-endfunction
-
-" Randomize order of lines in file
+" }}}1
+" functions {{{1
+" Randomize order of lines in file {{{2
 if has("ruby")
     function! ShuffleLines()
 ruby << EOF
@@ -587,7 +318,7 @@ EOF
     endfunction
 end
 
-" append n random letters to each line
+" append n random letters to each line {{{2
 function! AppendRandomLetter(n)
     if a:n > 0
         let n = a:n
@@ -599,17 +330,238 @@ function! AppendRandomLetter(n)
     endfor
 endfunction
 
-" find and highlight all lines longer than the current line
+" find and highlight all lines longer than the current line {{{2
 function! FindLongerLines()
     let @/ = '^.\{' . col('$') . '}'
     norm n$
 endfunction
+
+"
+" Jump to the position in a diff line where the difference starts {{{2
+function! FindDiffOnLine()
+    let c = 1
+    while c < col("$")
+        let hlID = diff_hlID(".", c)
+        if hlID == 24
+            call cursor(".", c)
+            return
+        endif
+        let c += 1
+    endwhile
+endfunction
+
+" Use `:match none` to turn off the matches afterwards. {{{2
+function! CountLines()
+    let i = 0
+    let s:regex = input("Regex>")
+    execute('silent g/' . s:regex . '/let i = i + 1')
+    execute("match Search /^.*" . s:regex . ".*$/")
+    echo i . " lines match."
+    norm ''
+endfunction
+
+" Copy/pasting from Word DOC files (uggggggh) results in a horrid mess {{{2
+function! FixInvisiblePunctuation()
+    silent! %s/\%u2018/'/g
+    silent! %s/\%u2019/'/g
+    silent! %s/\%u2026/.../g
+    silent! %s/\%uf0e0/->/g
+    silent! %s/\%u0092/'/g
+    silent! %s/\%u2013/--/g
+    silent! %s/\%u2014/--/g
+    silent! %s/\%u201C/"/g
+    silent! %s/\%u201D/"/g
+    silent! %s/\%u0052\%u20ac\%u2122/'/g
+    silent! %s/\%ua0/ /g
+    silent! %s/\%u93/'/g
+    silent! %s/\%u94/'/g
+    retab
+endfunction
+
+" Mark lines in current buffer that are exactly the same as a previous line {{{2
+function! MarkDuplicateLines()
+    let x = {}
+    let count_dupes = 0
+    for lnum in range(1, line('$'))
+        let line = getline(lnum)
+        if has_key(x, line)
+            exe lnum . 'norm I *****'
+            let count_dupes += 1
+        else
+            let x[line] = 1
+        endif
+    endfor
+    echomsg count_dupes . " dupe(s) found"
+endfunction
+
+" quickfix {{{2
+" https://vim.fandom.com/wiki/Toggle_to_open_or_close_the_quickfix_window
+command! -bang -nargs=? QFix call QFixToggle(<bang>0)
+function! QFixToggle(forced)
+  if exists("g:qfix_win") && a:forced == 0
+    cclose
+  else
+    copen 8
+  endif
+endfunction
+
+augroup QFixToggle
+ autocmd!
+ autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
+ autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win |
+             \ unlet! g:qfix_win |
+             \ endif
+augroup END
+
+" abbrs {{{1
+iab <expr> dts strftime("%Y-%m-%dT%I:%M:%S")
+iab <expr> dtd strftime("%Y-%m-%d (%a)")
+
+" fat fingers :(
+cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>
+cabbrev W <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'w' : 'W')<CR>
+cabbrev Q <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'q' : 'Q')<CR>
+
+
+" mappings {{{1
+" movement {{{2
+vnoremap <S-Up> <Up>
+inoremap <S-Up> <Up>
+nnoremap <S-Up> <Up>
+vnoremap <S-Down> <Down>
+inoremap <S-Down> <Down>
+nnoremap <S-Down> <Down>
+
+nmap <Space> <PageDown>
+nmap <C-Space> <PageUp>
+
+" visual mode indenting {{{2
+vnoremap > >gv
+vnoremap < <gv
+vnoremap <Tab> >
+vnoremap <S-Tab> <
+
+" Delete all buffers {{{2
+nnoremap <Leader>bd :silent bufdo! bd<CR>
+nnoremap <Leader>BD :silent bufdo! bd!<CR>
+
+"Change cwd to the path of the current file {{{2
+nnoremap <Leader>c :lcd %:h<CR>
+
+" Toggle wrapping, highlights {{{2
+nnoremap <Leader>w :setlocal nowrap!<CR>
+nnoremap <Leader>h :nohls<CR>
+
+nnoremap <Leader>q :QFix<CR>
+
+" location list {{{2
+nnoremap <Leader>l :lopen<CR>
+
+" Emacs-ish keybindings {{{2
+noremap! <M-Backspace> <C-W>
+noremap! <M-Left> <C-Left>
+noremap! <M-Right> <C-Right>
+noremap! <C-A> <Home>
+noremap! <C-E> <End>
+
+nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
+nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
+
+" nnoremap <Leader>l :call CountLines()<CR> {{{2
+
+inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
+
+inoremap <M-Up> <Esc>:m .-2<CR>==gi
+inoremap <M-Down> <Esc>:m .+1<CR>==gi
+nnoremap <M-Up> :m-2<CR>==
+nnoremap <M-Down> :m+<CR>==
+vnoremap <M-Up> :m '<-2<CR>gv=gv
+vnoremap <M-Down> :m '>+<CR>gv=gv
+inoremap <M-k> <Esc>:m .-2<CR>==gi
+inoremap <M-j> <Esc>:m .+1<CR>==gi
+nnoremap <M-k> :m-2<CR>==
+nnoremap <M-j> :m+<CR>==
+vnoremap <M-k> :m '<-2<CR>gv=gv
+vnoremap <M-j> :m '>+<CR>gv=gv
+
+set pastetoggle=<Leader>p
+
+" Open window below instead of above {{{2
+nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
+
+" Vertical equivalent of C-w-n and C-w-N {{{2
+nnoremap <C-w>v :vnew<CR>
+nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
+
+" I open new windows to warrant using up C-M-arrows on this {{{2
+nmap <C-M-Up> <C-w>n
+nmap <C-M-Down> <C-w>N
+nmap <C-M-Right> <C-w>v
+nmap <C-M-Left> <C-w>V
+
+" Horizontal window scrolling {{{2
+nnoremap <C-S-Right> zL
+nnoremap <C-S-Left> zH
+
+" select text that was just pasted {{{2
+nnoremap gp `[v`]
+
+" I used this to record all of my :w's over the course of a day, for fun {{{2
+"cabbrev w <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'W' : 'w')<CR>
+"command! -nargs=* W :execute("silent !echo " . strftime("%Y-%m-%d %H:%M:%S") . " >> ~/timestamps")|w <args>
+
+" Lines of strings => a paren-surrounded list of comma-separated strings on one line {{{2
+nnoremap <Leader>ll gg_<C-v>G$A,ggVGJI($s)\h
+
+" Delete blank lines {{{2
+nnoremap <Leader>db :%g/^$/d<CR>\h
+vnoremap <Leader>db :g/^$/d<CR>\h
+
+" Surround every line in the file with quotes {{{2
+nnoremap <Leader>'' :%s/.*/'\0'<CR>:setlocal nohls<CR>
+nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
+
+" fzf {{{2
+nnoremap <C-p> :Files<CR>
+nnoremap <C-g> :Rg<CR>
+
+" ultisnips {{{2
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsListSnippets="<c-u>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+" MacOS mappings {{{2
+if has('mac')
+    noremap <D-Up> <PageUp>
+    noremap <D-Down> <PageDown>
+    noremap <D-Left> _
+    noremap <D-Right> $
+
+    noremap <D-k> <PageUp>
+    noremap <D-j> <PageDown>
+    noremap <D-h> _
+    noremap <D-l> $
+
+    inoremap <D-k> <PageUp>
+    inoremap <D-j> <PageDown>
+    inoremap <D-h> <Esc>I
+    inoremap <D-l> <Esc>A
+
+    " wtf
+    inoremap ˚ <Esc>:m .-2<CR>==gi
+    inoremap ∆ <Esc>:m .+1<CR>==gi
+    nnoremap ˚ :m-2<CR>==
+    nnoremap ∆ :m+<CR>==
+    vnoremap ˚ :m '<-2<CR>gv=gv
+    vnoremap ∆ :m '>+<CR>gv=gv
+end
 
 " show syntax highlighting info of character under cursor
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+" refresh lightline after sourcing {{{1
 call lightline#init()
 call lightline#colorscheme()
 call lightline#update()

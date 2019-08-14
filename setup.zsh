@@ -13,6 +13,8 @@ DOTFILES="${0:a:h}"
 log "Linking..."
 mkdir -p ~/.config/kitty/
 # lns "$DOTFILES/zfunctions/dircolors-solarized/dircolors.ansi-light"     $HOME/.dir_colors
+mkdir -p "$HOME/.vim/backup"
+mkdir -p "$HOME/.vim/undo"
 lns "$DOTFILES/gitconfig"               "$HOME/.gitconfig"
 lns "$DOTFILES/gitignore"               "$HOME/.gitignore"
 lns "$DOTFILES/ignore"                  "$HOME/.ignore"

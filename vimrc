@@ -164,7 +164,7 @@ set wrap
 " plugin configs {{{1
 let g:netrw_fastbrowse = 0
 let g:netrw_liststyle = 3
-let g:user_emmet_leader_key = '<C-e>'
+let g:user_emmet_leader_key = '<C-,>'
 let g:lightline = {'colorscheme': 'Tomorrow_Night_Eighties'}
 let g:mustache_abbreviations = 1
 let g:rainbow_active = 1
@@ -461,28 +461,45 @@ nnoremap <Leader>l :lopen<CR>
 noremap! <M-Backspace> <C-W>
 noremap! <M-Left> <C-Left>
 noremap! <M-Right> <C-Right>
-noremap! <C-A> <Home>
-noremap! <C-E> <End>
+noremap! <C-a> <Home>
+nnoremap <C-a> <Home>
+noremap! <C-e> <End>
+nnoremap <C-e> <End>
+imap <M-l> <M-right>
+imap <M-h> <M-left>
+inoremap <M-right> <C-o>E<C-o>a
+inoremap <M-left> <C-o>B
+
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
 
 " nnoremap <Leader>l :call CountLines()<CR> {{{2
 
+
 inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
 
+" move lines up/down
+inoremap <M-k> <Esc>:m .-2<CR>==gi
+inoremap <M-j> <Esc>:m .+1<CR>==gi
 inoremap <M-Up> <Esc>:m .-2<CR>==gi
 inoremap <M-Down> <Esc>:m .+1<CR>==gi
 nnoremap <M-Up> :m-2<CR>==
 nnoremap <M-Down> :m+<CR>==
 vnoremap <M-Up> :m '<-2<CR>gv=gv
 vnoremap <M-Down> :m '>+<CR>gv=gv
-inoremap <M-k> <Esc>:m .-2<CR>==gi
-inoremap <M-j> <Esc>:m .+1<CR>==gi
 nnoremap <M-k> :m-2<CR>==
 nnoremap <M-j> :m+<CR>==
 vnoremap <M-k> :m '<-2<CR>gv=gv
 vnoremap <M-j> :m '>+<CR>gv=gv
+
+" move words left-right (https://vim.fandom.com/wiki/Swapping_characters,_words_and_lines)
+nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
+nnoremap <silent> gl "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR><Paste>
+nmap <M-h> gl
+nmap <M-l> gw
+imap <M-l> <C-o>gw
+imap <M-h> <C-o>gl
 
 set pastetoggle=<Leader>p
 
@@ -554,6 +571,10 @@ if has('mac')
     nnoremap ∆ :m+<CR>==
     vnoremap ˚ :m '<-2<CR>gv=gv
     vnoremap ∆ :m '>+<CR>gv=gv
+    nmap ˙ <M-h>
+    nmap ¬ <M-l>
+    imap ˙ <M-h>
+    imap ¬ <M-l>
 end
 
 " show syntax highlighting info of character under cursor

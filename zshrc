@@ -52,39 +52,22 @@ autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' formats '%F{8}:%F{7}%b%f'
 zstyle ':vcs_info:*' actionformats '%F{8}:%F{7}%b|%a%f'
-function prompt() {
 
+function prompt() {
     local PROMPT=''
     # status of last command
     PROMPT+="%(0?.%F{2}•.%B%F{1}✗%b)%f"
     # root
     PROMPT+="%(!.%F{1} root%f.)"
-    # hostname if ssh
-    if [[ ! -z "$SSH_CONNECTION" ]]; then
-        case `hostname -s` in 
-            "shiro")
-                PCOLOR="%F{15}%B"
-                ;;
-            "kuro")
-                PCOLOR="%F{7}%B"
-                ;;
-            "ki")
-                PCOLOR="%F{3}%B"
-                ;;
-            "ao")
-                PCOLOR="%F{4}%B"
-                ;;
-            "aka")
-                PCOLOR="%F{1}%B"
-                ;;
-            *)
-                PCOLOR="%F{6}"
-                ;;
-        esac
-        PROMPT+=" ${PCOLOR}@%m%f%b"
+    # hostname
+    if [[ -f "$HOME/.zsh.prompt" ]]; then
+        source ~/.zsh.prompt
+    else
+        PCOLOR="%F{15}"
     fi
+    PROMPT+=" ${PCOLOR}%m%f%b%F{8} "
     # pwd
-    PROMPT+=" %F{12}%~%f"
+    PROMPT+="%F{12}%~%f"
     # git
     PROMPT+="${vcs_info_msg_0_}"
     if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then

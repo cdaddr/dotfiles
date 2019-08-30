@@ -191,6 +191,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 vmap <Enter> <Plug>(EasyAlign)
 let g:AutoPairsShortcutFastWrap='<C-Right>'
+let g:splitjoin_ruby_curly_braces=0
 " }}}1
 " backup/undo/history/viminfo {{{1
 set backup

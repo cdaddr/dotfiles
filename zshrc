@@ -10,6 +10,7 @@ export LANGUAGE=en_US.UTF-8
 
 # zsh options
 autoload -Uz colors && colors
+autoload -Uz compinit && compinit
 
 export extended_history
 setopt hist_ignore_dups
@@ -142,6 +143,6 @@ $(command nvim -es &>/dev/null) && alias vim=nvim
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-if [[ `pyenv &>/dev/null` ]]; then
+if type pyenv > /dev/null; then
     eval "$(pyenv init -)"
 fi

@@ -59,7 +59,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-commentary'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'jiangmiao/auto-pairs'
+"Plug '"jiangmiao/auto-pairs"'
 Plug 'dhruvasagar/vim-table-mode'
 
 " for deoplete
@@ -102,7 +102,7 @@ set guioptions=Ac
 set ruler
 set showcmd
 set number
-set conceallevel=2
+set conceallevel=0
 set incsearch
 set hlsearch
 set showmatch
@@ -470,7 +470,6 @@ imap <M-l> <M-right>
 imap <M-h> <M-left>
 inoremap <M-right> <C-o>E<C-o>a
 inoremap <M-left> <C-o>B
-
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>

@@ -61,6 +61,9 @@ Plug 'tpope/vim-commentary'
 Plug 'nathanaelkane/vim-indent-guides'
 "Plug '"jiangmiao/auto-pairs"'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'godlygeek/tabular'
+Plug 'pangloss/vim-javascript'
+Plug 'evanleck/vim-svelte'
 
 " for deoplete
 if has('nvim')
@@ -77,7 +80,7 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
 Plug 'lithammer/vim-eighties'
 Plug 'srcery-colors/srcery-vim'
-Plug 'kien/rainbow_parentheses.vim'
+" Plug 'kien/rainbow_parentheses.vim'
 
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#custom#sources = {}
@@ -123,11 +126,11 @@ colorscheme srcery
 
 augroup appearance
     au!
-    au VimEnter * RainbowParenthesesToggle
-    au Syntax * RainbowParenthesesLoadRound
-    au Syntax * RainbowParenthesesLoadSquare
-    au Syntax * RainbowParenthesesLoadBraces
-    au Syntax * RainbowParenthesesLoadChevrons
+    " au VimEnter * RainbowParenthesesToggle
+    " au Syntax * RainbowParenthesesLoadRound
+    " au Syntax * RainbowParenthesesLoadSquare
+    " au Syntax * RainbowParenthesesLoadBraces
+    " au Syntax * RainbowParenthesesLoadChevrons
 augroup END
 
 " Visual bells give me seizures
@@ -164,7 +167,7 @@ set wrap
 " plugin configs {{{1
 let g:netrw_fastbrowse = 0
 let g:netrw_liststyle = 3
-let g:user_emmet_leader_key = '<C-,>'
+let g:user_emmet_leader_key = '<C-t>'
 let g:lightline = {'colorscheme': 'Tomorrow_Night_Eighties'}
 let g:mustache_abbreviations = 1
 let g:rainbow_active = 1

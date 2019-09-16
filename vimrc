@@ -585,8 +585,10 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-" refresh lightline after sourcing {{{1
+" refresh highlighting after sourcing {{{1
 call lightline#init()
 call lightline#colorscheme()
+
 call lightline#update()
+call signature#utils#SetupHighlightGroups()
 

@@ -476,6 +476,9 @@ nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
 
 
 inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
+inoremap (<CR> (<CR>)<C-c>O
+inoremap [<CR> [<CR>]<C-c>O
+inoremap {<CR> {<CR>}<C-c>O
 
 " move lines up/down
 inoremap <M-k> <Esc>:m .-2<CR>==gi

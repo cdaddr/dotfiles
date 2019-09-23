@@ -22,7 +22,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'kana/vim-textobj-user'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'sjl/gundo.vim'
-Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'itchyny/lightline.vim'
 Plug 'mhinz/vim-signify'
@@ -44,14 +43,12 @@ Plug 'morhetz/gruvbox'
 Plug 'rust-lang/rust.vim'
 Plug 'posva/vim-vue'
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mattn/emmet-vim' 
+" Plug 'mattn/emmet-vim' 
 Plug 'kshenoy/vim-signature'
 Plug 'cespare/vim-toml'
 Plug 'JikkuJose/vim-visincr'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'farmergreg/vim-lastplace'
-" Plug 'srcery-colors/srcery-vim'
-" Plug 'romainl/flattened'
 Plug 'fatih/vim-go'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -64,15 +61,7 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'godlygeek/tabular'
 Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte'
-
-" for deoplete
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " themes
 Plug 'lifepillar/vim-colortemplate'
@@ -80,12 +69,7 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
 Plug 'lithammer/vim-eighties'
 Plug 'srcery-colors/srcery-vim'
-" Plug 'kien/rainbow_parentheses.vim'
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#custom#sources = {}
-let g:deoplete#custom#sources._ = ['file', 'buffer']
-let g:deoplete#custom#sources.html = ['omni', 'ultisnips']
 " for snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -167,8 +151,22 @@ set wrap
 " plugin configs {{{1
 let g:netrw_fastbrowse = 0
 let g:netrw_liststyle = 3
-let g:user_emmet_leader_key = '<C-t>'
-let g:lightline = {'colorscheme': 'Tomorrow_Night_Eighties'}
+" let g:user_emmet_leader_key = '<C-t>'
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
+let g:lightline = {
+      \ 'colorscheme': 'Tomorrow_Night_Eighties',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status',
+      \   'currentfunction': 'CocCurrentFunction'
+      \ },
+      \ }
 let g:mustache_abbreviations = 1
 let g:rainbow_active = 1
 let g:ale_sign_column_always = 1
@@ -190,9 +188,6 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-vmap <Enter> <Plug>(EasyAlign)
 let g:AutoPairsShortcutFastWrap='<C-Right>'
 let g:splitjoin_ruby_curly_braces=0
 " }}}1
@@ -544,6 +539,8 @@ nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 " fzf {{{2
 nnoremap <C-p> :Files<CR>
 nnoremap <C-g> :Rg<CR>
+
+nnoremap <silent> <leader>y :<C-u>CocList -A --normal yank<cr>
 
 " ultisnips {{{2
 let g:UltiSnipsExpandTrigger="<tab>"

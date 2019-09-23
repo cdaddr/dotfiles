@@ -45,9 +45,15 @@ if [ -x "$(command -v go)" ]; then
 fi
 
 log "Fetching Vim plugins..."
-vim +PlugInstall +qall
-# for deoplete
+vim +"PlugInstall | qall"
+log "* coc"
+vim +"CocInstall -sync coc-css coc-html coc-json \
+      coc-python coc-git coc-emmet coc-yank \
+      coc-emmet coc-yaml coc-vimlsp | qall"
+log "* python"
 python3 -m pip install --user --upgrade pynvim
+log "* node"
+npm install -g neovim
 
 EMACS="$HOME/.emacs.d"
 if [[ -e $EMACS ]]; then

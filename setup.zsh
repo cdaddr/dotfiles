@@ -49,7 +49,7 @@ vim +"PlugInstall | qall"
 log "* coc"
 vim +"CocInstall -sync coc-css coc-html coc-json \
       coc-python coc-git coc-emmet coc-yank \
-      coc-emmet coc-yaml coc-vimlsp | qall"
+      coc-emmet coc-yaml coc-vimlsp coc-snippets | qall"
 log "* python"
 python3 -m pip install --user --upgrade pynvim
 log "* node"

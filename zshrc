@@ -7,6 +7,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
+export fpath=("$HOME/.zfuntions", $fpath)
 
 # zsh options
 autoload -Uz colors && colors
@@ -137,7 +138,8 @@ if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then
     eval $(dircolors "$HOME/.dir_colors")
 fi
 
-$(command nvim -es &>/dev/null) && alias vim=nvim
+# must go at end of file
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
 # auto-generated stuff
 
@@ -146,3 +148,4 @@ $(command nvim -es &>/dev/null) && alias vim=nvim
 if type pyenv > /dev/null; then
     eval "$(pyenv init -)"
 fi
+

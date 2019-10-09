@@ -12,7 +12,6 @@ DOTFILES="${0:a:h}"
 
 log "Linking..."
 mkdir -p ~/.config/kitty/
-# lns "$DOTFILES/zfunctions/dircolors-solarized/dircolors.ansi-light"     $HOME/.dir_colors
 mkdir -p "$HOME/.vim/backup"
 mkdir -p "$HOME/.vim/undo"
 lns "$DOTFILES/gitconfig"               "$HOME/.gitconfig"
@@ -22,11 +21,11 @@ lns "$DOTFILES/spacemacs"               "$HOME/.spacemacs"
 lns "$DOTFILES/tmux.conf"               "$HOME/.tmux.conf"
 lns "$DOTFILES/vim"                     "$HOME/.vim"
 lns "$DOTFILES/vimrc"                   "$HOME/.vimrc"
-lns "$DOTFILES/zfunctions"              "$HOME/.zfunctions"
+lns "$DOTFILES/zsh"                     "$HOME/.zsh"
 lns "$DOTFILES/zshrc"                   "$HOME/.zshrc"
 lns "$DOTFILES/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 lns "$DOTFILES/config/nvim"             "$HOME/.config/nvim"
-lns "$DOTFILES/LS_COLORS/LS_COLORS"     "$HOME/.dir_colors"
+lns "$DOTFILES/dir_colors"              "$HOME/.dir_colors"
 
 tic -o ~/.terminfo xterm-256color-italic.terminfo
 tic -o ~/.terminfo tmux-256color.terminfo

@@ -51,13 +51,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-commentary'
-Plug 'nathanaelkane/vim-indent-guides'
-"Plug '"jiangmiao/auto-pairs"'
+Plug 'Yggdroot/indentLine'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'godlygeek/tabular'
 Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'FooSoft/vim-argwrap'
 
 " themes
 Plug 'lifepillar/vim-colortemplate'
@@ -141,13 +141,6 @@ let g:fzf_colors = {
             \ 'spinner': ['fg', 'Label'],
             \ 'header':  ['fg', 'Normal'] }
 
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors=0
-let g:indent_guides_guide_size=1
-let g:indent_guides_start_level=2
-hi IndentGuidesOdd  guibg=#1e1e1e
-hi IndentGuidesEven guibg=#1e1e1e
-
 " wrapping {{{1
 set formatoptions+=tc
 set textwidth=99
@@ -205,7 +198,7 @@ set undofile
 set undodir^=~/.vim/undo//
 
 set history=5000
-if !has('nvim')
+if has('nvim')
     set shada='100,<50,s10,h,r/tmp,r/mnt
 else
     set viminfo='1024,<0,s100,f0,r/tmp,r/mnt
@@ -248,8 +241,7 @@ if has("patch-8.1.0360") || has("nvim")
     set diffopt+=internal,algorithm:patience
 endif
 
-set completeopt-=preview
-set completeopt+=noinsert
+set completeopt=noinsert,menuone,
 
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
@@ -261,6 +253,7 @@ augroup custom
     au BufWritePost ~/.vimrc so ~/.vimrc
 
     autocmd FileType netrw setl bufhidden=wipe
+    au BufNewFile,BufRead *.mmark setf markdown
 
     function! s:buildGo()
         let fn = expand('%:r')
@@ -285,6 +278,7 @@ augroup custom
     function! s:maybeHugoHtml()
         if s:isHugoDir()
             setlocal filetype=gohtmltmpl
+            UltiSnipsAddFiletypes html
         end
     endfunction
     function! s:maybeHugoIgnore()
@@ -437,9 +431,6 @@ vnoremap <S-Down> <Down>
 inoremap <S-Down> <Down>
 nnoremap <S-Down> <Down>
 
-nmap <Space> <PageDown>
-nmap <C-Space> <PageUp>
-
 " visual mode indenting {{{2
 vnoremap > >gv
 vnoremap < <gv
@@ -450,6 +441,8 @@ vnoremap <S-Tab> <
 nnoremap <Leader>bd :silent bufdo! bd<CR>
 nnoremap <Leader>BD :silent bufdo! bd!<CR>
 
+nnoremap <silent> <Leader>a :ArgWrap<CR>
+
 "Change cwd to the path of the current file {{{2
 nnoremap <Leader>c :lcd %:h<CR>
 
@@ -458,6 +451,8 @@ nnoremap <Leader>w :setlocal nowrap!<CR>
 nnoremap <Leader>h :nohls<CR>
 
 nnoremap <Leader>q :QFix<CR>
+
+nnoremap p ]p
 
 " location list {{{2
 nnoremap <Leader>l :lopen<CR>
@@ -480,8 +475,12 @@ nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
 
 " nnoremap <Leader>l :call CountLines()<CR> {{{2
 
-
-inoremap <expr> <CR> (pumvisible() ? "\<C-e><CR>" : "\<CR>")
+imap <silent> <expr> <C-j> (pumvisible() ? "\<C-n>" : "\<C-j>")
+imap <silent> <expr> <C-k> (pumvisible() ? "\<C-p>" : "\<C-k>")
+imap <C-j> <Esc><C-j>
+imap <C-k> <Esc><C-k>
+imap <C-h> <Esc><C-h>
+imap <C-l> <Esc><C-l>
 inoremap (<CR> (<CR>)<C-c>O
 inoremap [<CR> [<CR>]<C-c>O
 inoremap {<CR> {<CR>}<C-c>O
@@ -517,12 +516,6 @@ nnoremap <silent> <C-W>N :let sb=&sb<BAR>set sb<BAR>new<BAR>let &sb=sb<CR>
 nnoremap <C-w>v :vnew<CR>
 nnoremap <C-w>V :let spr=&spr<BAR>set nospr<BAR>vnew<BAR>let &spr=spr<CR>
 
-" I open new windows to warrant using up C-M-arrows on this {{{2
-nmap <C-M-Up> <C-w>n
-nmap <C-M-Down> <C-w>N
-nmap <C-M-Right> <C-w>v
-nmap <C-M-Left> <C-w>V
-
 " Horizontal window scrolling {{{2
 nnoremap <C-S-Right> zL
 nnoremap <C-S-Left> zH
@@ -547,15 +540,21 @@ nnoremap <Leader>"" :%s/.*/"\0"<CR>:setlocal nohls<CR>
 
 " fzf {{{2
 nnoremap <C-p> :Files<CR>
+nnoremap <Space>p :Files<CR>
 nnoremap <C-g> :Rg<CR>
+nnoremap <Space>b :Buffers<CR>
+nnoremap <Space>c :History:<CR>
+nnoremap <Space>l :BLines<CR>
+nnoremap <Space>g :Rg<CR>
+nnoremap <Space>h :History<CR>
+nnoremap <Space>s :Snippets<CR>
 
-nnoremap <silent> <leader>y :<C-u>CocList -A --normal yank<cr>
+nnoremap <silent> <Space>y :<C-u>CocList -A --normal --number-select yank<cr>
 
 " ultisnips {{{2
-let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsListSnippets="<c-u>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 " MacOS mappings {{{2
 if has('mac')
     noremap <D-Up> <PageUp>

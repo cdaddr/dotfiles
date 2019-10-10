@@ -149,3 +149,6 @@ if type pyenv > /dev/null; then
     eval "$(pyenv init -)"
 fi
 
+if type jenv > /dev/null; then
+    eval "$(jenv init -)"
+fi

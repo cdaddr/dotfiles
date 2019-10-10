@@ -1,9 +1,5 @@
 " .vimrc
-" http://briancarper.net/vim/vimrc  - Some parts stolen from others.
-"
-" Don't just copy this.  It has screwy stuff and depends on other stuff.
-" There's always a good possibility of there being broken or
-" experimental stuff in here.
+" http://github.com/cdaddr/dotfiles/
 
 " welcome to vim {{{1 
 set nocompatible

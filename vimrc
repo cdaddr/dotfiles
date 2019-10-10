@@ -63,8 +63,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'lifepillar/vim-colortemplate'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
-Plug 'lithammer/vim-eighties'
-Plug 'srcery-colors/srcery-vim'
+"Plug 'lithammer/vim-eighties'
+Plug 'arcticicestudio/nord-vim'
 
 " for snippets
 Plug 'SirVer/ultisnips'
@@ -92,26 +92,36 @@ set showmatch
 set wildmenu
 
 set background=dark
-let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 let g:eighties_italics=1
-let g:srcery_italic=1
-let g:srcery_bold=1
-let g:srcery_undercurl=1
-let g:srcery_inverse=1
-let g:srcery_inverse_matches=1
-let g:srcery_inverse_match_paren=1
-colorscheme srcery
+let g:nord_italic = 1
+let g:nord_underline = 0
+let g:nord_bold = 0
+colorscheme nord
+" hack until nord fixes this
+hi CursorLineNr cterm=NONE
 
-augroup appearance
-    au!
-    " au VimEnter * RainbowParenthesesToggle
-    " au Syntax * RainbowParenthesesLoadRound
-    " au Syntax * RainbowParenthesesLoadSquare
-    " au Syntax * RainbowParenthesesLoadBraces
-    " au Syntax * RainbowParenthesesLoadChevrons
-augroup END
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+" fix insert mode cursor
+let &t_SI="\e[6 q"
+let &t_EI="\e[2 q"
+
+function! Foldtext()
+    let line = getline(v:foldstart)
+    let sub = substitute(line, '\v^("|/\*|//)\s*|\s*(\{{3}\d?\s*)', '', 'g')
+    let format = ' %s (%d lines) '
+    return v:folddashes . printf(format, sub, (v:foldend - v:foldstart))
+endfunction
+set foldtext=Foldtext()
+set fillchars=vert:\┃,fold:-
+
+set cursorline
+if ! has('nvim')
+    set cursorlineopt=number
+end
+
+let g:indentLine_char_list = ['┆']
 
 " Visual bells give me seizures
 set t_vb=''
@@ -153,7 +163,7 @@ function! CocCurrentFunction()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'Tomorrow_Night_Eighties',
+      \ 'colorscheme': 'nord',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ]

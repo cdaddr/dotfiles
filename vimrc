@@ -190,6 +190,11 @@ let g:NERDTreeIndicatorMapCustom = {
 map <C-n> :NERDTreeCWD<CR>:NERDTreeFocus<CR>
 let g:AutoPairsShortcutFastWrap='<C-Right>'
 let g:splitjoin_ruby_curly_braces=0
+
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
+
+let g:indentLine_concealcursor=''
 " }}}1
 " backup/undo/history/viminfo {{{1
 set backup
@@ -255,6 +260,10 @@ augroup custom
 
     autocmd FileType netrw setl bufhidden=wipe
     au BufNewFile,BufRead *.mmark setf markdown
+
+    au FileType text setlocal formatoptions+=a
+
+    au FileType markdown setlocal comments=fb:> formatoptions-=q spell
 
     function! s:buildGo()
         let fn = expand('%:r')

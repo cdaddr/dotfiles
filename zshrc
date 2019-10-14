@@ -114,6 +114,7 @@ if [[ `uname` == 'Darwin' ]]; then
     export PATH="/usr/local/bin:$PATH"
 fi
 
+export PATH="$HOME/bin:$PATH"
 
 if [[ `ls --color=auto 2>/dev/null` ]]; then
     if [[ ! -z "${WSL_DISTRO_NAME}" ]]; then

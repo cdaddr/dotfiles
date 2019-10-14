@@ -5,6 +5,7 @@ vim/.VimballRecord
 vim/undo
 vim/backup
 vim/plugged
+vim/spell
 emacs.d/swank
 emacs.d/ac-comphist.dat
 emacs.d/.smex-items

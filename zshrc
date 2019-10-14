@@ -71,7 +71,7 @@ function prompt() {
     # hostname
     PROMPT+=" ${PCOLOR}%m%f "
     # pwd
-    PROMPT+="%F{12}%~%f"
+    PROMPT+="%F{12}%(3~|%-1~/…/%2~|%~)%f"
     # git
     PROMPT+="${vcs_info_msg_0_}"
     if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then

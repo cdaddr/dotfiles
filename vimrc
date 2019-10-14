@@ -255,6 +255,12 @@ set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
 " autocommands {{{1
 augroup custom
     au!
+    " restore cursor position
+    autocmd BufReadPost *
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
+
     au QuickFixCmdPost * :copen
     au BufWritePost ~/.vimrc so ~/.vimrc
 

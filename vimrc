@@ -94,8 +94,8 @@ set wildmenu
 
 set background=dark
 set termguicolors
-let g:eighties_italics=1
 let g:nord_italic = 1
+let g:nord_italic_comments = 1
 let g:nord_underline = 0
 let g:nord_bold = 0
 colorscheme nord

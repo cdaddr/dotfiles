@@ -11,9 +11,8 @@ lns()   { ln -Tfs "$1" "$2" }
 DOTFILES="${0:a:h}"
 
 log "Linking..."
-mkdir -p ~/.config/kitty/
-mkdir -p "$HOME/.vim/backup"
-mkdir -p "$HOME/.vim/undo"
+mkdir "$HOME/.bin" &>/dev/null
+mkdir "$HOME/.config" &>/dev/null
 lns "$DOTFILES/gitconfig"               "$HOME/.gitconfig"
 lns "$DOTFILES/gitignore"               "$HOME/.gitignore"
 lns "$DOTFILES/ignore"                  "$HOME/.ignore"
@@ -23,9 +22,16 @@ lns "$DOTFILES/vim"                     "$HOME/.vim"
 lns "$DOTFILES/vimrc"                   "$HOME/.vimrc"
 lns "$DOTFILES/zsh"                     "$HOME/.zsh"
 lns "$DOTFILES/zshrc"                   "$HOME/.zshrc"
-lns "$DOTFILES/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+lns "$DOTFILES/config/kitty/"           "$HOME/.config/kitty"
 lns "$DOTFILES/config/nvim"             "$HOME/.config/nvim"
+lns "$DOTFILES/config/i3"               "$HOME/.config/i3"
+lns "$DOTFILES/config/alacritty"        "$HOME/.config/alacritty"
 lns "$DOTFILES/dir_colors"              "$HOME/.dir_colors"
+lns "$DOTFILES/i3status.conf"           "$HOME/.i3status.conf"
+mkdir -p "$HOME/.vim/backup"
+mkdir -p "$HOME/.vim/undo"
+
+feh --bg-fill wallpaper/2560x1080.png
 
 tic -o ~/.terminfo xterm-256color-italic.terminfo
 tic -o ~/.terminfo tmux-256color.terminfo
@@ -44,9 +50,9 @@ if [ -x "$(command -v go)" ]; then
 fi
 
 log "Fetching Vim plugins..."
-vim +"PlugInstall | qall"
+nvim +"PlugInstall | qall"
 log "* coc"
-vim +"CocInstall -sync coc-css coc-html coc-json \
+nvim +"CocInstall -sync coc-css coc-html coc-json \
       coc-python coc-git coc-emmet coc-yank \
       coc-emmet coc-yaml coc-vimlsp coc-snippets | qall"
 log "* python"

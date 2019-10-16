@@ -114,7 +114,8 @@ if [[ `uname` == 'Darwin' ]]; then
     export PATH="/usr/local/bin:$PATH"
 fi
 
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.bin:$PATH"
+typeset -aU path
 
 if [[ `ls --color=auto 2>/dev/null` ]]; then
     if [[ ! -z "${WSL_DISTRO_NAME}" ]]; then
@@ -141,6 +142,11 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 # auto-generated stuff
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if type nvim > /dev/null; then
+    alias vim=nvim
+fi
+
 
 if type pyenv > /dev/null; then
     eval "$(pyenv init -)"

@@ -31,8 +31,6 @@ lns "$DOTFILES/i3status.conf"           "$HOME/.i3status.conf"
 mkdir -p "$HOME/.vim/backup"
 mkdir -p "$HOME/.vim/undo"
 
-feh --bg-fill wallpaper/2560x1080.png
-
 tic -o ~/.terminfo xterm-256color-italic.terminfo
 tic -o ~/.terminfo tmux-256color.terminfo
 

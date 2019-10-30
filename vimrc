@@ -497,6 +497,14 @@ imap <C-j> <Esc><C-j>
 imap <C-k> <Esc><C-k>
 imap <C-h> <Esc><C-h>
 imap <C-l> <Esc><C-l>
+function! EnterInsideTag()
+    if strcharpart(getline('.'), getpos('.')[2]-1, 1) == '<'
+        return "\<CR>\<Esc>O"
+    else
+        return "\<CR>"
+    endif
+endfunction
+imap <expr> <CR> EnterInsideTag()
 inoremap (<CR> (<CR>)<C-c>O
 inoremap [<CR> [<CR>]<C-c>O
 inoremap {<CR> {<CR>}<C-c>O

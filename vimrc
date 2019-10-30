@@ -99,8 +99,6 @@ let g:nord_italic_comments = 1
 let g:nord_underline = 0
 let g:nord_bold = 0
 colorscheme nord
-" hack until nord fixes this
-hi CursorLineNr cterm=NONE
 
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
@@ -167,6 +165,12 @@ let g:lightline = {
       \   'currentfunction': 'CocCurrentFunction'
       \ },
       \ }
+" let s:ll = g:lightline#colorscheme#nord#palette
+" let s:inactivefg = ["#ffffff", "NONE"]
+" let s:inactivebg = ["#000000", "NONE"]
+" let s:ll.inactive.middle = [[ s:inactivefg, s:inactivebg ]]
+" unlet s:ll
+
 let g:mustache_abbreviations = 1
 let g:rainbow_active = 1
 let g:ale_sign_column_always = 1
@@ -620,4 +624,32 @@ call lightline#colorscheme()
 
 call lightline#update()
 call signature#utils#SetupHighlightGroups()
+
+" hack until nord fixes this
+hi InactiveWindow guifg=#B48EAD guibg=#242933
+
+augroup WindowHighlight
+    au!
+    let groups = ["Folded","CursorLine","Normal","NormalNC",
+                  \ "LineNr","FoldColumn","SignColumn"]
+    let enter = ""
+    let leave = ""
+    for group in groups
+        let enter .= group . ":" . group . ","
+        let leave .= group . ":" . "InactiveWindow" . ","
+    endfor
+
+    exec "au WinEnter,BufWinEnter * setlocal winhighlight=" . enter
+    exec "au WinLeave * setlocal winhighlight=" . leave
+
+    au WinEnter,BufWinEnter * setlocal cursorline
+    au WinLeave * setlocal nocursorline
+augroup END
+
+hi CocGitAddedSign guibg=NONE guifg=#A3BE8C
+hi CocGitChangedSign guibg=NONE guifg=#EBCB8B
+hi CocGitChangeRemovedSign guibg=NONE guifg=#EBCB8B
+hi CocGitRemovedSign guibg=NONE guifg=#B48EAD
+hi CocGitTopRemovedSign guibg=NONE guifg=#B48EAD
+
 

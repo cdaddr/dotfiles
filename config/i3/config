@@ -29,6 +29,8 @@ font pango:DejaVu Sans Mono 14
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+focus_follows_mouse no
+
 # start a terminal
 bindsym $mod+Return exec alacritty
 
@@ -167,6 +169,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         status_command i3status
+        separator_symbol " | "
         colors {
                 # color            border  bg      text
                 background         #2E3440
@@ -180,18 +183,21 @@ bar {
 
 }
 
-for_window [class=".*"] border pixel 0
-gaps inner 10
+for_window [class=".*"] border pixel 1
+gaps bottom 1
+hide_edge_borders smart
 
 # nord
 # class                 border  backgr. text    indicator child_border
-client.focused          #B48EAD #285577 #ffffff #2e9ef4   #285577
+client.focused          #B48EAD #285577 #ffffff #2e9ef4   #88C0D0
 client.focused_inactive #00ff00 #5f676a #ffffff #484e50   #81A1C1
-client.unfocused        #2E3440 #222222 #888888 #292d2e   #285577
+client.unfocused        #2E3440 #222222 #888888 #292d2e   #2E3440
 client.urgent           #EBCB8B #900000 #ffffff #900000   #EBCB8B
 client.background       #000000
 
-exec_always --no-startup-id xset r rate 200 35
+exec --no-startup-id $HOME/.bin/polybar.sh
+exec --no-startup-id xset r rate 200 35
 exec --no-startup-id unclutter
-exec xsetroot -solid '#4C566A'
+exec --no-startup-id hsetroot -solid '#4C566A'
+exec --no-startup-id /usr/bin/vmtoolsd -n vmusr --blockFd 3
 

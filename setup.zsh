@@ -28,6 +28,7 @@ lns "$DOTFILES/config/i3"               "$HOME/.config/i3"
 lns "$DOTFILES/config/alacritty"        "$HOME/.config/alacritty"
 lns "$DOTFILES/dir_colors"              "$HOME/.dir_colors"
 lns "$DOTFILES/i3status.conf"           "$HOME/.i3status.conf"
+lns "$DOTFILES/rsync.excludes"          "$HOME/.rsync.excludes"
 mkdir -p "$HOME/.vim/backup"
 mkdir -p "$HOME/.vim/undo"
 

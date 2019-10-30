@@ -39,7 +39,7 @@ Plug 'morhetz/gruvbox'
 Plug 'rust-lang/rust.vim'
 Plug 'posva/vim-vue'
 Plug 'HerringtonDarkholme/yats.vim'
-" Plug 'mattn/emmet-vim' 
+Plug 'mattn/emmet-vim' 
 Plug 'kshenoy/vim-signature'
 Plug 'cespare/vim-toml'
 Plug 'JikkuJose/vim-visincr'
@@ -149,7 +149,7 @@ set wrap
 " plugin configs {{{1
 let g:netrw_fastbrowse = 0
 let g:netrw_liststyle = 3
-" let g:user_emmet_leader_key = '<C-t>'
+let g:user_emmet_leader_key = '<C-t>'
 function! CocCurrentFunction()
     return get(b:, 'coc_current_function', '')
 endfunction

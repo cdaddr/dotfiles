@@ -148,10 +148,16 @@ if type nvim > /dev/null; then
 fi
 
 
-if type pyenv > /dev/null; then
+if [ -d "$HOME/.pyenv" ]; then
+    export PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    source "$(pyenv root)/completions/pyenv.zsh"
 fi
 
 if type jenv > /dev/null; then
     eval "$(jenv init -)"
 fi
+
+# export GDK_SCALE=2
+# export GDK_DPI_SCALE=0.5

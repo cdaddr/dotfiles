@@ -59,6 +59,7 @@ Plug 'evanleck/vim-svelte'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'FooSoft/vim-argwrap'
 Plug 'markonm/traces.vim'
+Plug 'wellle/targets.vim'
 
 " themes
 Plug 'lifepillar/vim-colortemplate'

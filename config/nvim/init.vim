@@ -480,6 +480,8 @@ imap <C->> <C-o>:BulletDemote<CR>
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
+nnoremap dp dp]c
+nnoremap do do]c
 
 " nnoremap <Leader>l :call CountLines()<CR> {{{2
 

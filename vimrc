@@ -504,9 +504,6 @@ nnoremap <Leader>q :QFix<CR>
 
 nnoremap p ]p
 
-" location list {{{2
-nnoremap <Leader>l :lopen<CR>
-
 " Emacs-ish keybindings {{{2
 noremap! <M-Backspace> <C-W>
 noremap! <M-Left> <C-Left>

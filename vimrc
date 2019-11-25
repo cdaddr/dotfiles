@@ -157,16 +157,44 @@ function! CocCurrentFunction()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'nord',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status',
-      \   'currentfunction': 'CocCurrentFunction'
-      \ },
-      \ }
+            \ 'colorscheme': 'nord',
+            \ 'component': {
+            \   'lineinfo': 'ln %l:%L col %v',
+            \   'charvalue': '0x%B',
+            \   'filetype': '%{&ft!=#""?&ft:"none"}',
+            \ },
+            \ 'component_function': {
+            \   'cocstatus': 'coc#status',
+            \   'currentfunction': 'CocCurrentFunction',
+            \   'filename': 'LightlineFilename',
+            \   'cwd': 'LightlineCWD',
+            \   'gitbranch': 'fugitive#head'
+            \ },
+            \ 'component_type': {
+            \   'charvalue': 'error',
+            \ },
+            \ 'active': {
+            \   'left':  [['mode', 'paste'],
+            \             ['cocstatus', 'currentfunction', 'readonly', 'gitbranch', 'filename', 'modified']],
+            \   'right': [['lineinfo'],
+            \             ['charvalue'],
+            \             ['fileformat', 'fileencoding', 'filetype']],
+            \ },
+        \ }
+
+function! LightlineCWD()
+    return fnamemodify(getcwd(), ":~")
+endfunction
+
+function! LightlineFilename()
+    return expand('%:.')
+    " let root = fnamemodify(get(b:, 'git_dir'), ':h:~')
+    " let path = expand('%:p:~')
+    " if path[:len(root)-1] ==# root
+    "     return path[len(root)+1:]
+    " endif
+    " return expand('%')
+endfunction
 " let s:ll = g:lightline#colorscheme#nord#palette
 " let s:inactivefg = ["#ffffff", "NONE"]
 " let s:inactivebg = ["#000000", "NONE"]

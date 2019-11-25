@@ -136,7 +136,7 @@ font:
     style: Regular Italic
 
   # Point size
-  size: 12.0
+  size: 14.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -476,15 +476,15 @@ key_bindings:
   #- { key: Minus,  mods: Command,         action: DecreaseFontSize }
   #- { key: K,      mods: Command,         action: ClearHistory     }
   #- { key: K,      mods: Command,         chars: "\x0c"            }
-  #- { key: V,      mods: Command,         action: Paste            }
   #- { key: C,      mods: Command,         action: Copy             }
   #- { key: H,      mods: Command,         action: Hide             }
   #- { key: Q,      mods: Command,         action: Quit             }
   #- { key: W,      mods: Command,         action: Quit             }
-  #- { key: F,      mods: Command|Control, action: ToggleFullscreen }
 
-  - { key: Paste,                   action: Paste                            }
-  - { key: Copy,                    action: Copy                             }
+  - { key: F,        mods: Command|Control, action: ToggleFullscreen         }
+  - { key: C,        mods: Command,         action: Copy                     }
+  - { key: V,        mods: Command,         action: Paste                    }
+  - { key: N,        mods: Command, action: SpawnNewInstance                 }
   - { key: L,        mods: Control, action: ClearLogNotice                   }
   - { key: L,        mods: Control, chars: "\x0c"                            }
   - { key: Home,     mods: Alt,     chars: "\x1b[1;3H"                       }

@@ -121,6 +121,8 @@ if ! has('nvim')
 end
 
 let g:indentLine_char_list = ['┆']
+let g:indentLine_color_gui = "#4C566A"
+let g:indentLine_setColors = 1
 
 " Visual bells give me seizures
 set t_vb=''

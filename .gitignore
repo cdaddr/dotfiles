@@ -1,11 +1,12 @@
 emacs.d/history
 emacs.d/saveplace
-vim/.netrwhist
-vim/.VimballRecord
-vim/undo
-vim/backup
-vim/plugged
-vim/spell
+config/nvim/.netrwhist
+config/nvim/.VimballRecord
+config/nvim/log
+config/nvim/undo
+config/nvim/backup
+config/nvim/plugged
+config/nvim/spell
 emacs.d/swank
 emacs.d/ac-comphist.dat
 emacs.d/.smex-items
@@ -17,6 +18,8 @@ emacs.d/url
 emacs.d/elpa
 emacs.d/ido.last
 .DS_Store
+
+*.shada
 
 .hg/
 .hgignore

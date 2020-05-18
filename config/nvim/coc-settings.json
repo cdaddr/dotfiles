@@ -1,3 +1,4 @@
 {
-  "emmet.includeLanguages": {"gohtmltmpl": "html"}
+  "emmet.includeLanguages": {"gohtmltmpl": "html"},
+  "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"]
 }

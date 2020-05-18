@@ -3,11 +3,12 @@ export LANG=en_CA.UTF-8
 export EDITOR="nvim"
 export PAGER="less"
 export GOPATH="$HOME/Documents/go"
-export FZF_DEFAULT_COMMAND='rg --files --hidden'
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude '*~'"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export fpath=("$HOME/.zfuntions", $fpath)
+export XDG_DATA_HOME="$HOME/.config"
 
 # zsh options
 autoload -Uz colors && colors
@@ -159,5 +160,13 @@ if type jenv > /dev/null; then
     eval "$(jenv init -)"
 fi
 
+if [ -f "$HOME/.aliases" ]; then
+    source "$HOME/.aliases"
+fi
+
 # export GDK_SCALE=2
 # export GDK_DPI_SCALE=0.5
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

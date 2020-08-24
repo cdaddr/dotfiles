@@ -43,7 +43,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/vim-peekaboo'
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-vinegar'
-" Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-commentary'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'godlygeek/tabular'
@@ -53,19 +52,22 @@ Plug 'FooSoft/vim-argwrap'
 Plug 'markonm/traces.vim'
 Plug 'wellle/targets.vim'
 Plug 'gko/vim-coloresque'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'kovisoft/paredit'
 Plug 'dkarter/bullets.vim'
 
 " themes
 Plug 'franbach/miramare'
 Plug 'chriskempson/base16-vim'
 Plug 'arcticicestudio/nord-vim'
+Plug 'romainl/flattened'
+Plug 'morhetz/gruvbox'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'dracula/vim', {'as': 'dracula'}
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'ayu-theme/ayu-vim'
+Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
 
 " for snippets
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 
 call plug#end()
 " }}}
@@ -74,33 +76,7 @@ call plug#end()
 let g:bullets_enabled_file_types = ['markdown', 'text']
 let g:netrw_fastbrowse = 0
 let g:netrw_liststyle = 3
-let g:user_emmet_leader_key = '<C-t>'
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
-endfunction
-
-call miramare_lightline#load()
-let g:lightline = {
-            \ 'colorscheme': 'nord',
-            \ 'active': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ],
-            \  'right': [ [ 'lineinfo' ],
-            \             [ 'percent' ],
-            \             [ 'fileformat', 'fileencoding', 'filetype' ] ]
-            \ },
-            \ 'inactive': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ],
-            \  'right': [ [ 'lineinfo' ],
-            \             [ 'percent' ],
-            \             [ 'fileformat', 'fileencoding', 'filetype' ] ]
-            \ },
-            \ 'component_function': {
-            \   'cocstatus': 'coc#status',
-            \   'currentfunction': 'CocCurrentFunction'
-            \ },
-        \ }
+let g:user_emmet_leader_key = '<c-u>'
 
 let g:mustache_abbreviations = 1
 let g:rainbow_active = 1
@@ -111,13 +87,6 @@ let g:splitjoin_ruby_curly_braces=0
 
 let g:indentLine_concealcursor=''
 
-" set before choosing color scheme
-let g:miramare_enable_italic=1
-let g:nord_cursor_line_number_background = 1
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 0
-let g:nord_bold = 1
 " }}}1
 "
 " appearance {{{1
@@ -142,9 +111,49 @@ set cursorline
 set winheight=3
 set winminheight=3
 
-set background=dark
+" set before choosing color scheme
+let g:miramare_enable_italic=1
+let g:nord_cursor_line_number_background = 1
+let g:nord_italic = 1
+let g:nord_italic_comments = 1
+let g:nord_underline = 0
+let g:nord_bold = 1
+let g:gruvbox_contrast_light='hard'
+let g:gruvbox_improved_stings=1
+let g:PaperColor_Theme_Options = {
+  \   'theme': {
+  \     'default': {
+  \       'allow_italic': 1,
+  \       'allow_bold': 1
+  \     }
+  \   }
+  \ }
+
+set background=light
 set termguicolors
-colorscheme nord
+
+colorscheme papercolor
+
+let g:lightline = {
+            \ 'colorscheme': 'PaperColor',
+            \ 'active': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'currentfunction', 'readonly', 'filename', 'modified' ] ],
+            \  'right': [ [ 'lineinfo' ],
+            \             [ 'percent' ],
+            \             [ 'fileformat', 'fileencoding', 'filetype' ] ]
+            \ },
+            \ 'inactive': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'currentfunction', 'readonly', 'filename', 'modified' ] ],
+            \  'right': [ [ 'lineinfo' ],
+            \             [ 'percent' ],
+            \             [ 'fileformat', 'fileencoding', 'filetype' ] ]
+            \ },
+            \ 'component_function': {
+            \ },
+        \ }
+
 
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
@@ -159,7 +168,7 @@ function! Foldtext()
     return v:folddashes . printf(format, sub, (v:foldend - v:foldstart))
 endfunction
 set foldtext=Foldtext()
-set fillchars=vert:\┃,fold:-,stl:-
+set fillchars=vert:\┃,fold:-,stl:-,stlnc:-
 
 if ! has('nvim')
     set cursorlineopt=number
@@ -191,6 +200,7 @@ let g:fzf_action = {
 
 " wrapping {{{1
 set formatoptions+=tc
+set formatlistpat+=\\\|^\\s\\*[a-zA-Z\\d*]\\s\\*
 set textwidth=99
 " set colorcolumn=100
 set wrap
@@ -262,7 +272,12 @@ if has("nvim")
     set diffopt+=internal,algorithm:patience
 endif
 
+
+" let g:completion_enable_snippet = 'UltiSnips'
+" let g:completion_timer_cycle = 200
+" let g:completion_confirm_key = "\<C-y>"
 set completeopt=noinsert,menuone,
+set shortmess+=c
 
 let &showbreak = '>>> '
 set list listchars=eol:\ ,tab:>-,trail:.,extends:>,nbsp:_
@@ -282,11 +297,14 @@ augroup custom
 
     autocmd FileType netrw setl bufhidden=wipe
 
-    au FileType text setlocal formatoptions+=a
+    " au FileType text setlocal formatoptions+=a
 
     au FileType markdown setlocal comments=fb:> formatoptions-=q spell
 
     au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
+
+    " autocmd BufEnter * lua require'completion'.on_attach()
+    autocmd BufEnter *.py,*.vim call LSPMaps()
 augroup END
 " }}}1
 " functions {{{1
@@ -419,16 +437,22 @@ cabbrev E <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'e' : 'E')<CR>
 cabbrev W <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'w' : 'W')<CR>
 cabbrev Q <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'q' : 'Q')<CR>
 
-
 " mappings {{{1
+" completion {{{2
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+
 " terminal {{{2
 
 " tnoremap <Esc> <C-\><C-n>
-" tmap <C-j> <Esc><C-j>
-" tmap <C-k> <Esc><C-k>
-" tmap <C-h> <Esc><C-h>
-" tmap <C-l> <Esc><C-l>
-
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap <C-\> <C-\><C-n>
+tnoremap <C-c> i<C-c>
 
 " movement {{{2
 vnoremap <S-Up> <Up>
@@ -461,6 +485,8 @@ nnoremap <Leader>q :QFix<CR>
 
 nnoremap p ]p
 
+nnoremap gf <c-w><c-f>
+
 " location list {{{2
 nnoremap <Leader>l :lopen<CR>
 
@@ -476,7 +502,7 @@ imap <M-l> <M-right>
 imap <M-h> <M-left>
 inoremap <M-right> <C-o>E<C-o>a
 inoremap <M-left> <C-o>B
-imap <C->> <C-o>:BulletDemote<CR>
+imap <C-p> <C-o>:BulletDemote<CR>
 
 nnoremap <silent> ]c ]c:call FindDiffOnLine()<CR>
 nnoremap <silent> [c [c:call FindDiffOnLine()<CR>
@@ -491,19 +517,18 @@ imap <C-j> <Esc><C-j>
 imap <C-k> <Esc><C-k>
 imap <C-h> <Esc><C-h>
 imap <C-l> <Esc><C-l>
-" handled by tmux plugin
-" nmap <C-h> <C-w>h
-" nmap <C-k> <C-w>k
-" nmap <C-j> <C-w>j
-" nmap <C-l> <C-w>l
-function! EnterInsideTag()
-    if strcharpart(getline('.'), getpos('.')[2]-1, 1) == '<'
-        return "\<CR>\<Esc>O"
-    else
-        return "\<CR>"
-    endif
-endfunction
-imap <expr> <CR> EnterInsideTag()
+nmap <C-h> <C-w>h
+nmap <C-k> <C-w>k
+nmap <C-j> <C-w>j
+nmap <C-l> <C-w>l
+" function! EnterInsideTag()
+"     if strcharpart(getline('.'), getpos('.')[2]-1, 1) == '<'
+"         return "\<CR>\<Esc>O"
+"     else
+"         return "\<CR>"
+"     endif
+" endfunction
+" imap <expr> <CR> EnterInsideTag()
 inoremap (<CR> (<CR>)<C-c>O
 inoremap [<CR> [<CR>]<C-c>O
 inoremap {<CR> {<CR>}<C-c>O
@@ -572,10 +597,9 @@ nnoremap <Space>g :Rg<CR>
 nnoremap <Space>h :History<CR>
 nnoremap <Space>s :Snippets<CR>
 
-nnoremap <silent> <Space>y :<C-u>CocList -A --normal --number-select yank<cr>
-
 " ultisnips {{{2
-let g:UltiSnipsListSnippets="<c-u>"
+let g:UltiSnipsExpandTrigger="<c-s>"
+let g:UltiSnipsListSnippets="<c-s>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 " MacOS mappings {{{2
@@ -614,11 +638,11 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 function! HugoServe()
-    below new
+    below split
     terminal hugo serve --disableFastRender --bind 0.0.0.0 --buildDrafts
 endfunction
 
-nnoremap <F5> :call HugoServe()<CR>
+nnoremap <F5> <cmd>:call HugoServe()<CR>
 
 " refresh highlighting after sourcing {{{1
 call lightline#init()

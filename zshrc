@@ -164,6 +164,10 @@ if type jenv > /dev/null; then
     eval "$(jenv init -)"
 fi
 
+if type rbenv > /dev/null; then
+    eval "$(rbenv init -)"
+fi
+
 # fkill - kill process
 fkill() {
   local pid

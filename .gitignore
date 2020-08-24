@@ -20,6 +20,8 @@ emacs.d/ido.last
 .DS_Store
 
 *.shada
+.nvimlog
+config/nvim/*.log
 
 .hg/
 .hgignore

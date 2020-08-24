@@ -19,3 +19,6 @@ function! RenumberPages()
     g/\v^\s+(end)?page \zs\d+\s+\{/s//\=i.' {'/ | let i=i+1
 endfunction
 
+setlocal foldmethod=indent
+setlocal textwidth=0
+setlocal formatexpr-=t

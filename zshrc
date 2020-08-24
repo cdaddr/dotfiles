@@ -152,15 +152,27 @@ fi
 if [ -d "$HOME/.pyenv" ]; then
     export PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    source "$(pyenv root)/completions/pyenv.zsh"
+    if [ -f "$(pyenv root)/completions/pyenv.zsh" ]; then
+        source "$(pyenv root)/completions/pyenv.zsh"
+    fi
 fi
 
 if type jenv > /dev/null; then
     eval "$(jenv init -)"
 fi
 
-if [ -f "$HOME/.aliases" ]; then
+# fkill - kill process
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+if [[ -f "$HOME/.aliases" ]]; then
     source "$HOME/.aliases"
 fi
 

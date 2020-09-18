@@ -1,0 +1,27 @@
+set surround
+set highlightedyank
+set ideamarks
+set ideajoin
+set commentary
+set argtextobj
+set textobj-entire
+let mapleader = " "
+set idearefactormode=visual
+set ideastatusicon=gray
+map <Leader>r :action RenameElement<CR>
+map <Leader>f :action FindUsages<CR>
+map <Leader>g :action Generate<CR>
+map <Leader>t :action TypeHierarchy<CR>
+map <Leader>c :action CallHierarchy<CR>
+
+nnoremap <C-o> :action Back<CR>
+nnoremap <C-i> :action Forward<CR>
+nnoremap g; :action JumpToLastChange<CR>
+nnoremap g, :action JumpToNextChange<CR>
+
+map <Leader>[ :action EditorCodeBlockStart<CR>
+map <Leader>] :action EditorCodeBlockEnd<CR>
+
+map <C-k> :action EditorSelectWord<CR>
+
+

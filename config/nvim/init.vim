@@ -511,12 +511,6 @@ nnoremap do do]c
 
 " nnoremap <Leader>l :call CountLines()<CR> {{{2
 
-imap <silent> <expr> <C-j> (pumvisible() ? "\<C-n>" : "\<C-j>")
-imap <silent> <expr> <C-k> (pumvisible() ? "\<C-p>" : "\<C-k>")
-imap <C-j> <Esc><C-j>
-imap <C-k> <Esc><C-k>
-imap <C-h> <Esc><C-h>
-imap <C-l> <Esc><C-l>
 nmap <C-h> <C-w>h
 nmap <C-k> <C-w>k
 nmap <C-j> <C-w>j

@@ -8,6 +8,10 @@ set textobj-entire
 let mapleader = " "
 set idearefactormode=visual
 set ideastatusicon=gray
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 map <Leader>r :action RenameElement<CR>
 map <Leader>f :action FindUsages<CR>
 map <Leader>g :action Generate<CR>
@@ -21,6 +25,10 @@ nnoremap g, :action JumpToNextChange<CR>
 
 map <Leader>[ :action EditorCodeBlockStart<CR>
 map <Leader>] :action EditorCodeBlockEnd<CR>
+<<<<<<< Updated upstream
+=======
+map <Leader>q :action Jdbc.OpenConsole<CR>
+>>>>>>> Stashed changes
 
 map <C-k> :action EditorSelectWord<CR>
 

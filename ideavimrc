@@ -5,14 +5,21 @@ set ideajoin
 set commentary
 set argtextobj
 set textobj-entire
-let mapleader = " "
 set idearefactormode=visual
 set ideastatusicon=gray
+
+let mapleader = " "
+map <Leader>a :action GotoAction<CR>
+map <Leader><Leader> :action SearchEverywhere<CR>
+map <Leader>p :action SearchEverywhere<CR>
 map <Leader>r :action RenameElement<CR>
 map <Leader>f :action FindUsages<CR>
 map <Leader>g :action Generate<CR>
 map <Leader>t :action TypeHierarchy<CR>
 map <Leader>c :action CallHierarchy<CR>
+map <Leader>o :action GotoFile<CR>
+map <Leader>e :action SurroundWithEmmet<CR>
+map <Leader>s :action SurroundWith<CR>
 
 nnoremap <C-o> :action Back<CR>
 nnoremap <C-i> :action Forward<CR>
@@ -21,7 +28,6 @@ nnoremap g, :action JumpToNextChange<CR>
 
 map <Leader>[ :action EditorCodeBlockStart<CR>
 map <Leader>] :action EditorCodeBlockEnd<CR>
+map <Leader>q :action Jdbc.OpenConsole<CR>
 
 map <C-k> :action EditorSelectWord<CR>
-
-

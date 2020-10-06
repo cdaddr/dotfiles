@@ -38,7 +38,7 @@ source "$HOME/.zshrc"
 
 log "Version managers..."
 log "* node (nvm)..."
-if type pyenv > /dev/null; then
+if type nvm > /dev/null; then
     skip
 else
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
@@ -46,9 +46,19 @@ fi
 
 log "* python (pyenv)"
 if type pyenv > /dev/null; then
+    eval "$(pyenv init -)"
     skip
 else
     curl https://pyenv.run | bash
+    eval "$(pyenv init -)"
+fi
+pip install --upgrade pip
+
+log "* python (poetry)"
+if type poetry > /dev/null; then
+    skip
+else
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 fi
 
 

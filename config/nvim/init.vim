@@ -53,6 +53,7 @@ Plug 'markonm/traces.vim'
 Plug 'wellle/targets.vim'
 Plug 'gko/vim-coloresque'
 Plug 'dkarter/bullets.vim'
+Plug 'dag/vim-fish'
 
 " themes
 Plug 'franbach/miramare'
@@ -304,7 +305,7 @@ augroup custom
     au BufWritePost */colors/* exe 'colorscheme ' . expand('%:t:r')
 
     " autocmd BufEnter * lua require'completion'.on_attach()
-    autocmd BufEnter *.py,*.vim call LSPMaps()
+    " autocmd BufEnter *.py,*.vim call LSPMaps()
 augroup END
 " }}}1
 " functions {{{1

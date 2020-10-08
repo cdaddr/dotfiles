@@ -1,5 +1,11 @@
 
-source $HOME/.config/fish/aliases.fish
+if test -e $HOME/.config/fish/aliases.fish
+    source $HOME/.config/fish/aliases.fish
+end
+
+if test -e $HOME/.config/fish/local.fish
+    source $HOME/.config/fish/local.fish
+end
 
 set -x EDITOR nvim
 set -x PAGER less

@@ -20,3 +20,4 @@ status --is-interactive && source (pyenv init -|psub)
 status --is-interactive && source (rbenv init -|psub)
 status --is-interactive && source (jenv init  -|psub)
 
+starship init fish | source

@@ -54,6 +54,7 @@ Plug 'wellle/targets.vim'
 Plug 'gko/vim-coloresque'
 Plug 'dkarter/bullets.vim'
 Plug 'dag/vim-fish'
+Plug 'mboughaba/i3config.vim'
 
 " themes
 Plug 'franbach/miramare'
@@ -133,10 +134,10 @@ let g:PaperColor_Theme_Options = {
 set background=light
 set termguicolors
 
-colorscheme papercolor
+colorscheme nord
 
 let g:lightline = {
-            \ 'colorscheme': 'PaperColor',
+            \ 'colorscheme': 'nord',
             \ 'active': {
             \   'left': [ [ 'mode', 'paste' ],
             \             [ 'currentfunction', 'readonly', 'filename', 'modified' ] ],

@@ -16,8 +16,7 @@ set -x XDG_CACHE_HOME "$HOME/.cache"
 set -x PATH $HOME/.bin $PATH
 set NVM_DIR "$HOME/.nvm"
 
-status --is-interactive && source (pyenv init -|psub)
-status --is-interactive && source (rbenv init -|psub)
-status --is-interactive && source (jenv init  -|psub)
-
-starship init fish | source
+status --is-interactive && type -q pyenv && source (pyenv init -|psub)
+status --is-interactive && type -q rbenv && source (rbenv init -|psub)
+status --is-interactive && type -q jenv && source (jenv init  -|psub)
+status --is-interactive && type -q starship && starship init fish | source

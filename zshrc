@@ -1,21 +1,43 @@
-# env
-export LANG=en_CA.UTF-8
-export EDITOR="nvim"
-export PAGER="less"
-export GOPATH="$HOME/Documents/go"
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude '*~'"
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-export fpath=("$HOME/.zfuntions", $fpath)
-
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
+export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
 
-# zsh options
-autoload -Uz colors && colors
-autoload -Uz compinit && compinit
+if type brew &>/dev/null; then
+    local zc="$(brew --prefix)/share/zsh-completions"
+    local bc="$(brew --prefix)/share/zsh/site-functions"
+    export FPATH="$zc:$bc:$FPATH"
+
+    PATH="$(brew --prefix)/bin:$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"
+
+    if [[ `ls --color=auto 2>/dev/null` ]]; then
+        alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto"
+        if type dircolors &>/dev/null && [[ -f "$XDG_CONFIG_HOME/dircolors" ]]; then
+            eval $(dircolors "$XDG_CONFIG_HOME/dircolors")
+        fi
+    fi
+fi
+
+
+source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$ZSH_PLUGINS/zsh-z/zsh-z.plugin.zsh"
+export ZSHZ_CMD=z
+
+autoload -U compinit; compinit
+
+export EDITOR='nvim'
+export PAGER="less"
+export LANG=en_CA.UTF-8
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude '*~'"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export WORDCHARS="${WORDCHARS/\/}"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export GOPATH="$XDG_DATA_HOME/go"
+export HOMEBREW_NO_ENV_HINTS=1
 
 export extended_history
 setopt hist_ignore_dups
@@ -31,66 +53,35 @@ export SAVEHIST=$HISTSIZE
 export HISTFILE=~/.zsh_history
 setopt auto_pushd
 setopt extended_glob
-setopt no_beep
-setopt complete_aliases
-setopt no_clobber
-setopt short_loops
-setopt check_jobs
-setopt notify
-setopt auto_menu
-setopt autolist
-setopt list_types
-setopt no_list_ambiguous
 setopt no_auto_remove_slash
 setopt auto_param_keys
 setopt prompt_subst
+setopt no_extended_glob
+setopt short_loops
+setopt check_jobs
+setopt notify
 
-#           normal  bright
-#  black    0       8
-#  red      1       9
-#  green    2       10
-#  yellow   3       11
-#  blue     4       12
-#  magenta  5       13
-#  cyan     6       14
-#  white    7       15
-autoload -Uz vcs_info
+source "$XDG_CONFIG_HOME/LS_COLORS.sh"
 
-zstyle ':vcs_info:*' formats '%F{8} %F{7}%b%f'
-zstyle ':vcs_info:*' actionformats '%F{8} %F{7}%b|%a%f'
+zstyle ":completion:*" matcher-list ''
+zstyle ':completion:*' menu select search
+zstyle ':completion:*' fuzzy-match yes
+zstyle ':completion:*' rehash true
+zstyle ':completion:*:*:-command-:*:*' group-order aliases functions builtins commands
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' squeeze-slashes true
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}" "ma=48;5;153;1"
 
-function prompt() {
-    PCOLOR="%F{15}"
-    PSYMBOLGOOD="•"
-    PSYMBOLBAD="✗"
-    if [[ -f "$HOME/.zsh.prompt" ]]; then
-        source ~/.zsh.prompt
-    fi
+setopt no_beep
+setopt no_clobber
+# setopt menu_complete
+# setopt auto_menu
+setopt auto_list # show completions immediately when >2
+setopt list_types
+setopt no_list_ambiguous
+setopt glob_complete
 
-    local PROMPT=''
-    # status of last command
-    PROMPT+="%(0?.${PCOLOR}${PSYMBOLGOOD}.%B%F{1}${PSYMBOLBAD}%b)%f"
-    # root
-    PROMPT+="%(!.%F{1} root%f.)"
-    # hostname
-    PROMPT+=" ${PCOLOR}%m%f "
-    # pwd
-    PROMPT+="%F{12}%(4~|%-1~/…/%2~|%~)%f"
-    # git
-    PROMPT+="${vcs_info_msg_0_}"
-    if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
-        PROMPT+="%F{1}*%f"
-    fi
-    # end
-    PROMPT+=" %F{13}❯%f "
-
-    echo "$PROMPT"
-}
-
-precmd () { vcs_info }
-export PS1='$(prompt)'
-
-# keybinds
 bindkey -e
 bindkey '\e[H' beginning-of-line
 bindkey '\e[F' end-of-line
@@ -104,88 +95,43 @@ bindkey -s '\e[' '\\\C-v['
 bindkey '\e[1~' beginning-of-line
 bindkey '\e[4~' end-of-line
 
-export WORDCHARS="${WORDCHARS/\/}"
-
-if [[ `uname` == 'Darwin' ]]; then
-    local gnubin="/usr/local/opt/coreutils/libexec/gnubin" 
-    local findbin="/usr/local/opt/findutils/libexec/gnubin" 
-    if [[ -d $gnubin ]]; then
-        export PATH="${gnubin}:$PATH"
-    fi
-    if [[ -d $findbin ]]; then
-        export PATH="${findbin}:$PATH"
-    fi
-    export PATH="/usr/local/bin:$PATH"
+if [[ -f  "$XDG_CONFIG_HOME/aliases.sh" ]]; then
+    source "$XDG_CONFIG_HOME/aliases.sh"
 fi
 
-export PATH="$HOME/.bin:$PATH"
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+source ~/.config/powerlevel10k/powerlevel10k.zsh-theme
+[[ ! -f ~/.config/p10k.zsh ]] || source ~/.config/p10k.zsh
+
+if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
+    source "$HOME/.local/share/cargo/env"
+    export PATH="$PATH:$CARGO_HOME/bin"
+fi
+
+[ -f $XDG_CONFIG_HOME/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf.zsh
+
+## From here down is all junk added by tools.  May need periodic cleanup.
+
+export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
+
 typeset -aU path
-
-if [[ `ls --color=auto 2>/dev/null` ]]; then
-    if [[ ! -z "${WSL_DISTRO_NAME}" ]]; then
-        alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto 2>/dev/null"
-    else
-        alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto"
-    fi
-
-    alias ll="ls -lh"
-    alias la="la -a"
+if [[ -f "$XDG_CONFIG_HOME/zsh-private" ]]; then
+    source "$XDG_CONFIG_HOME/zsh-private"
 fi
+source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-if type fdfind &>/dev/null && ! type fd &>/dev/null; then
-    alias fd=fdfind
+if type mise &>/dev/null; then
+    eval "$(mise activate zsh)"
 fi
+eval "$($HOME/.local/bin/mise activate zsh)"
 
-if [[ $(command dircolors) && -f "$HOME/.dir_colors" ]]; then
-    eval $(dircolors "$HOME/.dir_colors")
-fi
+source "$HOME/.config/zsh/catppuccin-syntax.zsh"
 
-# must go at end of file
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+export PATH="$PATH:$HOME/.dotnet/tools"
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"
 
-# auto-generated stuff
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-if type nvim > /dev/null; then
-    alias vim=nvim
-fi
-
-
-if [ -d "$HOME/.pyenv" ]; then
-    export PATH="$HOME/.pyenv/bin:$PATH"
-    eval "$(pyenv init -)"
-    if [ -f "$(pyenv root)/completions/pyenv.zsh" ]; then
-        source "$(pyenv root)/completions/pyenv.zsh"
-    fi
-fi
-
-if type jenv > /dev/null; then
-    eval "$(jenv init -)"
-fi
-
-if type rbenv > /dev/null; then
-    eval "$(rbenv init -)"
-fi
-
-# fkill - kill process
-fkill() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]
-  then
-    echo $pid | xargs kill -${1:-9}
-  fi
-}
-
-if [[ -f "$HOME/.aliases" ]]; then
-    source "$HOME/.aliases"
-fi
-
-# export GDK_SCALE=2
-# export GDK_DPI_SCALE=0.5
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet@9/libexec"

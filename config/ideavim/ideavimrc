@@ -1,33 +1,133 @@
-set surround
-set highlightedyank
 set ideamarks
 set ideajoin
-set commentary
-set argtextobj
-set textobj-entire
-set idearefactormode=visual
+set ideaput
+set idearefactormode=select
 set ideastatusicon=gray
+set ideaenabledbufs=
+set clipboard+=unnamedplus
+
+set incsearch
+set hlsearch
+set scrolloff=5
+set nrformats+=alpha,octal
+
+" plugins
+set commentary
+set surround
+set highlightedyank
+set matchit
+set textobj-entire
+set exchange
+
+let g:argtextobj_pairs="(:),{:},<:>,[:]"
+set argtextobj
+set clipboard=unnamed,unnamedplus,ideaput
 
 let mapleader = " "
 map <Leader>a :action GotoAction<CR>
+let g:argtextobj_pairs="(:),{:},<:>,[:]"
 map <Leader><Leader> :action SearchEverywhere<CR>
-map <Leader>p :action SearchEverywhere<CR>
 map <Leader>r :action RenameElement<CR>
-map <Leader>f :action FindUsages<CR>
+map <Leader>f :action FindInPath<CR>
 map <Leader>g :action Generate<CR>
 map <Leader>t :action TypeHierarchy<CR>
 map <Leader>c :action CallHierarchy<CR>
 map <Leader>o :action GotoFile<CR>
 map <Leader>e :action SurroundWithEmmet<CR>
 map <Leader>s :action SurroundWith<CR>
+vmap S :action SurroundWith<CR>
+
+nnoremap <Leader>w <Esc>vipJgqq
 
 nnoremap <C-o> :action Back<CR>
 nnoremap <C-i> :action Forward<CR>
 nnoremap g; :action JumpToLastChange<CR>
 nnoremap g, :action JumpToNextChange<CR>
+nnoremap zi :action ExpandAllRegions<CR>
 
 map <Leader>[ :action EditorCodeBlockStart<CR>
 map <Leader>] :action EditorCodeBlockEnd<CR>
 map <Leader>q :action Jdbc.OpenConsole<CR>
 
-map <C-k> :action EditorSelectWord<CR>
+map <Leader>h :nohls<CR>
+
+map \ <Leader>
+
+noremap <Leader>y "+y
+noremap <Leader>p "+p
+noremap <Leader>P "+P
+
+noremap <Leader>d "_d
+noremap <Leader>D "_D
+noremap <Leader>x "_x
+noremap <Leader>x "_x
+
+inoremap <silent> <C-j> <esc>:m .+<CR>==gi
+inoremap <silent> <C-k> <esc>:m .-2<CR>==gi
+
+nnoremap <silent> <C-j> :m .+<CR>==
+nnoremap <silent> <C-k> :m .-2<CR>==
+vnoremap <silent> <C-j> :m '>+<CR>gv=gv
+vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+
+vmap < <gv
+vmap > >gv
+
+nmap <Tab> :tabn<cr>
+nmap <S-Tab> :tabp<cr>
+nmap <Leader><Tab> <C-w>W
+
+" this makes m-lowercase use IDE bookmarks always
+nmap 'a 'A
+nmap 'b 'B
+nmap 'c 'C
+nmap 'd 'D
+nmap 'e 'E
+nmap 'f 'F
+nmap 'g 'G
+nmap 'h 'H
+nmap 'i 'I
+nmap 'j 'J
+nmap 'k 'K
+nmap 'l 'L
+nmap 'm 'M
+nmap 'n 'N
+nmap 'o 'O
+nmap 'p 'P
+nmap 'q 'Q
+nmap 'r 'R
+nmap 's 'S
+nmap 't 'T
+nmap 'u 'U
+nmap 'v 'V
+nmap 'w 'W
+nmap 'x 'X
+nmap 'y 'Y
+nmap 'z 'Z
+
+nmap ma mA
+nmap mb mB
+nmap mc mC
+nmap md mD
+nmap me mE
+nmap mf mF
+nmap mg mG
+nmap mh mH
+nmap mi mI
+nmap mj mJ
+nmap mk mK
+nmap ml mL
+nmap mm mM
+nmap mn mN
+nmap mo mO
+nmap mp mP
+nmap mq mQ
+nmap mr mR
+nmap ms mS
+nmap mt mT
+nmap mu mU
+nmap mv mV
+nmap mw mW
+nmap mx mX
+nmap my mY
+nmap mz mZ

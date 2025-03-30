@@ -1,6 +1,8 @@
 [core]
 	excludesfile = ~/.gitignore
-	pager = less -FRSX
+    # pager = less -FRSX
+    pager = delta
+	abbrev = auto
 [color]
 	status = auto
 	branch = auto
@@ -13,32 +15,24 @@
 [alias]
 	last = log -1 HEAD
 	co = checkout
-	st = status -s
+	st = status -sb
 	stat = diff --stat
 	ci = commit
 	ca = commit -a
 	br = branch -a
 	logstat = log --stat
 	logf = log --pretty=fuller
-	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr)'
-	unadd = reset --mixed
+	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
+    logg = log --date=format:'%a %b %e, %Y' --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%cd%C(reset) %C(blue)%an%C(reset) %C(green)%d%C(reset)' --graph
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
 	ls = ls-tree -rt --abbrev
-	di = diff --cached
-	ignore = !echo $1 >> .gitignore
 	amend = commit --amend
 	history = log --follow -p
-	com = commit
 	stageall = add -A
 	stage = add -u
-	unstage = reset HEAD --
-	unstageall = reset HEAD
-	rewindall = reset --hard HEAD
-	rewind = checkout
-	update = add -u
-	update-submodules = "!f(){ git pull --recurse-submodules; git submodule update; };f"
-	sba = "!f() { git subtree add --prefix $2 $1 master --squash; }; f"
-	sbu = "!f() { git subtree pull --prefix $2 $1 master --squash; }; f"
-	ls-subtrees = !"git log | grep git-subtree-dir | awk '{ print $2 }'"
+
+	unstage = restore --staged
+	wt = restore --worktree --staged
 
 [credential]
 	helper = cache --timeout=3600
@@ -52,5 +46,13 @@
 	required = true
 [pull]
 	rebase = true
+[rebase]
+	autoStash = true
 [init]
 	defaultBranch = main
+[merge]
+	conflictStyle = zdiff3
+[log]
+	abbrevCommit = true
+[status]
+    showUntrackedFiles = all

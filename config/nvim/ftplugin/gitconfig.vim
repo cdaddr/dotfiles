@@ -1,5 +1,0 @@
-setlocal copyindent
-setlocal nosmartindent
-setlocal noautoindent
-setlocal nocindent
-setlocal noexpandtab

@@ -5,9 +5,10 @@ set idearefactormode=select
 set ideastatusicon=gray
 set ideaenabledbufs=
 set clipboard+=unnamedplus
+set showcmd
 
 set incsearch
-set hlsearch
+" set hlsearch
 set scrolloff=5
 set nrformats+=alpha,octal
 
@@ -22,6 +23,8 @@ set exchange
 let g:argtextobj_pairs="(:),{:},<:>,[:]"
 set argtextobj
 set clipboard=unnamed,unnamedplus,ideaput
+" remove vim mode from dialogs
+set ideavimsupport=
 
 let mapleader = " "
 map <Leader>a :action GotoAction<CR>

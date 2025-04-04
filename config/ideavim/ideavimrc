@@ -1,5 +1,6 @@
 set ideamarks
 set ideajoin
+
 set ideaput
 set idearefactormode=select
 set ideastatusicon=gray
@@ -8,7 +9,7 @@ set clipboard+=unnamedplus
 set showcmd
 
 set incsearch
-" set hlsearch
+set nohlsearch
 set scrolloff=5
 set nrformats+=alpha,octal
 
@@ -27,8 +28,8 @@ set clipboard=unnamed,unnamedplus,ideaput
 set ideavimsupport=
 
 let mapleader = " "
+
 map <Leader>a :action GotoAction<CR>
-let g:argtextobj_pairs="(:),{:},<:>,[:]"
 map <Leader><Leader> :action SearchEverywhere<CR>
 map <Leader>r :action RenameElement<CR>
 map <Leader>f :action FindInPath<CR>
@@ -39,6 +40,16 @@ map <Leader>o :action GotoFile<CR>
 map <Leader>e :action SurroundWithEmmet<CR>
 map <Leader>s :action SurroundWith<CR>
 vmap S :action SurroundWith<CR>
+
+nnoremap / :action Find<CR>
+vnoremap / :action Macro.find.in.selection<CR>
+
+sethandler <D-f> a:vim
+nnoremap <D-f> :action Find<CR>
+vnoremap <D-f> :action Macro.find.in.selection<CR>
+
+" this would be cool if intellij would wrap search to top by default
+" nnoremap * he:action FindWordAtCaret<CR><ESC>b
 
 nnoremap <Leader>w <Esc>vipJgqq
 

@@ -28,6 +28,7 @@ end
 
 %w[
   .config/aliases.sh
+  .config/bat
   .config/dircolors
   .config/fish
   .config/fzf.zsh

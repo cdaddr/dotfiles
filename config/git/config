@@ -1,39 +1,18 @@
 [core]
 	excludesfile = ~/.gitignore
-    # pager = less -FRSX
-    pager = delta
 	abbrev = auto
+  pager = bat
+  # pager = nvim -R -c 'set filetype=git' -
+  # pager = less -FRSX
+; [pager]
+;   diff = nvim -R -c 'set filetype=git diff' -
 [color]
 	status = auto
 	branch = auto
 	ui = auto
-	pager = 1
-# [diff]
-# 	external = git_diff_wrapper
-# [pager]
-# 	diff = true
-[alias]
-	last = log -1 HEAD
-	co = checkout
-	st = status -sb
-	stat = diff --stat
-	ci = commit
-	ca = commit -a
-	br = branch -a
-	logstat = log --stat
-	logf = log --pretty=fuller
-	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
-    logg = log --date=format:'%a %b %e, %Y' --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%cd%C(reset) %C(blue)%an%C(reset) %C(green)%d%C(reset)' --graph
-    lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
-	ls = ls-tree -rt --abbrev
-	amend = commit --amend
-	history = log --follow -p
-	stageall = add -A
-	stage = add -u
-
-	unstage = restore --staged
-	wt = restore --worktree --staged
-
+	pager = false
+[column]
+  ui = auto
 [credential]
 	helper = cache --timeout=3600
 [user]
@@ -44,15 +23,69 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
+[commit]
+  verbose = true
+[diff]
+  colorMoved = true
+  mnemonicPrefix = true
+  renamed = true
+  algorithm = histogram
+[grep]
+  patternType = perl
+[help]
+  autocorrect = prompt
+[branch]
+  sort = -committerdate
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
 [pull]
 	rebase = true
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
 [rebase]
 	autoStash = true
+  autoSquash = true
+  updateRefs = true
 [init]
 	defaultBranch = main
 [merge]
 	conflictStyle = zdiff3
 [log]
+  date = iso-local
 	abbrevCommit = true
 [status]
     showUntrackedFiles = all
+[rerere]
+  enabled = true
+  autoupdate = true
+[tag]
+  sort = version:refname
+
+
+[alias]
+  alias = config --get-regexp '^alias.'
+	last = log -1 HEAD
+	co = checkout
+	ci = commit
+	st = status -sb
+	stat = diff --stat
+	c = commit
+	ca = commit -a
+	br = branch -a
+	ls = ls-tree -rt --abbrev
+	amend = commit --amend
+	history = log --follow -p
+	unstage = restore --staged
+	wt = restore --worktree --staged
+  out = "log @{u}.."
+	logstat = log --stat
+	logf = log --pretty=fuller
+	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
+  logg = log --date=format:'%a %b %e, %Y' --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%cd%C(reset) %C(blue)%an%C(reset) %C(green)%d%C(reset)' --graph
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+

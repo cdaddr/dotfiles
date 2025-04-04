@@ -130,6 +130,16 @@ eval "$($HOME/.local/bin/mise activate zsh)"
 
 source "$HOME/.config/zsh/catppuccin-syntax.zsh"
 
+export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+help() {
+  "$@" --help 2>&1 | bat --plain --language=help
+}
+
+# fix to make the completion menu selected item text black
+zstyle ':completion:*:default' menu select
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} 'ma=00;30;48;5;111'
+
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"

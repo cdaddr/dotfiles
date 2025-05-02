@@ -7,6 +7,8 @@ vim.g.maplocalleader = "\\"
 require("config.opts")
 require("config.lazy")
 
+vim.cmd.colorscheme("catppuccin-mocha")
+
 local aug = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
 local cabbrev = vim.cmd.cabbrev

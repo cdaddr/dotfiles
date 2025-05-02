@@ -3,7 +3,6 @@ return {
     lazy = false,
     prority = 1000,
     config = function()
-      vim.cmd.colorscheme("kanagawa")
       local colors = require("kanagawa.colors").setup({ theme = "wave" })
       local palette_colors = colors.palette
       require("kanagawa").setup({

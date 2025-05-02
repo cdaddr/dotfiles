@@ -1,6 +1,6 @@
-alias eza="eza --git --group-directories-first --icons=auto"
+alias eza="eza --git --group-directories-first --icons=never"
 alias ls="eza"
-alias ll="eza -lhmgM --no-permissions -o --icons=auto"
+alias ll="eza -lhmgM --no-permissions -o --icons=never"
 alias la="eza -a"
 alias lla="ll -a"
 alias lls="ll --sort=size"
@@ -21,5 +21,5 @@ alias vim=nvim
 
 alias zrc='vim ~/.zshrc'
 alias vimdiff='nvim -d'
-alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim -O init.lua lua/plugins/plugins.lua && popd'
+alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim init.lua && popd'
 alias history='history 0'

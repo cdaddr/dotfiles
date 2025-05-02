@@ -3,7 +3,7 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 config.font_size = 16
-config.color_scheme = 'Kanagawa (Gogh)'
+config.color_scheme = 'Catppuccin Mocha'
 config.font_size = 16.0
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 
@@ -90,43 +90,5 @@ for i = 1, 9 do
 		action = wezterm.action.ActivateTab(i - 1)
 	}
 end
-
-config.colors = {
-  tab_bar = {
-		background = '#1a1a22',
-    active_tab = {
-      bg_color = '#2d4f67',
-      fg_color = '#dcd7ba',
-      -- bg_color = '#1a1a22',
-      -- fg_color = '#ff9e3b',
-
-    --   intensity = 'Normal',
-    --   underline = 'None',
-    --   italic = false,
-    --   strikethrough = false,
-    },
-    inactive_tab = {
-      bg_color = '#1a1a22',
-      fg_color = '#54546d',
-    },
-    --
-    -- inactive_tab_hover = {
-    --   bg_color = '#3b3052',
-    --   fg_color = '#909090',
-    --   italic = true,
-    -- },
-    --
-    new_tab = {
-      bg_color = '#1a1a22',
-      fg_color = '#dcd7ba',
-    },
-    --
-    -- new_tab_hover = {
-    --   bg_color = '#3b3052',
-    --   fg_color = '#909090',
-    --   italic = true,
-    -- },
-  },
-}
 
 return config

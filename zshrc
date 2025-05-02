@@ -1,3 +1,7 @@
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -39,6 +43,10 @@ export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GOPATH="$XDG_DATA_HOME/go"
 export HOMEBREW_NO_ENV_HINTS=1
 export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
+
+# abbreviate pathname in term title
+precmd () {print -Pn "\e]0;%(5~|%-1~/…/%3~|%4~)\a"}
+# precmd () {print -Pn "\e]0;%35<…<%~%<< \a"}
 
 export extended_history
 setopt hist_ignore_dups
@@ -126,9 +134,8 @@ fi
 source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 if type mise &>/dev/null; then
-    eval "$(mise activate zsh)"
+  eval "$(mise activate zsh)"
 fi
-eval "$($HOME/.local/bin/mise activate zsh)"
 
 source "$HOME/.config/zsh/catppuccin-syntax.zsh"
 
@@ -147,3 +154,6 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"
 
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet@9/libexec"
+
+# To customize prompt, run `p10k configure` or edit ~/.dotfiles/config/p10k.zsh.
+[[ ! -f ~/.dotfiles/config/p10k.zsh ]] || source ~/.dotfiles/config/p10k.zsh

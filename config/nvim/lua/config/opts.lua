@@ -16,6 +16,8 @@ vim.o.signcolumn = "yes:2"
 vim.o.timeoutlen = 1000
 vim.o.mouse = "a"
 vim.o.breakindent = true
+vim.o.title = true
+vim.o.titlestring = "%t - Nvim"
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append {'unnamedplus'}
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

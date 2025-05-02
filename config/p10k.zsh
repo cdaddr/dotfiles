@@ -50,7 +50,7 @@
     vim_shell               # vim shell indicator (:sh)
     nix_shell               # nix shell (https://nixos.org/nixos/nix-pills/developing-with-nix-shell.html)
     time                  # current time
-    newline                 # \n
+    # newline                 # \n
     # =========================[ Line #2 ]=========================
     status
     prompt_char            # prompt symbol

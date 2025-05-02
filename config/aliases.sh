@@ -22,3 +22,4 @@ alias vim=nvim
 alias zrc='vim ~/.zshrc'
 alias vimdiff='nvim -d'
 alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim -O init.lua lua/plugins/plugins.lua && popd'
+alias history='history 0'

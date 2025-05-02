@@ -30,6 +30,7 @@ end
   .config/aliases.sh
   .config/bat
   .config/dircolors
+  .config/eza
   .config/fish
   .config/fzf.zsh
   .config/git

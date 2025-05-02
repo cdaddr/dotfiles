@@ -38,6 +38,7 @@ export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GOPATH="$XDG_DATA_HOME/go"
 export HOMEBREW_NO_ENV_HINTS=1
+export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 
 export extended_history
 setopt hist_ignore_dups
@@ -61,7 +62,8 @@ setopt short_loops
 setopt check_jobs
 setopt notify
 
-source "$XDG_CONFIG_HOME/LS_COLORS.sh"
+# eza theme instead
+# source "$XDG_CONFIG_HOME/LS_COLORS.sh"
 
 zstyle ":completion:*" matcher-list ''
 zstyle ':completion:*' menu select search

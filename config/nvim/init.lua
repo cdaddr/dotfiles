@@ -27,13 +27,6 @@ au({'FileType'}, {
   command = "setlocal indentkeys-=."
 })
 
--- remove trailing whitespace
-au({"BufWritePre"}, {
-  group = vimrc,
-  pattern = "*",
-  command = [[%s/\s\+$//e]],
-})
-
 au("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()

@@ -48,6 +48,7 @@ end)
 config.use_fancy_tab_bar = false
 config.tab_max_width = 40
 config.mouse_wheel_scrolls_tabs = false
+config.swallow_mouse_click_on_window_focus = true
 config.underline_position = "-8"
 config.underline_thickness = "1px"
 

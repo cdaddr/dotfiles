@@ -22,8 +22,14 @@ return {
     opts = {
       picker = {
         enabled = true,
+        win = {
+          input = {
+            keys = {
+              ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
+            }
+          }
+        }
       },
-
     },
 
     keys = {

@@ -43,14 +43,18 @@ vmap S :action SurroundWith<CR>
 
 nnoremap / :action Find<CR>
 vnoremap / :action Macro.find.in.selection<CR>
+nnoremap n :action FindNext<CR>
+vnoremap n :action FindNext<CR>
+nnoremap N :action FindPrevious<CR>
+vnoremap N :action FindPrevious<CR>
 
 sethandler <D-f> a:vim
 nnoremap <D-f> :action Find<CR>
 vnoremap <D-f> :action Macro.find.in.selection<CR>
 
-" this would be cool if intellij would wrap search to top by default
-" nnoremap * he:action FindWordAtCaret<CR><ESC>b
+nnoremap * he:action FindWordAtCaret<CR><ESC>b
 
+nnoremap % :action EditorMatchBrace<CR>
 nnoremap <Leader>w <Esc>vipJgqq
 
 nnoremap <C-o> :action Back<CR>
@@ -59,9 +63,10 @@ nnoremap g; :action JumpToLastChange<CR>
 nnoremap g, :action JumpToNextChange<CR>
 nnoremap zi :action ExpandAllRegions<CR>
 
-map <Leader>[ :action EditorCodeBlockStart<CR>
-map <Leader>] :action EditorCodeBlockEnd<CR>
-map <Leader>q :action Jdbc.OpenConsole<CR>
+nnoremap <C-}> <Nop>
+
+" map <Leader>[ :action EditorCodeBlockStart<CR>
+" map <Leader>] :action EditorCodeBlockEnd<CR>
 
 map <Leader>h :nohls<CR>
 
@@ -84,12 +89,16 @@ nnoremap <silent> <C-k> :m .-2<CR>==
 vnoremap <silent> <C-j> :m '>+<CR>gv=gv
 vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 
+nmap gss :s@\v(.* \= )(.*);@\1$state(\2);@<CR>
+
 vmap < <gv
 vmap > >gv
 
 nmap <Tab> :tabn<cr>
 nmap <S-Tab> :tabp<cr>
 nmap <Leader><Tab> <C-w>W
+
+nnoremap <Leader>L :action MoveTabRight<CR>
 
 " this makes m-lowercase use IDE bookmarks always
 nmap 'a 'A

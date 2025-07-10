@@ -45,7 +45,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 
 # abbreviate pathname in term title
-precmd () {print -Pn "\e]0;%(5~|%-1~/…/%3~|%4~)\a"}
+precmd () {print -Pn "\e]0;zsh %(5~|%-1~/…/%3~|%4~)\a"}
 # precmd () {print -Pn "\e]0;%35<…<%~%<< \a"}
 
 export extended_history
@@ -113,8 +113,10 @@ export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-source ~/.config/powerlevel10k/powerlevel10k.zsh-theme
-[[ ! -f ~/.config/p10k.zsh ]] || source ~/.config/p10k.zsh
+# source ~/.config/powerlevel10k/powerlevel10k.zsh-theme
+# [[ ! -f ~/.config/p10k.zsh ]] || source ~/.config/p10k.zsh
+
+eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/catppuccin.omp.json)"
 
 if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     source "$HOME/.local/share/cargo/env"

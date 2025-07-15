@@ -2,6 +2,7 @@
 	excludesfile = ~/.gitignore
 	abbrev = auto
   pager = bat
+	autocrlf = input
   # pager = nvim -R -c 'set filetype=git' -
   # pager = less -FRSX
 ; [pager]

@@ -15,11 +15,19 @@
       "segments": [
         {
           "background": "p:blue",
+          "foreground": "transparent",
+          "style": "diamond",
+          "template": "\ue0bc\ue0bb",
+          "type": "text",
+          "force": true
+        },
+        {
+          "background": "p:blue",
           "foreground": "p:text",
           "powerline_symbol": "\ue0bc",
           "leading_diamond": "\ue0ba",
           "style": "diamond",
-          "template": " {{.Icon}} ",
+          "template": "{{.Icon}}",
           "type": "os"
         },
         {
@@ -27,16 +35,16 @@
           "foreground": "p:text",
           "powerline_symbol": "\ue0bc",
           "style": "diamond",
-          "template": "{{ .UserName }}@{{ .HostName }} ",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .HostName }} ",
           "type": "session"
         },
         {
           "background": "p:pink",
           "foreground": "p:text",
           "properties": {
-            "folder_icon": "..\ue5fe..",
+            "folder_icon": "…",
             "home_icon": "~",
-            "style": "agnoster_short"
+            "style": "agnoster"
           },
           "powerline_symbol": "\ue0bc",
           "style": "powerline",
@@ -65,10 +73,19 @@
         },
         {
           "background": "p:red",
-          "foreground": "p:text",
+          "foreground": "transparent",
           "trailing_diamond": "\ue0bc",
           "style": "diamond",
           "template": "\ue0bb\ue0bb",
+          "type": "text",
+          "force": true
+        },
+        {
+          "background": "transparent",
+          "foreground": "p:red",
+          "trailing_diamond": "\ue0bc",
+          "style": "plain",
+          "template": "{{ if ne .Code 0 }} ({{ .Code }}){{ end }}",
           "type": "text",
           "force": true
         }
@@ -77,9 +94,9 @@
     }
   ],
   "transient_prompt": {
-    "background": "p:pink",
+    "background": "p:blue",
     "foreground": "p:text",
-    "template": "\ue0bc {{ .PWD }} \ue0ba<text,transparent> </>"
+    "template": "\ue0bc {{ .Shell }} \ue0ba<text,transparent> </>"
   },
   "final_space": true,
   "version": 3

@@ -67,6 +67,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   local DARKER = '#11111b'
   local PURPLE = '#7f849c'
   local MAROON = '#f4a6c7'
+  local BLUE = '#8AADF4'
   local SLASH = wezterm.nerdfonts.ple_forwardslash_separator
   local RIGHT_SOLID = wezterm.nerdfonts.ple_upper_left_triangle
   local LEFT_SOLID = wezterm.nerdfonts.ple_lower_right_triangle
@@ -85,12 +86,15 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
 
   c(bg('none'))
   if tab.is_active then
-    c(fg(PINK))
+    c(fg(BLUE))
     c(text(LEFT_SOLID))
+    c(bg(BLUE))
+    c(text(' '))
 
-    c(bg(PINK))
+    c(bg(BLUE))
     c(fg(DARKER))
     c(text(number))
+    c(text(' '))
 
     if #panes > 1 then
       local active
@@ -100,7 +104,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
         end
       end
       if active then
-        c(fg(PINK))
+        c(fg(BLUE))
         c(bg(MAROON))
         c(text(RIGHT_SOLID))
 
@@ -109,16 +113,16 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
         c(text(tostring(active)))
 
         c(fg(MAROON))
-        c(bg(RED))
+        c(bg(PINK))
         c(text(RIGHT_SOLID))
       end
     else
-      c(bg(PINK))
-      c(fg(RED))
+      c(bg(BLUE))
+      c(fg(PINK))
       c(text(LEFT_SOLID))
     end
 
-    c(bg(RED))
+    c(bg(PINK))
     c(fg(DARKER))
     c(text(' '))
     c(text(title))
@@ -127,6 +131,8 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     c(text(' '))
 
     c(bg(RED))
+    c(fg(PINK))
+    c(text(RIGHT_SOLID))
     c(fg(DARKER))
     c(text(SLASH))
     c(text(SLASH))

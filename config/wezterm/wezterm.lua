@@ -190,6 +190,18 @@ config.keys = {
 	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right' } },
 	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down' } },
 
+  { mods = 'CMD|SHIFT', key = 'o', action = wezterm.action.Multiple {
+      wezterm.action.SendKey { key = 'Space' },
+      wezterm.action.SendKey { key = 'Space' },
+    },
+  },
+
+  { mods = 'CMD|SHIFT', key = 'f', action = wezterm.action.Multiple {
+      wezterm.action.SendKey { key = 'Space' },
+      wezterm.action.SendKey { key = '/' },
+    },
+  },
+
   -- command palette
 	{ mods = 'CMD|SHIFT', key = "P", action = wezterm.action.ActivateCommandPalette },
 

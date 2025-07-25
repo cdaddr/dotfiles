@@ -2,6 +2,10 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+local MAX_TAB_WIDTH = 48
+
+config.tab_max_width = MAX_TAB_WIDTH
+
 config.font_size = 16
 config.color_scheme = 'Catppuccin Mocha'
 config.font_size = 16.0
@@ -49,10 +53,14 @@ wezterm.on('update-status', function(window)
 end)
 
 function tab_title(tab_info)
+  local MAX_WIDTH = MAX_TAB_WIDTH - 12
   local title = tab_info.tab_title
   -- if the tab title is explicitly set, take that
   if not (title and #title > 0) then
     title = tab_info.active_pane.title or 'Tab'
+  end
+  if #title > MAX_WIDTH then
+    title = string.sub(title, 1, MAX_WIDTH) .. '…'
   end
   -- Otherwise, use the title from the active pane
   -- in that tab
@@ -124,10 +132,9 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
 
     c(bg(PINK))
     c(fg(DARKER))
+
     c(text(' '))
     c(text(title))
-
-
     c(text(' '))
 
     c(bg(RED))
@@ -167,7 +174,6 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
 end)
 
 config.use_fancy_tab_bar = false
-config.tab_max_width = 40
 config.mouse_wheel_scrolls_tabs = false
 config.swallow_mouse_click_on_window_focus = true
 config.underline_position = "-8"

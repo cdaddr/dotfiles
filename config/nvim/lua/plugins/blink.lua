@@ -53,25 +53,27 @@ return {
     },
 
     cmdline = {
-      completion = {
-        menu = {
-          auto_show = false
-        },
-        list = {
-          selection = { preselect = false, auto_insert = true},
-        },
-      },
-      keymap = {
-        ['<tab>'] = { 'show', 'select_next', },
-        ['<c-l>'] = { function(cmd) cmd.accept(); cmd.show(); end },
-      },
+      enabled = false,
+      -- completion = {
+      --   menu = {
+      --     auto_show = true
+      --   },
+      --   list = {
+      --     selection = { preselect = true, auto_insert = true},
+      --   },
+      --   ghost_text = { enabled = true },
+      -- },
+      -- keymap = {
+      --   ['<tab>'] = { 'show', 'select_next', },
+      --   ['<c-l>'] = { function(cmd) cmd.accept(); cmd.show(); end },
+      -- },
     },
 
     fuzzy = {
       implementation = "prefer_rust_with_warning",
       sorts = {
         'exact',
-        'score',
+        -- 'score',
         'sort_text',
       },
     },

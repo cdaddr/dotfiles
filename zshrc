@@ -1,3 +1,4 @@
+zmodload zsh/zprof
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -27,7 +28,13 @@ source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZSH_PLUGINS/zsh-z/zsh-z.plugin.zsh"
 export ZSHZ_CMD=z
 
-autoload -U compinit; compinit
+autoload -Uz compinit
+if [[ -n ${HOME}/.zcompdump(#qNmh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+autoload -Uz _git
 
 export EDITOR='nvim'
 export PAGER="less"
@@ -74,7 +81,7 @@ setopt notify
 # source "$XDG_CONFIG_HOME/LS_COLORS.sh"
 
 zstyle ":completion:*" matcher-list ''
-zstyle ':completion:*' menu select search
+zstyle ':completion:*' menu select
 zstyle ':completion:*' fuzzy-match yes
 zstyle ':completion:*' rehash true
 zstyle ':completion:*:*:-command-:*:*' group-order aliases functions builtins commands
@@ -83,14 +90,18 @@ zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}" "ma=48;5;153;1"
 
+setopt menu_complete
+
 setopt no_beep
 setopt no_clobber
 # setopt menu_complete
-# setopt auto_menu
 setopt auto_list # show completions immediately when >2
 setopt list_types
 setopt no_list_ambiguous
 setopt glob_complete
+
+# free up ^Q ^S ^P ^O
+stty stop undef start undef rprnt undef discard undef
 
 bindkey -e
 bindkey '\e[H' beginning-of-line
@@ -104,6 +115,10 @@ bindkey '\e[3;3~' delete-word
 bindkey -s '\e[' '\\\C-v['
 bindkey '\e[1~' beginning-of-line
 bindkey '\e[4~' end-of-line
+
+zmodload zsh/complist
+bindkey -M menuselect '^S' history-incremental-search-forward
+bindkey -M menuselect '^R' history-incremental-search-backward
 
 if [[ -f  "$XDG_CONFIG_HOME/aliases.sh" ]]; then
     source "$XDG_CONFIG_HOME/aliases.sh"
@@ -123,7 +138,7 @@ if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     export PATH="$PATH:$CARGO_HOME/bin"
 fi
 
-[ -f $XDG_CONFIG_HOME/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf.zsh
+# [ -f $XDG_CONFIG_HOME/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf.zsh
 
 ## From here down is all junk added by tools.  May need periodic cleanup.
 
@@ -159,3 +174,5 @@ export DOTNET_ROOT="/opt/homebrew/opt/dotnet@9/libexec"
 
 # To customize prompt, run `p10k configure` or edit ~/.dotfiles/config/p10k.zsh.
 [[ ! -f ~/.dotfiles/config/p10k.zsh ]] || source ~/.dotfiles/config/p10k.zsh
+
+

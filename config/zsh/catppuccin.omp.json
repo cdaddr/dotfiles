@@ -3,10 +3,21 @@
   "palette": {
         "os": "#ACB0BE",
         "pink": "#F5BDE6",
+        "maroon": "#eba0ac",
         "red": "#F38BA8",
         "lavender": "#B7BDF8",
         "blue":  "#8AADF4",
+        "sapphire": "#74c7ec",
+        "sky": "#99d1db",
         "wight": "#FFFFFF",
+        "green": "#a6d189",
+        "mauve": "#cba6f7",
+        "peach": "#fab387",
+        "yellow": "#f9e2af",
+        "overlay1": "#7f849c",
+        "overlay2": "#9399b2",
+        "subtext1": "#bac2de",
+        "mantle": "#181825",
         "text": "#11111b"
   },
   "blocks": [
@@ -17,7 +28,8 @@
           "background": "p:blue",
           "foreground": "transparent",
           "style": "diamond",
-          "template": "\ue0bc\ue0bb",
+          "leading_diamond": "\ue0ba",
+          "template": "\ue0bb",
           "type": "text",
           "force": true
         },
@@ -35,7 +47,7 @@
           "foreground": "p:text",
           "powerline_symbol": "\ue0bc",
           "style": "diamond",
-          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .HostName }} ",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
           "type": "session"
         },
         {
@@ -44,7 +56,7 @@
           "properties": {
             "folder_icon": "…",
             "home_icon": "~",
-            "style": "agnoster"
+            "style": "agnoster_short"
           },
           "powerline_symbol": "\ue0bc",
           "style": "powerline",
@@ -79,24 +91,36 @@
           "template": "\ue0bb\ue0bb",
           "type": "text",
           "force": true
-        },
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "segments": [
         {
           "background": "transparent",
-          "foreground": "p:red",
-          "trailing_diamond": "\ue0bc",
+          "foreground": "p:green",
           "style": "plain",
-          "template": "{{ if ne .Code 0 }} ({{ .Code }}){{ end }}",
+          "template": "{{ if ne .Code 0 }}<p:red>({{ .Code }}) </>{{ end }}\uf054",
           "type": "text",
           "force": true
         }
       ],
-      "type": "prompt"
+      "alignment": "left",
+      "type": "prompt",
+      "newline": true
     }
   ],
   "transient_prompt": {
-    "background": "p:blue",
+    "background": "p:lavender",
     "foreground": "p:text",
-    "template": "\ue0bc {{ .Shell }} \ue0ba<text,transparent> </>"
+    "background_templates": [
+      "{{ if gt .Code 0 }}p:red{{ end }}"
+    ],
+    "forground_templates": [
+      "{{ if gt .Code 0 }}p:red{{ end }}"
+    ],
+    "template": "<background,transparent>\ue0ba</> {{ .Shell }} \ue0bb\ue0bb {{ .Folder }} <background,transparent>\ue0bc</><text,transparent> </>"
   },
   "final_space": true,
   "version": 3

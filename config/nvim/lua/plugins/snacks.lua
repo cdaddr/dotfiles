@@ -22,6 +22,7 @@ return {
     opts = {
       picker = {
         enabled = true,
+        layout = { preset = 'ivy', width = 0.9 },
         win = {
           input = {
             keys = {
@@ -34,7 +35,7 @@ return {
 
     keys = {
       -- Top Pickers & Explorer
-      { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+      { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent" },
       { "<leader>p", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },

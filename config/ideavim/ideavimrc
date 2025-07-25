@@ -9,7 +9,7 @@ set clipboard+=unnamedplus
 set showcmd
 
 set incsearch
-set nohlsearch
+set hlsearch
 set scrolloff=5
 set nrformats+=alpha,octal
 
@@ -17,7 +17,7 @@ set nrformats+=alpha,octal
 set commentary
 set surround
 set highlightedyank
-set matchit
+" set matchit
 set textobj-entire
 set exchange
 
@@ -33,7 +33,7 @@ map <Leader>a :action GotoAction<CR>
 map <Leader><Leader> :action SearchEverywhere<CR>
 map <Leader>r :action RenameElement<CR>
 map <Leader>f :action FindInPath<CR>
-map <Leader>g :action Generate<CR>
+-- map <Leader>g :action Generate<CR>
 map <Leader>t :action TypeHierarchy<CR>
 map <Leader>c :action CallHierarchy<CR>
 map <Leader>o :action GotoFile<CR>
@@ -41,12 +41,15 @@ map <Leader>e :action SurroundWithEmmet<CR>
 map <Leader>s :action SurroundWith<CR>
 vmap S :action SurroundWith<CR>
 
+nnoremap <Esc> :nohls<CR>
 nnoremap / :action Find<CR>
 vnoremap / :action Macro.find.in.selection<CR>
 nnoremap n :action FindNext<CR>
 vnoremap n :action FindNext<CR>
 nnoremap N :action FindPrevious<CR>
 vnoremap N :action FindPrevious<CR>
+
+nnoremap <Leader>gs :s/["'].*['"]/{[\0,]}/<CR>
 
 sethandler <D-f> a:vim
 nnoremap <D-f> :action Find<CR>

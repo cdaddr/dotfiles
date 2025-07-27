@@ -123,5 +123,6 @@
     "template": "<background,transparent>\ue0ba</> {{ .Shell }} \ue0bb\ue0bb {{ .Folder }} <background,transparent>\ue0bc</><text,transparent> </>"
   },
   "final_space": true,
-  "version": 3
+  "version": 3,
+  "async": true
 }

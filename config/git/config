@@ -1,7 +1,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	abbrev = auto
-  pager = bat
+  pager = moar
 	autocrlf = input
   # pager = nvim -R -c 'set filetype=git' -
   # pager = less -FRSX
@@ -11,7 +11,8 @@
 	status = auto
 	branch = auto
 	ui = auto
-	pager = false
+  diff = auto
+	pager = true
 [column]
   ui = auto
 [credential]

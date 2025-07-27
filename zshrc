@@ -37,7 +37,7 @@ fi
 autoload -Uz _git
 
 export EDITOR='nvim'
-export PAGER="less"
+export PAGER="moar --quit-if-one-screen"
 export LANG=en_CA.UTF-8
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude '*~'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

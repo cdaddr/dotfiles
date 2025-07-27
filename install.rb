@@ -36,6 +36,7 @@ end
   .config/git
   .config/ideavim
   .config/irb
+  .config/jj
   .config/lazygit
   .config/mise
   .config/nvim

@@ -76,6 +76,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   local PURPLE = '#7f849c'
   local MAROON = '#f4a6c7'
   local BLUE = '#8AADF4'
+  local TAB_BG = '#1e1e2e'
   local SLASH = wezterm.nerdfonts.ple_forwardslash_separator
   local RIGHT_SOLID = wezterm.nerdfonts.ple_upper_left_triangle
   local LEFT_SOLID = wezterm.nerdfonts.ple_lower_right_triangle
@@ -95,6 +96,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   c(bg('none'))
   if tab.is_active then
     c(fg(BLUE))
+    c(bg(TAB_BG))
     c(text(LEFT_SOLID))
     c(bg(BLUE))
     c(text(' '))
@@ -144,10 +146,11 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     c(text(SLASH))
     c(text(SLASH))
 
-    c(bg('none'))
+    c(bg(TAB_BG))
     c(fg(RED))
     c(text(RIGHT_SOLID))
   else
+    c(bg(TAB_BG))
     c(fg(MID))
     c(text(LEFT_SOLID))
 
@@ -164,7 +167,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     c(text(title))
     c(text(' '))
 
-    c(bg('none'))
+    c(bg(TAB_BG))
     c(fg(DARK))
     c(text(RIGHT_SOLID))
   end

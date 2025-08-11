@@ -39,6 +39,7 @@ map <Leader>c :action CallHierarchy<CR>
 map <Leader>o :action GotoFile<CR>
 map <Leader>e :action SurroundWithEmmet<CR>
 map <Leader>s :action SurroundWith<CR>
+map <Leader>gu :action ShowUsages<CR>
 vmap S :action SurroundWith<CR>
 
 nnoremap <Esc> :nohls<CR>
@@ -84,13 +85,13 @@ noremap <Leader>D "_D
 noremap <Leader>x "_x
 noremap <Leader>x "_x
 
-inoremap <silent> <C-j> <esc>:m .+<CR>==gi
-inoremap <silent> <C-k> <esc>:m .-2<CR>==gi
-
-nnoremap <silent> <C-j> :m .+<CR>==
-nnoremap <silent> <C-k> :m .-2<CR>==
-vnoremap <silent> <C-j> :m '>+<CR>gv=gv
-vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+" inoremap <silent> <C-j> <esc>:m .+<CR>==gi
+" inoremap <silent> <C-k> <esc>:m .-2<CR>==gi
+" 
+" nnoremap <silent> <C-j> :m .+<CR>==
+" nnoremap <silent> <C-k> :m .-2<CR>==
+" vnoremap <silent> <C-j> :m '>+<CR>gv=gv
+" vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 
 nmap gss :s@\v(.* \= )(.*);@\1$state(\2);@<CR>
 

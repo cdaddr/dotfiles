@@ -5,12 +5,42 @@ local config = wezterm.config_builder()
 local MAX_TAB_WIDTH = 48
 
 config.tab_max_width = MAX_TAB_WIDTH
+config.initial_cols = 160
+config.initial_rows=48
 
-config.font_size = 16
-config.color_scheme = 'Catppuccin Mocha'
-config.font_size = 16.0
+local lightdark = 'light'
+local home = os.getenv('HOME')
+if home then
+  local f = io.open('/Users/brian/.config/lightdark')
+  if f then
+    lightdark = f:read('*l')
+    print(lightdark)
+  end
+end
+-- print(io.open('/Users/brian/.config/lightdark'))
+
+if lightdark == 'light' then
+  config.color_scheme = 'Catppuccin Latte'
+else
+  config.color_scheme = 'Catppuccin Macchiato'
+end
+config.font_size = 18.0
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
-config.font = wezterm.font({family = 'JetBrainsMono Nerd Font' })
+config.font = wezterm.font_with_fallback{
+  {
+    family = 'TX-02',
+    stretch = 'SemiCondensed',
+    weight = 300
+  },
+  {
+    family = 'JetBrainsMono Nerd Font Mono',
+    scale = 1.2,
+    weight = 300,
+  }
+}
+-- config.use_cap_height_to_scale_fallback_fonts = true
+
+-- 1234567890
 
 -- config.use_resize_increments = true
 config.window_close_confirmation = "NeverPrompt"
@@ -18,8 +48,8 @@ config.window_background_opacity = 1.00
 -- config.macos_window_background_blur = 10
 config.window_decorations = 'RESIZE|INTEGRATED_BUTTONS'
 config.window_frame = {
-	font = wezterm.font({ family = 'JetBrainsMono Nerd Font' }),
-	font_size = 12,
+	font = wezterm.font({ family = 'TX-02', stretch = 'SemiCondensed' }),
+	font_size = 14,
 }
 config.window_padding = {
   left=16, right=16, top=16, bottom=16
@@ -54,57 +84,82 @@ end)
 
 function tab_title(tab_info)
   local MAX_WIDTH = MAX_TAB_WIDTH - 12
-  local title = tab_info.tab_title
-  -- if the tab title is explicitly set, take that
-  if not (title and #title > 0) then
-    title = tab_info.active_pane.title or 'Tab'
+  local title = tab_info.active_pane.title or tab_info.tab_title
+
+  -- If no explicit title, use current working directory
+  if not (title and #title > 0) or title == 'zsh' then
+    local cwd = tab_info.active_pane.current_working_dir
+    if cwd then
+      -- Extract just the directory name
+      title = 'zsh ' .. cwd.file_path:gsub(wezterm.home_dir, '~')
+    else
+      title = tab_info.active_pane.title or 'Tab'
+    end
   end
+
   if #title > MAX_WIDTH then
     title = string.sub(title, 1, MAX_WIDTH) .. '…'
   end
-  -- Otherwise, use the title from the active pane
-  -- in that tab
+
   return title
 end
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  -- catpucciin colours - I tweaked some though
+  local GRAY, DARKGRAY, LIGHTGRAY
   local RED = '#f38ba8'
   local PINK = '#f5c2e7'
-  local MID = '#45475a'
-  local DARK = '#313244'
-  local DARKER = '#11111b'
+  local GRAY = '#313244'
+  local DARKGRAY = '#11111b'
   local PURPLE = '#7f849c'
   local MAROON = '#f4a6c7'
   local BLUE = '#8AADF4'
-  local TAB_BG = '#1e1e2e'
-  local SLASH = wezterm.nerdfonts.ple_forwardslash_separator
-  local RIGHT_SOLID = wezterm.nerdfonts.ple_upper_left_triangle
-  local LEFT_SOLID = wezterm.nerdfonts.ple_lower_right_triangle
+  local LAVENDAR = '#b7bdf8'
+  local NONE = 'none'
+  local BLACK = "#11111b"
+  if lightdark == 'dark' then
+    GRAY = '#313244'
+    DARKGRAY = '#11111b'
+    LIGHTGRAY = '#45475a'
+  else
+    LIGHTGRAY = '#acb0be'
+    GRAY = '#ccd0da'
+    DARKGRAY = '#eff1f5'
+  end
+
+  SEPARATOR = wezterm.nerdfonts.ple_forwardslash_separator    -- \ue0bb 
+  UPPER_LEFT = wezterm.nerdfonts.ple_upper_left_triangle -- \ue0bc 
+  LOWER_RIGHT = wezterm.nerdfonts.ple_lower_right_triangle -- \ue0ba 
 
   local fg = function(color) return { Foreground = { Color = color } } end
   local bg = function(color) return { Background = { Color = color } } end
   local text = function(txt) return { Text = (txt or '') } end
 
   local format = {}
-  local c = function(option) return table.insert(format, option) end
+  local c = function(...)
+    if ... then
+      for i,v in ipairs(table.pack(...)) do
+        table.insert(format, v)
+      end
+    end
+  end
+
+  -- local old_fgcolor = NONE
+  -- local old_bgcolor = NONE
+  -- local section = function(fgcolor, bgcolor, ...)
+  --   c(fg(bgcolor), bg(old_bgcolor), text(LOWER_RIGHT))
+  --   c(fg(fgcolor), bg(bgcolor), ...)
+  -- end
 
   local next_tab = tabs[tab.tab_index + 2]
   local prev_tab = tabs[tab.tab_index]
   local title = tab_title(tab)
   local number = tostring(tab.tab_index + 1)
 
-  c(bg('none'))
+  c(bg(NONE))
   if tab.is_active then
-    c(fg(BLUE))
-    c(bg(TAB_BG))
-    c(text(LEFT_SOLID))
-    c(bg(BLUE))
-    c(text(' '))
-
-    c(bg(BLUE))
-    c(fg(DARKER))
-    c(text(number))
-    c(text(' '))
+    c(fg(BLUE), bg(NONE), text(LOWER_RIGHT))
+    c(fg(BLACK), bg(BLUE), text(SEPARATOR), text(' '), text(number), text(' '))
 
     if #panes > 1 then
       local active
@@ -114,62 +169,24 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
         end
       end
       if active then
-        c(fg(BLUE))
-        c(bg(MAROON))
-        c(text(RIGHT_SOLID))
-
-        c(fg(DARKER))
-        c(bg(MAROON))
-        c(text(tostring(active)))
-
-        c(fg(MAROON))
-        c(bg(PINK))
-        c(text(RIGHT_SOLID))
+        c(fg(BLUE), bg(LAVENDAR), text(UPPER_LEFT))
+        c(fg(BLACK), bg(LAVENDAR), text(tostring(active)))
+        c(fg(LAVENDAR), bg(PINK), text(UPPER_LEFT))
       end
     else
-      c(bg(BLUE))
-      c(fg(PINK))
-      c(text(LEFT_SOLID))
+      c(fg(PINK), bg(BLUE), text(LOWER_RIGHT))
     end
 
-    c(bg(PINK))
-    c(fg(DARKER))
-
-    c(text(' '))
-    c(text(title))
-    c(text(' '))
-
-    c(bg(RED))
-    c(fg(PINK))
-    c(text(RIGHT_SOLID))
-    c(fg(DARKER))
-    c(text(SLASH))
-    c(text(SLASH))
-
-    c(bg(TAB_BG))
-    c(fg(RED))
-    c(text(RIGHT_SOLID))
+    c(fg(BLACK), bg(PINK), text(' '), text(title), text(' '))
+    c(fg(PINK), bg(RED), text(UPPER_LEFT))
+    c(fg(BLACK), text(SEPARATOR), text(SEPARATOR))
+    c(fg(RED), bg(NONE), text(UPPER_LEFT))
   else
-    c(bg(TAB_BG))
-    c(fg(MID))
-    c(text(LEFT_SOLID))
-
-    c(bg(MID))
-    c(fg(DARKER))
-    c(text(number))
-
-    c(bg(DARK))
-    c(fg(MID))
-    c(text(RIGHT_SOLID))
-
-    c(fg(PURPLE))
-    c(text(' '))
-    c(text(title))
-    c(text(' '))
-
-    c(bg(TAB_BG))
-    c(fg(DARK))
-    c(text(RIGHT_SOLID))
+    c(fg(LIGHTGRAY), bg(NONE), text(LOWER_RIGHT))
+    c(fg(DARKGRAY), bg(LIGHTGRAY), text(number))
+    c(fg(LIGHTGRAY), bg(GRAY), text(UPPER_LEFT))
+    c(fg(PURPLE), text(' '), text(title), text(' '))
+    c(fg(GRAY), bg(NONE), text(UPPER_LEFT))
   end
 
 
@@ -234,7 +251,7 @@ end
 
 config.colors = {
   tab_bar = {
-    background = '#1e1e2e'
+    background = 'none'
   },
 }
 

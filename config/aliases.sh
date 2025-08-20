@@ -1,6 +1,8 @@
-alias eza="eza --git --group-directories-first --icons=never"
+[[ -f $XDG_CONFIG_HOME/zsh/colors.sh ]] && source $XDG_CONFIG_HOME/zsh/colors.sh
+
+alias eza="eza --git --group-directories-first --icons=never --no-quotes"
 alias ls="eza"
-alias ll="eza -lhmgM --no-permissions -o --icons=never"
+alias ll="eza -lhmM -o --icons=never"
 alias la="eza -a"
 alias lla="ll -a"
 alias lls="ll --sort=size"
@@ -25,3 +27,17 @@ alias zrc='vim ~/.zshrc'
 alias vimdiff='nvim -d'
 alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim init.lua && popd'
 alias history='history 0'
+
+alias_reminder() {
+  local original="$1"
+  local replacement="$2"
+  local RED=$RED
+
+  eval "$original() {
+    echo -e \"${RED}** reminder: use $replacement instead of $original ${RESET}\n\"
+    command $replacement \"\$@\"
+  }"
+}
+
+alias_reminder "du" "dua"
+alias_reminder "grep" "rg"

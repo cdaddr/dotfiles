@@ -14,30 +14,29 @@ local au = vim.api.nvim_create_autocmd
 local cabbrev = vim.cmd.cabbrev
 local map = vim.keymap.set
 
-local vimrc = aug('vimrc', {})
+local vimrc = aug("vimrc", {})
 
-au({'BufWritePost'}, {
-  pattern = 'init.lua',
-  command = "source <afile>"
+au({ "BufWritePost" }, {
+	pattern = "init.lua",
+	command = "source <afile>",
 })
 
-au({'FileType'}, {
-  group = vimrc,
-  pattern = 'ruby',
-  command = "setlocal indentkeys-=."
+au({ "FileType" }, {
+	group = vimrc,
+	pattern = "ruby",
+	command = "setlocal indentkeys-=.",
 })
 
 au("TextYankPost", {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+	callback = function()
+		vim.highlight.on_yank()
+	end,
 })
 
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
 cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
 cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
 cabbrev("vrc", ":e $MYVIMRC")
-
 
 -- insert mode niceties
 map({ "i", "c" }, "<M-BS>", "<C-W>", { desc = "Backward delete word" })
@@ -48,12 +47,12 @@ map("n", "<leader>th", "<cmd>nohls<cr>")
 map("n", "<leader>tw", "<cmd>setlocal nowrap!<cr>")
 
 -- move lines
-map('i', '<C-j>', "<c-o>:m .+<CR><c-o>==", {silent=true})
-map('i', '<C-k>', "<c-o>:m .-2<CR><c-o>==", {silent=true})
-map('n', '<C-j>', ":m .+<CR>==", {silent=true})
-map('n', '<C-k>', ":m .-2<CR>==", {silent=true})
-map('v', '<C-j>', ":m '>+<CR>gv=gv", {silent=true})
-map('v', '<C-k>', ":m '<-2<CR>gv=gv", {silent=true})
+map("i", "<C-j>", "<c-o>:m .+<CR><c-o>==", { silent = true })
+map("i", "<C-k>", "<c-o>:m .-2<CR><c-o>==", { silent = true })
+map("n", "<C-j>", ":m .+<CR>==", { silent = true })
+map("n", "<C-k>", ":m .-2<CR>==", { silent = true })
+map("v", "<C-j>", ":m '>+<CR>gv=gv", { silent = true })
+map("v", "<C-k>", ":m '<-2<CR>gv=gv", { silent = true })
 
 -- visual mode reselect pasted text
 map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
@@ -68,11 +67,11 @@ map("n", "<Leader>c", '"_c')
 map("n", "<Leader>C", '"_C')
 
 -- keep indenting
-map('v', '>', '>gv')
-map('v', '<', '<gv')
+map("v", ">", ">gv")
+map("v", "<", "<gv")
 
 -- cd to dir of file in buffer
-map('n', '<Leader>cd', ':cd %:p:h<CR>')
+map("n", "<Leader>cd", ":cd %:p:h<CR>")
 
 -- stop q from starting a macro during hit-enter (:h hit-enter)
 vim.cmd([[
@@ -104,22 +103,22 @@ vim.cmd([[
 ]])
 
 -- restore cursor position
-vim.api.nvim_create_autocmd('BufRead', {
-  callback = function(opts)
-    vim.api.nvim_create_autocmd('BufWinEnter', {
-      once = true,
-      buffer = opts.buf,
-      callback = function()
-        local ft = vim.bo[opts.buf].filetype
-        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-        if
-          not (ft:match('commit') and ft:match('rebase'))
-          and last_known_line > 1
-          and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-        then
-          vim.api.nvim_feedkeys([[g`"]], 'nx', false)
-        end
-      end,
-    })
-  end,
+vim.api.nvim_create_autocmd("BufRead", {
+	callback = function(opts)
+		vim.api.nvim_create_autocmd("BufWinEnter", {
+			once = true,
+			buffer = opts.buf,
+			callback = function()
+				local ft = vim.bo[opts.buf].filetype
+				local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+				if
+					not (ft:match("commit") and ft:match("rebase"))
+					and last_known_line > 1
+					and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+				then
+					vim.api.nvim_feedkeys([[g`"]], "nx", false)
+				end
+			end,
+		})
+	end,
 })

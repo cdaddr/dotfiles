@@ -54,17 +54,17 @@ map("n", "<C-k>", ":m .-2<CR>==", { silent = true })
 map("v", "<C-j>", ":m '>+<CR>gv=gv", { silent = true })
 map("v", "<C-k>", ":m '<-2<CR>gv=gv", { silent = true })
 
--- visual mode reselect pasted text
+map('n', '<leader>o', '<cmd>Oil<cr>', {desc = "Open Oil"}) -- visual mode reselect pasted text
 map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
 
 -- delete to black hole
-map("n", "<Leader>d", '"_d')
-map("n", "<Leader>D", '"_D')
-map("n", "<Leader>x", '"_x')
-map("n", "<Leader>s", '"_s')
-map("n", "<Leader>S", '"_S')
-map("n", "<Leader>c", '"_c')
-map("n", "<Leader>C", '"_C')
+-- map("n", "<Leader>d", '"_d')
+-- map("n", "<Leader>D", '"_D')
+-- map("n", "<Leader>x", '"_x')
+-- map("n", "<Leader>s", '"_s')
+-- map("n", "<Leader>S", '"_S')
+-- map("n", "<Leader>c", '"_c')
+-- map("n", "<Leader>C", '"_C')
 
 -- keep indenting
 map("v", ">", ">gv")

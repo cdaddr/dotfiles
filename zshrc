@@ -19,7 +19,7 @@ fi
 if [[ $LIGHTDARK == "light" ]]; then
   export ZSH_THEME="catppuccin-frappe"
 else
-  export ZSH_THEME="catppuccin-mocha"
+  export ZSH_THEME="catppuccin-macchiato"
 fi
 
 # Set LESS_TERMCAP variables based on ZSH_THEME for Catppuccin colors
@@ -86,7 +86,7 @@ fi
 autoload -Uz _git
 
 export EDITOR='nvim'
-export PAGER="moar --quit-if-one-screen --style=$ZSH_THEME"
+export PAGER="moor --quit-if-one-screen --style=$ZSH_THEME"
 export LANG=en_CA.UTF-8
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -196,6 +196,7 @@ if type mise &>/dev/null; then
 fi
 
 export PATH="$PATH:$HOME/.dotnet/tools"
+export PATH="$PATH:$GOPATH/bin"
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"
 

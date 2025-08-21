@@ -26,6 +26,7 @@ else
 end
 config.font_size = 18.0
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
+-- 1234567890
 config.font = wezterm.font_with_fallback{
   {
     family = 'TX-02',
@@ -34,13 +35,10 @@ config.font = wezterm.font_with_fallback{
   },
   {
     family = 'JetBrainsMono Nerd Font Mono',
-    scale = 1.2,
     weight = 300,
   }
 }
 -- config.use_cap_height_to_scale_fallback_fonts = true
-
--- 1234567890
 
 -- config.use_resize_increments = true
 config.window_close_confirmation = "NeverPrompt"

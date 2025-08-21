@@ -1,7 +1,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	abbrev = auto
-  pager = moar
+  pager = moor
 	autocrlf = input
   # pager = nvim -R -c 'set filetype=git' -
   # pager = less -FRSX

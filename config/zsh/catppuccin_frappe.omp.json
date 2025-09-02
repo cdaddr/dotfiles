@@ -18,7 +18,8 @@
     "overlay2": "#9399b2",
     "subtext1": "#bac2de",
     "mantle": "#181825",
-    "text": "#11111b"
+    "text": "#11111b",
+    "gray": "#626880"
   },
   "blocks": [
     {
@@ -38,35 +39,30 @@
       "alignment": "left",
       "segments": [
         {
-          "background": "p:blue",
-          "foreground": "transparent",
-          "style": "diamond",
-          "leading_diamond": "\ue0ba",
-          "template": "\ue0bb",
-          "type": "text",
-          "force": true
-        },
-        {
-          "background": "p:blue",
-          "foreground": "p:text",
-          "powerline_symbol": "\ue0bc",
-          "leading_diamond": "\ue0ba",
-          "style": "diamond",
+          "foreground": "p:blue",
+          "style": "plain",
           "template": "{{.Icon}}",
           "type": "os"
         },
         {
-          "background": "p:blue",
-          "foreground": "p:text",
-          "powerline_symbol": "\ue0bc",
-          "style": "diamond",
+          "foreground": "p:blue",
+          "style": "plain",
           "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
           "type": "session"
         },
         {
-          "background": "p:lavender",
-          "foreground": "p:text",
-          "style": "powerline",
+          "foreground": "p:pink",
+          "properties": {
+            "folder_icon": "..\ue5fe..",
+            "home_icon": "~",
+            "style": "full"
+          },
+          "style": "plain",
+          "template": "{{ .Path }} ",
+          "type": "path"
+        },
+        {
+          "foreground": "p:lavender",
           "properties": {
             "branch_icon": "\ue725 ",
             "cherry_pick_icon": "\ue29b ",
@@ -79,47 +75,21 @@
             "revert_icon": "\uf0e2 ",
             "tag_icon": "\uf412 "
           },
-          "powerline_symbol": "\ue0bc",
-          "template": " {{ .HEAD }} ",
+          "template": "{{ .HEAD }} ",
+          "style": "plain",
           "type": "git"
         },
         {
-          "background": "p:pink",
-          "foreground": "p:text",
-          "properties": {
-            "mapped_locations_enabled": false,
-            "folder_icon": "…",
-            "home_icon": "󰜥",
-            "style": "full"
-          },
-          "powerline_symbol": "\ue0bc",
-          "style": "powerline",
-          "template": " {{ .Path }} ",
-          "type": "path"
-        },
-        {
-          "background": "p:maroon",
-          "foreground": "p:text",
+          "foreground": "p:gray",
           "properties": {
             "time_format": "3:04 pm"
           },
-          "powerline_symbol": "\ue0bc",
-          "style": "powerline",
-          "template": " {{ .CurrentDate | date .Format }} ",
+          "style": "plain",
+          "template": "[{{ .CurrentDate | date .Format }}]",
           "type": "time"
-        },
-        {
-          "background": "p:red",
-          "foreground": "transparent",
-          "trailing_diamond": "\ue0bc",
-          "style": "diamond",
-          "template": "\ue0bb\ue0bb",
-          "type": "text",
-          "force": true
         }
       ],
-      "type": "prompt",
-      "newline": true
+      "type": "prompt"
     },
     {
       "segments": [
@@ -127,10 +97,12 @@
           "foreground": "p:blue",
           "properties": {
             "home_icon": "󰜥",
-            "style": "folder"
+            "folder_icon": "…",
+            "style": "agnoster_short",
+            "max_depth": 1
           },
           "style": "plain",
-          "template": " {{ .Path }} ",
+          "template": "{{ .Path }} ",
           "type": "path"
         },
         {
@@ -147,6 +119,5 @@
     }
   ],
   "final_space": true,
-  "version": 3,
-  "async": true
+  "version": 3
 }

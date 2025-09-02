@@ -202,5 +202,5 @@ export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"
 
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet@9/libexec"
 
-eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/catppuccin.omp.json)"
+eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/catppuccin_macchiato.omp.json)"
 

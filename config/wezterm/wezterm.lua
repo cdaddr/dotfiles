@@ -102,36 +102,49 @@ function tab_title(tab_info)
   return title
 end
 
-wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  -- catpucciin colours - I tweaked some though
-  local GRAY, DARKGRAY, LIGHTGRAY
-  local RED = '#f38ba8'
-  local PINK = '#f5c2e7'
-  local GRAY = '#313244'
-  local DARKGRAY = '#11111b'
-  local PURPLE = '#7f849c'
-  local MAROON = '#f4a6c7'
-  local BLUE = '#8AADF4'
-  local LAVENDAR = '#b7bdf8'
-  local NONE = 'none'
-  local BLACK = "#11111b"
-  if lightdark == 'dark' then
-    GRAY = '#313244'
-    DARKGRAY = '#11111b'
-    LIGHTGRAY = '#45475a'
-  else
-    LIGHTGRAY = '#acb0be'
-    GRAY = '#ccd0da'
-    DARKGRAY = '#eff1f5'
-  end
+local TABBAR = '#1e2030'
 
-  SEPARATOR = wezterm.nerdfonts.ple_forwardslash_separator    -- \ue0bb 
-  UPPER_LEFT = wezterm.nerdfonts.ple_upper_left_triangle -- \ue0bc 
-  LOWER_RIGHT = wezterm.nerdfonts.ple_lower_right_triangle -- \ue0ba 
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local GRAY, DARKGRAY, LIGHTGRAY, OVERLAY, SURFACE
+  local palette = {
+    rosewater = "#f4dbd6",
+    flamingo = "#f0c6c6",
+    pink = "#f5bde6",
+    mauve = "#c6a0f6",
+    red = "#ed8796",
+    maroon = "#ee99a0",
+    peach = "#f5a97f",
+    yellow = "#eed49f",
+    green = "#a6da95",
+    teal = "#8bd5ca",
+    sky = "#91d7e3",
+    sapphire = "#7dc4e4",
+    blue = "#8aadf4",
+    lavender = "#b7bdf8",
+    text = "#cad3f5",
+    subtext1 = "#b8c0e0",
+    subtext0 = "#a5adcb",
+    overlay2 = "#939ab7",
+    overlay1 = "#8087a2",
+    overlay0 = "#6e738d",
+    surface2 = "#5b6078",
+    surface1 = "#494d64",
+    surface0 = "#363a4f",
+    base = "#24273a",
+    mantle = "#1e2030",
+    crust = "#181926",
+    black = "#000000",
+    none = TABBAR
+  }
+
+  LOWER_LEFT = '\u{231D}'
+  LEFT_BORDER = '\u{258f}'
+  LEFT_BORDER_THICK = '\u{258c}'
+  RIGHT_BORDER = '\u{1fb87}'
 
   local fg = function(color) return { Foreground = { Color = color } } end
   local bg = function(color) return { Background = { Color = color } } end
-  local text = function(txt) return { Text = (txt or '') } end
+  local text = function(...) local args = {...};  return { Text = (args and table.concat(args, '') or '') } end
 
   local format = {}
   local c = function(...)
@@ -142,51 +155,80 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     end
   end
 
-  -- local old_fgcolor = NONE
-  -- local old_bgcolor = NONE
-  -- local section = function(fgcolor, bgcolor, ...)
-  --   c(fg(bgcolor), bg(old_bgcolor), text(LOWER_RIGHT))
-  --   c(fg(fgcolor), bg(bgcolor), ...)
-  -- end
+  local super = function(n)
+    local sup = {
+        utf8.char(0x00B9), -- ¹
+        utf8.char(0x00B2), -- ²
+        utf8.char(0x00B3), -- ³
+        utf8.char(0x2074), -- ⁴
+        utf8.char(0x2075), -- ⁵
+        utf8.char(0x2076), -- ⁶
+        utf8.char(0x2077), -- ⁷
+        utf8.char(0x2078), -- ⁸
+        utf8.char(0x2079)  -- ⁹
+    }
+    local sub = {
+      utf8.char(0x2081), -- ₁
+      utf8.char(0x2082), -- ₂
+      utf8.char(0x2083), -- ₃
+      utf8.char(0x2084), -- ₄
+      utf8.char(0x2085), -- ₅
+      utf8.char(0x2086), -- ₆
+      utf8.char(0x2087), -- ₇
+      utf8.char(0x2088), -- ₈
+      utf8.char(0x2089)  -- ₉
+    }
+
+    if n >= 1 and n <= 9 then
+      return sub[n]
+    else
+      return '\u{208a}' -- subscript ₊
+    end
+  end
 
   local next_tab = tabs[tab.tab_index + 2]
   local prev_tab = tabs[tab.tab_index]
   local title = tab_title(tab)
   local number = tostring(tab.tab_index + 1)
 
-  c(bg(NONE))
+  local bg_tab, fg_tab, bg_number, fg_border
   if tab.is_active then
-    c(fg(BLUE), bg(NONE), text(LOWER_RIGHT))
-    c(fg(BLACK), bg(BLUE), text(SEPARATOR), text(' '), text(number), text(' '))
+    bg_tab = bg(palette.lavender)
+    fg_tab = fg(palette.black)
+    bg_number = bg(palette.blue)
+    fg_border = fg(palette.lavender)
 
-    if #panes > 1 then
-      local active
-      for _, pane in pairs(panes) do
-        if pane.is_active then
-          active = pane.pane_index + 1
-        end
-      end
-      if active then
-        c(fg(BLUE), bg(LAVENDAR), text(UPPER_LEFT))
-        c(fg(BLACK), bg(LAVENDAR), text(tostring(active)))
-        c(fg(LAVENDAR), bg(PINK), text(UPPER_LEFT))
-      end
-    else
-      c(fg(PINK), bg(BLUE), text(LOWER_RIGHT))
-    end
-
-    c(fg(BLACK), bg(PINK), text(' '), text(title), text(' '))
-    c(fg(PINK), bg(RED), text(UPPER_LEFT))
-    c(fg(BLACK), text(SEPARATOR), text(SEPARATOR))
-    c(fg(RED), bg(NONE), text(UPPER_LEFT))
   else
-    c(fg(LIGHTGRAY), bg(NONE), text(LOWER_RIGHT))
-    c(fg(DARKGRAY), bg(LIGHTGRAY), text(number))
-    c(fg(LIGHTGRAY), bg(GRAY), text(UPPER_LEFT))
-    c(fg(PURPLE), text(' '), text(title), text(' '))
-    c(fg(GRAY), bg(NONE), text(UPPER_LEFT))
+    bg_tab = bg(palette.surface0)
+    fg_tab = fg(palette.overlay2)
+    bg_number = bg(palette.surface1)
+    fg_border = fg(palette.surface2)
   end
 
+  c(bg_number, fg_border, text(LEFT_BORDER))
+  c(bg_number, fg_tab, text(number, ' '))
+
+  if tab.is_active and #panes > 1 then
+    local active
+    for _, pane in pairs(panes) do
+      if pane.is_active then
+        active = pane.pane_index + 1
+      end
+    end
+    if active then
+      c(text(super(active)))
+    end
+  end
+
+  c(bg_tab, fg_tab)
+  c(text(' ', title, ' '))
+  if tab.is_active then
+    c(fg_tab, text(LOWER_LEFT))
+  else
+    c(text(' '))
+  end
+
+  c(bg(palette.none), text(' '))
 
   return format
 end)
@@ -249,7 +291,7 @@ end
 
 config.colors = {
   tab_bar = {
-    background = 'none'
+    background = TABBAR
   },
 }
 

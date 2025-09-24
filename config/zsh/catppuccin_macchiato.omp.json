@@ -111,7 +111,7 @@
         {
           "background": "transparent",
           "style": "plain",
-          "template": "{{ if ne .Code 0 }}<p:red>({{ .Code }}) </>{{ end }}<p:lavender>\uf054</>",
+          "template": "{{ if ne .Code 0 }}<p:red>({{ .Code }}) </>{{ end }}<p:lavender></>",
           "type": "text",
           "force": true
         }

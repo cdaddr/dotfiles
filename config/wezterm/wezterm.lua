@@ -206,7 +206,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   end
 
   c(bg_number, fg_border, text(LEFT_BORDER))
-  c(bg_number, fg_tab, text(number, ' '))
+  c(bg_number, fg_tab, text(number))
 
   if tab.is_active and #panes > 1 then
     local active
@@ -219,6 +219,8 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
       c(text(super(active)))
     end
   end
+
+  c(text(' '))
 
   c(bg_tab, fg_tab)
   c(text(' ', title, ' '))
@@ -241,7 +243,22 @@ config.underline_thickness = "1px"
 
 config.quit_when_all_windows_are_closed = false
 
-config.keys = {
+config.keys = {}
+-- map CMD+letter to <Space>w<letter> so I can remap them in nvim
+-- overridden below by specific CMD-<letter> that we keep as wezterm bindings
+-- wezterm prefix is <leader>wz, matching my nvim config
+local letter = string.byte("A")
+while letter <= string.byte("z") do
+  table.insert(config.keys, { mods = "CMD", key = string.char(letter), action = wezterm.action.Multiple {
+    wezterm.action.SendKey { key = 'Space' },
+    wezterm.action.SendKey { key = 'w' },
+    wezterm.action.SendKey { key = 'z' },
+    wezterm.action.SendKey { key = string.char(letter) },
+  }})
+  letter = letter + 1
+end
+
+local keys = {
   -- home/end
 	{ mods = 'CMD', key = "LeftArrow", action = wezterm.action.SendKey { key = 'Home', } },
 	{ mods = 'CMD', key = "RightArrow", action = wezterm.action.SendKey { key = 'End', } },
@@ -249,23 +266,26 @@ config.keys = {
   -- split
 	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right' } },
 	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down' } },
+  { mods = 'CMD', key = "t", action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
 
-  { mods = 'CMD|SHIFT', key = 'o', action = wezterm.action.Multiple {
-      wezterm.action.SendKey { key = 'Space' },
-      wezterm.action.SendKey { key = 'Space' },
-    },
-  },
-
-  { mods = 'CMD|SHIFT', key = 'f', action = wezterm.action.Multiple {
-      wezterm.action.SendKey { key = 'Space' },
-      wezterm.action.SendKey { key = '/' },
-    },
-  },
+  -- wezterm defaults we want to keep
+  { mods = 'CMD', key = 'c', action = wezterm.action.CopyTo 'Clipboard' },
+  { mods = 'CMD', key = 'v', action = wezterm.action.PasteFrom 'Clipboard' },
+  { mods = 'CMD', key = 'n', action = wezterm.action.SpawnWindow },
+  { mods = 'CMD', key = 'r', action = wezterm.action.ReloadConfiguration },
+  { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
+  { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
+  { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
+  
 
   -- command palette
 	{ mods = 'CMD|SHIFT', key = "P", action = wezterm.action.ActivateCommandPalette },
 
 }
+
+for _, item in pairs(keys) do
+  config.keys[#config.keys + 1] = item
+end
 
 for key, dir in pairs({ L = 'Right', H = 'Left', J = 'Down', K = 'Up' }) do
 	config.keys[#config.keys + 1] = {

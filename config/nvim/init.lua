@@ -14,6 +14,8 @@ local au = vim.api.nvim_create_autocmd
 local cabbrev = vim.cmd.cabbrev
 local map = vim.keymap.set
 
+vim.diagnostic.config({virtual_text=false, virtual_lines=false, underline=true})
+
 local vimrc = aug("vimrc", {})
 
 au({ "BufWritePost" }, {
@@ -122,3 +124,14 @@ vim.api.nvim_create_autocmd("BufRead", {
 		})
 	end,
 })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    vim.keymap.set('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', {buffer = true})
+    vim.keymap.set('n', '<f1>', function() require('pretty_hover').hover() end, {buffer=true})
+    vim.keymap.set('n', 'K', function() require('pretty_hover').hover() end, {buffer=true})
+    vim.keymap.set('n', '<s-f1>', '<C-w>d', {noremap = true, buffer = true})
+  end
+})
+

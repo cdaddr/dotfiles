@@ -54,7 +54,16 @@ return {
 			ghost_text = {
 				enabled = true,
 			},
-			documentation = { auto_show = true },
+			documentation = {
+        draw = function(opts)
+          if opts.item and opts.item.documentation and opts.item.documentation.value then
+            local out = require("pretty_hover.parser").parse(opts.item.documentation.value)
+            opts.item.documentation.value = out:string()
+          end
+
+          opts.default_implementation(opts)
+        end,
+      },
 			list = {
 				selection = { preselect = true, auto_insert = true },
 			},

@@ -14,7 +14,6 @@ if home then
   local f = io.open('/Users/brian/.config/lightdark')
   if f then
     lightdark = f:read('*l')
-    print(lightdark)
   end
 end
 -- print(io.open('/Users/brian/.config/lightdark'))
@@ -245,16 +244,27 @@ config.quit_when_all_windows_are_closed = false
 
 config.keys = {}
 -- map CMD+letter to <Space>w<letter> so I can remap them in nvim
--- overridden below by specific CMD-<letter> that we keep as wezterm bindings
 -- wezterm prefix is <leader>wz, matching my nvim config
+-- this only performed if the active process is neovim
 local letter = string.byte("A")
 while letter <= string.byte("z") do
-  table.insert(config.keys, { mods = "CMD", key = string.char(letter), action = wezterm.action.Multiple {
-    wezterm.action.SendKey { key = 'Space' },
-    wezterm.action.SendKey { key = 'w' },
-    wezterm.action.SendKey { key = 'z' },
-    wezterm.action.SendKey { key = string.char(letter) },
-  }})
+  local char = string.char(letter)
+  table.insert(config.keys,
+    { mods = "CMD",
+      key = char,
+      action = wezterm.action_callback(function(window, pane)
+        local process = pane:get_foreground_process_info()
+        if process and process.name and process.name:find("nvim") then
+          window:perform_action(
+            wezterm.action.Multiple {
+              wezterm.action.SendKey { key = 'Space' },
+              wezterm.action.SendKey { key = 'w' },
+              wezterm.action.SendKey { key = 'z' },
+              wezterm.action.SendKey { key = char }},
+          pane)
+        end
+      end)
+    })
   letter = letter + 1
 end
 
@@ -276,7 +286,7 @@ local keys = {
   { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
   { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
   { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
-  
+  { mods = 'CMD', key = 'f', action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
 
   -- command palette
 	{ mods = 'CMD|SHIFT', key = "P", action = wezterm.action.ActivateCommandPalette },

@@ -29,6 +29,8 @@ set ideavimsupport=
 
 let mapleader = " "
 
+nmap Y y$
+
 map <Leader>a <Action>(GotoAction)
 map <Leader><Leader> <Action>(SearchEverywhere)
 map <Leader>r <Action>(RenameElement)
@@ -40,11 +42,36 @@ map <Leader>o <Action>(GotoFile)
 map <Leader>e <Action>(SurroundWithEmmet)
 map <Leader>s <Action>(SurroundWith)
 map <Leader>gu <Action>(ShowUsages)
+map gt <Action>(GotoTypeDeclaration)
 
-nnoremap <C-t> gt
-nnoremap <S-C-t> gT
-nnoremap t gt
-nnoremap T gT
+vmap g{ "zc{[<C-r>z]}<esc>va{
+
+vmap <C-o> <Esc><C-o>
+vmap <C-i> <Esc><C-i>
+
+function! SmartWrap()
+  let char = strpart(getline('.'), col('.') - 1, 1)
+  if char =~ '["'']'
+    normal! va"
+  elseif char =~ '\w'
+    normal! viw
+  else
+    return
+  endif
+  echo "start"
+  echo char
+  echo strpart(line('.'), col('.'), 1)
+  echo "done"
+endfunction
+
+nmap <D-F12> :call SmartWrap()<CR>
+
+imap <M-{> <ESC>ysa{<C-O>a
+
+nnoremap <C-t> :tabn<cr>
+nnoremap <S-C-t> :tabp<cr>
+nnoremap t :tabn<cr>
+nnoremap T :tabp<cr>
 
 map <Leader>m <Action>(HarpoonMark)
 map <Leader>d <Action>(HarpoonRemove)

@@ -197,10 +197,6 @@ fi
 
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
-export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
-export PATH="/opt/homebrew/opt/dotnet@9/bin:$PATH"
-
-export DOTNET_ROOT="/opt/homebrew/opt/dotnet@9/libexec"
 
 eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/catppuccin_macchiato.omp.json)"
 

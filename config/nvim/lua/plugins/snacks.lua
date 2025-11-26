@@ -19,7 +19,99 @@ return {
   { "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    opts = {
+    init = function()
+      -- Override column number highlight for better visibility on selected lines
+      vim.api.nvim_set_hl(0, "SnacksPickerCol", { link = "SnacksPickerIdx" })
+    end,
+    opts = function()
+      -- Define custom grep formatter once
+      local grep_format = function(item, picker)
+        local ret = {} ---@type snacks.picker.Highlight[]
+
+        if item.line then
+          -- Trim leading whitespace and truncate to 40 chars
+          local trimmed_line = item.line:match("^%s*(.-)$") or item.line
+          local max_line_width = 40
+          local truncated = false
+
+          if vim.api.nvim_strwidth(trimmed_line) > max_line_width then
+            local width = 0
+            local idx = 1
+            for i = 1, #trimmed_line do
+              local char = trimmed_line:sub(i, i)
+              local char_width = vim.api.nvim_strwidth(char)
+              if width + char_width > max_line_width - 1 then
+                idx = i
+                break
+              end
+              width = width + char_width
+              idx = i + 1
+            end
+            trimmed_line = trimmed_line:sub(1, idx - 1) .. "…"
+            truncated = true
+          end
+
+          -- Add the matching line content
+          if item.positions and not truncated then
+            local leading_ws = #(item.line:match("^%s*") or "")
+            local adjusted_positions = {}
+            for _, pos in ipairs(item.positions) do
+              local adjusted_pos = pos - leading_ws
+              if adjusted_pos >= 0 and adjusted_pos < #trimmed_line then
+                table.insert(adjusted_positions, adjusted_pos)
+              end
+            end
+            if #adjusted_positions > 0 then
+              local temp_item = vim.tbl_extend("force", {}, item)
+              temp_item.positions = adjusted_positions
+              local offset = Snacks.picker.highlight.offset(ret)
+              Snacks.picker.highlight.matches(ret, temp_item.positions, offset)
+            end
+          end
+          Snacks.picker.highlight.format(item, trimmed_line, ret)
+
+          -- Add virtual text for right-aligned file info
+          local path = Snacks.picker.util.path(item) or item.file
+          local truncpath = Snacks.picker.util.truncpath(
+            path,
+            100,
+            { cwd = picker:cwd(), kind = picker.opts.formatters.file.truncate }
+          )
+
+          local dir, base = truncpath:match("^(.*)/(.+)$")
+
+          local virt_parts = {}
+          if base and dir and dir ~= "" then
+            table.insert(virt_parts, { dir, "SnacksPickerDir" })
+            table.insert(virt_parts, { " " })
+            table.insert(virt_parts, { base, "SnacksPickerFile" })
+          else
+            table.insert(virt_parts, { " " })
+            table.insert(virt_parts, { truncpath, "SnacksPickerFile" })
+          end
+          table.insert(virt_parts, { ":", "SnacksPickerDelim" })
+          if item.pos and item.pos[1] then
+            table.insert(virt_parts, { tostring(item.pos[1]), "SnacksPickerRow" })
+            if item.pos[2] and item.pos[2] > 0 then
+              table.insert(virt_parts, { ":", "SnacksPickerDelim" })
+              table.insert(virt_parts, { tostring(item.pos[2]), "SnacksPickerCol" })
+            end
+          end
+
+          ret[#ret + 1] = {
+            col = 0,
+            virt_text = virt_parts,
+            virt_text_pos = "right_align",
+            hl_mode = "combine",
+          }
+        else
+          return require("snacks.picker.format").file(item, picker)
+        end
+
+        return ret
+      end
+
+      return {
       terminal = {},
       picker = {
         enabled = true,
@@ -27,7 +119,18 @@ return {
         formatters = {
           file = {
             filename_first = true,
-          }
+          },
+        },
+        sources = {
+          grep = {
+            format = grep_format,
+          },
+          grep_buffers = {
+            format = grep_format,
+          },
+          grep_word = {
+            format = grep_format,
+          },
         },
         win = {
           input = {
@@ -43,7 +146,8 @@ return {
       toggle = {
         enabled = true,
       },
-    },
+      }
+    end,
     keys = {
       -- CMD shortcuts
       { "<D-o>", function() Snacks.picker.git_files() end, desc = "Find Files (Git)" },
@@ -56,7 +160,6 @@ return {
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep (cwd)" },
       { "<leader>l/", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (Git root)" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
-      { "<leader>q", function() Snacks.picker.grep({format = function(item) return {id=1,filename="foo.txt",text="foo"} end}) end},
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Files (Config)" },

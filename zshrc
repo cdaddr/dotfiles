@@ -185,7 +185,9 @@ if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     export PATH="$PATH:$CARGO_HOME/bin"
 fi
 
-# [ -f $XDG_CONFIG_HOME/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf.zsh
+# fzf shell integration
+source /opt/homebrew/opt/fzf/shell/completion.zsh
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 if [[ -f "$XDG_CONFIG_HOME/zsh-private.sh" ]]; then
     source "$XDG_CONFIG_HOME/zsh-private.sh"

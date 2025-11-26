@@ -18,6 +18,11 @@ if home then
 end
 -- print(io.open('/Users/brian/.config/lightdark'))
 
+config.inactive_pane_hsb = {
+  saturation = 0.9,
+  brightness = 0.5,
+}
+
 if lightdark == 'light' then
   config.color_scheme = 'Catppuccin Latte'
 else

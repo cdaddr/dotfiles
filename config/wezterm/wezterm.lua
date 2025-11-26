@@ -34,7 +34,7 @@ config.font = wezterm.font_with_fallback{
   },
   {
     family = 'JetBrainsMono Nerd Font Mono',
-    weight = 300,
+    weight = "Regular",
   }
 }
 -- config.use_cap_height_to_scale_fallback_fonts = true
@@ -237,56 +237,107 @@ end)
 config.use_fancy_tab_bar = false
 config.mouse_wheel_scrolls_tabs = false
 config.swallow_mouse_click_on_window_focus = true
-config.underline_position = "-8"
-config.underline_thickness = "1px"
 
 config.quit_when_all_windows_are_closed = false
 
+config.enable_kitty_keyboard = true
 config.keys = {}
 -- map CMD+letter to <Space>w<letter> so I can remap them in nvim
 -- wezterm prefix is <leader>wz, matching my nvim config
 -- this only performed if the active process is neovim
-local letter = string.byte("A")
-while letter <= string.byte("z") do
-  local char = string.char(letter)
-  table.insert(config.keys,
-    { mods = "CMD",
-      key = char,
-      action = wezterm.action_callback(function(window, pane)
-        local process = pane:get_foreground_process_info()
-        if process and process.name and process.name:find("nvim") then
-          window:perform_action(
-            wezterm.action.Multiple {
-              wezterm.action.SendKey { key = 'Space' },
-              wezterm.action.SendKey { key = 'w' },
-              wezterm.action.SendKey { key = 'z' },
-              wezterm.action.SendKey { key = char }},
-          pane)
-        end
-      end)
-    })
-  letter = letter + 1
-end
+-- local letter = string.byte("A")
+-- while letter <= string.byte("z") do
+--   local char = string.char(letter)
+--   table.insert(config.keys,
+--     { mods = "CMD",
+--       key = char,
+--       action = wezterm.action_callback(function(window, pane)
+--         local process = pane:get_foreground_process_info()
+--         if process and process.name and process.name:find("nvim") then
+--           window:perform_action(
+--             wezterm.action.Multiple {
+--               wezterm.action.SendKey { key = 'Space' },
+--               wezterm.action.SendKey { key = 'w' },
+--               wezterm.action.SendKey { key = 'z' },
+--               wezterm.action.SendKey { key = char }},
+--           pane)
+--         end
+--       end)
+--     })
+--   letter = letter + 1
+-- end
 
 local keys = {
+  { mods = 'NONE', key = 'Delete', action = wezterm.action.SendString('\x1b[3~') },
+  { mods = 'NONE', key = 'Escape', action = wezterm.action.SendString( '\x1b[27u') },
   -- home/end
 	{ mods = 'CMD', key = "LeftArrow", action = wezterm.action.SendKey { key = 'Home', } },
 	{ mods = 'CMD', key = "RightArrow", action = wezterm.action.SendKey { key = 'End', } },
 
   -- split
-	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right' } },
-	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down' } },
+	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right', size = { Percent = 25 } } },
+	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down', size = { Percent = 25 } } },
+	{ mods = 'CMD', key = "\\", action = wezterm.action.SplitPane { direction = 'Right' } },
+	{ mods = 'CMD', key = "-", action = wezterm.action.SplitPane { direction = 'Down' } },
   { mods = 'CMD', key = "t", action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
 
+  -- toggle zoom for output pane (bottom/right pane, only works with exactly 2 panes)
+  { mods = 'CMD', key = "z", action = wezterm.action_callback(function(window, pane)
+    local tab = window:active_tab()
+    local panes = tab:panes_with_info()
+
+    if #panes ~= 2 then
+      window:toast_notification('wezterm', 'Zoom toggle requires exactly 2 panes', nil, 1000)
+      return
+    end
+
+    -- Determine if horizontal or vertical split
+    local is_horizontal = panes[1].top ~= panes[2].top
+
+    -- Find the output pane (bottom-most for horizontal, right-most for vertical)
+    local output_pane, other_pane
+    if is_horizontal then
+      if panes[1].top > panes[2].top then
+        output_pane = panes[1]
+        other_pane = panes[2]
+      else
+        output_pane = panes[2]
+        other_pane = panes[1]
+      end
+    else
+      if panes[1].left > panes[2].left then
+        output_pane = panes[1]
+        other_pane = panes[2]
+      else
+        output_pane = panes[2]
+        other_pane = panes[1]
+      end
+    end
+
+    if output_pane.is_zoomed then
+      -- Output pane is zoomed, unzoom and switch to other pane
+      window:perform_action(wezterm.action.TogglePaneZoomState, output_pane.pane)
+      other_pane.pane:activate()
+    else
+      -- Switch to output pane and zoom it
+      output_pane.pane:activate()
+      window:perform_action(wezterm.action.TogglePaneZoomState, output_pane.pane)
+    end
+  end) },
+
   -- wezterm defaults we want to keep
-  { mods = 'CMD', key = 'c', action = wezterm.action.CopyTo 'Clipboard' },
-  { mods = 'CMD', key = 'v', action = wezterm.action.PasteFrom 'Clipboard' },
-  { mods = 'CMD', key = 'n', action = wezterm.action.SpawnWindow },
-  { mods = 'CMD', key = 'r', action = wezterm.action.ReloadConfiguration },
-  { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
-  { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
-  { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
-  { mods = 'CMD', key = 'f', action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
+  -- { mods = 'CMD', key = 'c', action = wezterm.action.CopyTo 'Clipboard' },
+  -- { mods = 'CMD', key = 'v', action = wezterm.action.PasteFrom 'Clipboard' },
+  -- { mods = 'CMD', key = 'n', action = wezterm.action.SpawnWindow },
+  -- { mods = 'CMD', key = 'r', action = wezterm.action.ReloadConfiguration },
+  -- { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
+  -- { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
+  -- { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
+  -- { mods = 'CMD', key = 'f', action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
+  { mods = 'CMD', key = 'f', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD|SHIFT', key = 'f', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD', key = 'F', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD|SHIFT', key = 'F', action = wezterm.action.DisableDefaultAssignment},
 
   -- command palette
 	{ mods = 'CMD|SHIFT', key = "P", action = wezterm.action.ActivateCommandPalette },
@@ -324,5 +375,6 @@ config.colors = {
     background = TABBAR
   },
 }
+config.debug_key_events = true
 
 return config

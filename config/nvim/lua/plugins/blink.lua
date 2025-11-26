@@ -13,16 +13,16 @@ return {
 					cmp.show({ providers = { "snippets" } })
 				end,
 			},
-			["<C-b>"] = {
-				function(cmp)
-					cmp.show({ providers = { "buffer" } })
-				end,
-			},
-			["<C-f>"] = {
-				function(cmp)
-					cmp.show({ providers = { "path" } })
-				end,
-			},
+			-- ["<C-b>"] = {
+			-- 	function(cmp)
+			-- 		cmp.show({ providers = { "buffer" } })
+			-- 	end,
+			-- },
+			-- ["<C-f>"] = {
+			-- 	function(cmp)
+			-- 		cmp.show({ providers = { "path" } })
+			-- 	end,
+			-- },
 			["<C-e>"] = { "hide" },
 			["<C-y>"] = { "select_and_accept" },
 			-- ['<CR>'] = { 'accept', 'fallback' },

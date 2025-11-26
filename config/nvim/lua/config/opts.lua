@@ -27,3 +27,4 @@ vim.opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop)
 vim.go.background = "dark"
 vim.opt.termguicolors = true
 vim.opt.relativenumber = false
+vim.opt.exrc = true

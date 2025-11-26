@@ -1,8 +1,3 @@
-
-function wezterm(key)
-  return "<leader>wz" .. key
-end
-
 return {
   {
     "folke/which-key.nvim",
@@ -29,39 +24,49 @@ return {
       picker = {
         enabled = true,
         layout = { preset = 'ivy', width = 0.9 },
+        formatters = {
+          file = {
+            filename_first = true,
+          }
+        },
         win = {
           input = {
             keys = {
               ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
               ["<m-K>"] = { "history_back", mode = { "i", "n" } },
               ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
+              ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
             }
           }
-        }
+        },
+      },
+      toggle = {
+        enabled = true,
       },
     },
     keys = {
-      -- Top Pickers & Explorer
+      -- CMD shortcuts
+      { "<D-o>", function() Snacks.picker.git_files() end, desc = "Find Files (Git)" },
+      { "<D-f>", function() Snacks.picker.grep() end, desc = "Grep" },
+      { "<D-p>", function() Snacks.picker.smart() end, desc = "Find Files (Smart)" },
+      { "<D-e>", function() Snacks.picker.recent() end, desc = "Find Files (Recent)" },
+
       { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent" },
-      { wezterm("w"), function() Snacks.picker.recent() end, desc = "Recent" },
-      { "<leader>p", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
-      { wezterm("e"), function() Snacks.picker.smart() end, desc = "Smart Find Files" },
-      { wezterm("p"), function() Snacks.picker.recent() end, desc = "Recent" },
-      { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
-      { wezterm("/"), function() Snacks.picker.grep() end, desc = "Grep" },
-      { wezterm("F"), function() Snacks.picker.grep() end, desc = "Grep" },
+      { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)" },
+      { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep (cwd)" },
+      { "<leader>l/", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (Git root)" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
-      -- { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
+      { "<leader>q", function() Snacks.picker.grep({format = function(item) return {id=1,filename="foo.txt",text="foo"} end}) end},
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-
-      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Files (Config)" },
       { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
-      { wezterm("O"), function() Snacks.picker.git_files() end, desc = "Find Git Files" },
+      { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Files (Git)" },
       { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
       { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+      { "<leader>fl", function() Snacks.picker.files({cwd = vim.fn.expand("%:p:h")}) end, desc = "Find Files (current file's cwd)" },
+      -- buffers
+      { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       -- git
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
       { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
@@ -76,6 +81,7 @@ return {
       { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       -- search
+      { "<leader>sn", function() Snacks.picker.notifications() end, desc = "Notification History" },
       { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
       { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
       { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
@@ -98,46 +104,63 @@ return {
       { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },
       { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
       -- LSP
-      -- { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
-      -- { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
-      -- { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
-      -- { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
-      -- { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+      { "<leader>ld", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
+      { "<leader>lD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
+      { "<leader>lr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+      { "<leader>lI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+      { "<leader>ly", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
       { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
       { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
       -- Other
-      { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
-      { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
+      -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
+      -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
       { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
       { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
       { "<leader>gn", function() Snacks.notifier.show_history() end, desc = "Notification History" },
-      { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
       { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
-      { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
-      { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
+      -- { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
+      -- { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
       { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
       { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
-      {
-        "<leader>N",
-        desc = "Neovim News",
-        function()
-          Snacks.win({
-            file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
-            width = 0.6,
-            height = 0.6,
-            wo = {
-              spell = false,
-              wrap = false,
-              signcolumn = "yes",
-              statuscolumn = " ",
-              conceallevel = 3,
-            },
-          })
-        end,
-      }
+
+      { "<leader>x", function() 
+        local Snacks = require'snacks'
+        return Snacks.picker({
+          format = "text",
+          finder = function()
+            local items = {}
+            local file = 'package.json'
+
+            local f = io.open(file, "r")
+            if not f then return {} end
+
+            local content = f:read("*all")
+            f:close()
+
+            -- Simple JSON parsing (assumes valid JSON and "scripts" present)
+            -- For robustness, use vim.json.decode in Neovim 0.6+
+            local ok, json = pcall(vim.json.decode, content)
+            if not ok or not json.scripts then return {} end
+
+            for name, cmd in pairs(json.scripts) do
+              table.insert(items, {
+                value = name,
+                text = name .. " : " .. cmd,
+                label = "npm run " .. name,
+                description = cmd,
+              })
+            end
+            return items
+          end,
+          confirm = function (picker, selected)
+            picker:close()
+            Snacks.terminal("npm run " .. selected.value)
+          end
+        })
+      end}
     },
   }
 }

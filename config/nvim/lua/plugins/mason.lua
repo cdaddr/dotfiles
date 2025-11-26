@@ -7,8 +7,14 @@ return {
     },
     opts = {
       automatic_enable = true,
+      handlers = {
+        function(server_name)
+          require("lspconfig")[server_name].setup({})
+        end,
+      },
     },
     ensure_installed = {
+      "lua_ls",
       "prettier",
       "sql-formatter",
       "stylua",

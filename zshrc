@@ -3,6 +3,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
 
+# Load theme environment variables
+source "$HOME/.dotfiles/config/current-theme-env.zsh"
+
 # color themes
 # if [[ -n $INTELLIJ ]]; then
 #   export ZSH_THEME="catppuccin-latte"
@@ -54,10 +57,10 @@ else
 fi
 
 if command -v vivid >/dev/null &>/dev/null; then
-  export LS_COLORS="$(vivid generate $ZSH_THEME)"
+  export LS_COLORS="$(vivid generate $VIVID_THEME)"
 fi
 
-source "$HOME/.config/zsh/$ZSH_THEME-zsh-syntax-highlighting.zsh"
+source "$XDG_CONFIG_HOME/zsh/current-syntax-highlighting.zsh"
 source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 
@@ -86,7 +89,7 @@ fi
 autoload -Uz _git
 
 export EDITOR='nvim'
-export PAGER="moor --quit-if-one-screen --style=$ZSH_THEME"
+export PAGER="moor --quit-if-one-screen --style=$MOOR_THEME"
 export LANG=en_CA.UTF-8
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -200,5 +203,5 @@ fi
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
 
-eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/catppuccin_macchiato.omp.json)"
+eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/current-theme.omp.json)"
 

@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "primary": "#8aadf4",
+    "path": "#f5bde6",
+    "accent": "#b7bdf8",
+    "muted": "#626880",
+    "error": "#ed8796",
+    "fg": "#cad3f5",
+    "fg_inverse": "#000000",
+    "bg": "#24273a",
+    "bg_dark": "#1e2030",
+    "bg_light": "#363a4f",
+    "bg_lighter": "#494d64",
+    "comment": "#5b6078",
+    "green": "#a6da95",
+    "peach": "#f5a97f",
+    "mauve": "#c6a0f6",
+    "red": "#ed8796",
+    "text": "#cad3f5",
+    "yellow": "#eed49f",
+    "maroon": "#ee99a0"
+  },
+  "wezterm": "Catppuccin Macchiato",
+  "nvim": "catppuccin-macchiato",
+  "vivid": "catppuccin-macchiato",
+  "eza": "catppuccin",
+  "moor": "catppuccin-macchiato"
+}

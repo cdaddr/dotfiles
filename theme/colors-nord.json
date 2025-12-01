@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "primary": "#81A1C1",
+    "path": "#B48EAD",
+    "accent": "#81A1C1",
+    "muted": "#4C566A",
+    "error": "#BF616A",
+    "fg": "#D8DEE9",
+    "fg_inverse": "#000000",
+    "bg": "#2E3440",
+    "bg_dark": "#2E3440",
+    "bg_light": "#3B4252",
+    "bg_lighter": "#434C5E",
+    "comment": "#4C566A",
+    "green": "#A3BE8C",
+    "peach": "#D08770",
+    "mauve": "#B48EAD",
+    "red": "#BF616A",
+    "text": "#D8DEE9",
+    "yellow": "#EBCB8B",
+    "maroon": "#BF616A"
+  },
+  "wezterm": "Nord",
+  "nvim": "nordic",
+  "vivid": "nord",
+  "eza": "catppuccin",
+  "moor": "nord"
+}

@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "primary": "#7aa2f7",
+    "path": "#ff9e64",
+    "accent": "#7dcfff",
+    "muted": "#565f89",
+    "error": "#f7768e",
+    "fg": "#c0caf5",
+    "fg_inverse": "#000000",
+    "bg": "#1a1b26",
+    "bg_dark": "#16161e",
+    "bg_light": "#292e42",
+    "bg_lighter": "#414868",
+    "comment": "#565f89",
+    "green": "#9ece6a",
+    "peach": "#ff9e64",
+    "mauve": "#bb9af7",
+    "red": "#f7768e",
+    "text": "#c0caf5",
+    "yellow": "#e0af68",
+    "maroon": "#f7768e"
+  },
+  "wezterm": "Tokyo Night",
+  "nvim": "tokyonight",
+  "vivid": "tokyonight-night",
+  "eza": "tokyonight",
+  "moor": "tokyonight-night"
+}

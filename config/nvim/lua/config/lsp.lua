@@ -1,0 +1,63 @@
+-- note to self: nvim-lspconfig server names, lsp commands (execuatables), and Mason package names can differ.
+local servers = {
+  "bashls",
+  "shfmt",
+  "stylua",
+  "lua_ls",
+  "rubocop",
+  "ruby_lsp",
+  "jsonls",
+  "pyright",
+  "ruff",
+  "vtsls", --typescript
+  "svelte",
+  "yamlls",
+  "taplo", --toml
+}
+
+for _, server in ipairs(servers) do
+  vim.lsp.enable(server)
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup("my.lsp", {}),
+  callback = function(args)
+    local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+    local bufnr = args.buf
+    local filetype = vim.api.nvim_get_option_value("filetype", {buf=bufnr})
+
+    -- this would enable auto-format buffer on save
+    -- if client:supports_method('textDocument/formatting', bufnr) then
+    --   vim.api.nvim_create_autocmd("BufWritePre", {
+    --     group = vim.api.nvim_create_augroup("my.lsp.format", { clear = false }),
+    --     buffer = bufnr,
+    --     callback = function()
+    --       vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 1000 })
+    --     end,
+    --   })
+    -- end
+    if client:supports_method('textDocument/formatting') then
+    end
+
+    vim.bo[bufnr].formatexpr = 'v:lua.vim.lsp.formatexpr(#{timeout_ms:250})'
+
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {buffer = true})
+    vim.keymap.set('n', '<f1>', function() require('pretty_hover').hover() end, {buffer=true})
+    vim.keymap.set('n', 'K', function() require('pretty_hover').hover() end, {buffer=true})
+    vim.keymap.set('n', '<s-f1>', vim.diagnostic.open_float, {noremap = true, buffer = true})
+
+    vim.keymap.set('n', '<leader>lK', function() require('pretty_hover').hover() end, {buffer=true})
+    vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, {buffer=true})
+    vim.keymap.set('n', '<leader>ls', vim.lsp.buf.document_symbol, {buffer=true})
+    vim.keymap.set('n', '<leader>lS', vim.lsp.buf.workspace_symbol, {buffer=true})
+    vim.keymap.set('n', '<leader>ld', vim.lsp.buf.declaration, {buffer = true})
+    vim.keymap.set('n', '<leader>lD', vim.lsp.buf.definition, {buffer = true})
+    vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition, {buffer = true})
+    vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, {buffer = true})
+    vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, {noremap = true, buffer = true})
+
+    vim.keymap.set('n', '<leader>llf', vim.lsp.buf.format, {noremap = true, buffer = true})
+    vim.keymap.set('n', '<leader>llr', vim.lsp.buf.rename, {noremap = true, buffer = true})
+  end
+})
+

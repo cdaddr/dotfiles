@@ -7,6 +7,7 @@ vim.g.maplocalleader = "\\"
 
 require("config.opts")
 require("config.lazy")
+require("config.lsp")
 
 local aug = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
@@ -54,15 +55,19 @@ end
 au("ColorScheme", { callback = set_dim_diagnostics })
 set_dim_diagnostics()
 
-vim.cmd.colorscheme("catppuccin-macchiato")
--- vim.cmd.colorscheme("kanagawa")
-
+-- Load theme from generated config
+local theme_file = vim.fn.expand('~/.dotfiles/config/current-theme.lua')
+local theme = dofile(theme_file)
+vim.cmd.colorscheme(theme.nvim)
 
 local vimrc = aug("vimrc", {})
 
 au({ "BufWritePost" }, {
 	pattern = "init.lua",
-	command = "source <afile>",
+  callback = function()
+    vim.cmd("source %")
+    vim.schedule(function() vim.cmd.colorscheme(theme.nvim) end)
+  end
 })
 
 au({ "FileType" }, {
@@ -77,6 +82,13 @@ au("TextYankPost", {
 	end,
 })
 
+au("FileType", {
+  pattern = { "json", "markdown" },
+  callback = function()
+    vim.opt_local.conceallevel = 0
+  end,
+})
+
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
 cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
 cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
@@ -88,12 +100,14 @@ map({ "i", "c" }, "<M-BS>", "<C-W>", { desc = "Backward delete word" })
 map("n", "<esc>", "<cmd>nohls<cr>")
 
 -- move lines
-map("i", "<C-j>", "<c-o>:m .+<CR><c-o>==", { silent = true })
-map("i", "<C-k>", "<c-o>:m .-2<CR><c-o>==", { silent = true })
-map("n", "<C-j>", ":m .+<CR>==", { silent = true })
-map("n", "<C-k>", ":m .-2<CR>==", { silent = true })
-map("v", "<C-j>", ":m '>+<CR>gv=gv", { silent = true })
-map("v", "<C-k>", ":m '<-2<CR>gv=gv", { silent = true })
+map("n", "<C-j>", "<C-w>j", { silent = true, desc = "select window down <C-w>j" })
+map("n", "<C-k>", "<C-w>k", { silent = true, desc = "select window up <C-w>k" })
+map("n", "<C-h>", "<C-w>h", { silent = true, desc = "select window left <C-w>h" })
+map("n", "<C-l>", "<C-w>l", { silent = true, desc = "select window right <C-w>l" })
+map("i", "<C-j>", "<C-o><C-j>", { silent = true })
+map("i", "<C-k>", "<C-o><C-k>", { silent = true })
+map("i", "<C-h>", "<C-o><C-h>", { silent = true })
+map("i", "<C-l>", "<C-o><C-l>", { silent = true })
 
 map("n", "t", "<cmd>bnext<cr>", {desc = ":bnext"})
 
@@ -147,12 +161,12 @@ vim.cmd([[
   augroup END
 ]])
 
-vim.cmd([[ autocmd TermOpen * startinsert ]])
+au("TermOpen", {pattern = "*", command = [[ startinsert ]] })
 
 -- restore cursor position
-vim.api.nvim_create_autocmd("BufRead", {
+au("BufRead", {
 	callback = function(opts)
-		vim.api.nvim_create_autocmd("BufWinEnter", {
+		au("BufWinEnter", {
 			once = true,
 			buffer = opts.buf,
 			callback = function()
@@ -168,15 +182,5 @@ vim.api.nvim_create_autocmd("BufRead", {
 			end,
 		})
 	end,
-})
-
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    vim.keymap.set('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', {buffer = true})
-    vim.keymap.set('n', '<f1>', function() require('pretty_hover').hover() end, {buffer=true})
-    vim.keymap.set('n', 'K', function() require('pretty_hover').hover() end, {buffer=true})
-    vim.keymap.set('n', '<s-f1>', '<C-w>d', {noremap = true, buffer = true})
-  end
 })
 

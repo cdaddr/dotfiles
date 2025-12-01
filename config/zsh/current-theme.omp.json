@@ -1,0 +1,118 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "primary": "#7aa2f7",
+    "path": "#ff9e64",
+    "accent": "#7dcfff",
+    "muted": "#565f89",
+    "error": "#f7768e",
+    "fg": "#c0caf5",
+    "fg_inverse": "#000000",
+    "bg": "#1a1b26",
+    "bg_dark": "#16161e",
+    "bg_light": "#292e42",
+    "bg_lighter": "#414868",
+    "comment": "#565f89",
+    "green": "#9ece6a",
+    "peach": "#ff9e64",
+    "mauve": "#bb9af7",
+    "red": "#f7768e",
+    "text": "#c0caf5",
+    "yellow": "#e0af68",
+    "maroon": "#f7768e"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "template": "\u0000"
+        }
+      ],
+      "newline": true,
+      "force": true
+    },
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{.Icon}}",
+          "type": "os"
+        },
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
+          "type": "session"
+        },
+        {
+          "foreground": "p:path",
+          "style": "plain",
+          "type": "text",
+          "template": "{{ .Env.PWD }} "
+        },
+        {
+          "foreground": "p:accent",
+          "properties": {
+            "branch_icon": " ",
+            "cherry_pick_icon": " ",
+            "commit_icon": " ",
+            "fetch_status": false,
+            "fetch_upstream_icon": false,
+            "merge_icon": " ",
+            "no_commits_icon": " ",
+            "rebase_icon": " ",
+            "revert_icon": " ",
+            "tag_icon": " "
+          },
+          "template": "{{ .HEAD }} ",
+          "style": "plain",
+          "type": "git"
+        },
+        {
+          "foreground": "p:muted",
+          "properties": {
+            "time_format": "3:04 pm"
+          },
+          "style": "plain",
+          "template": "[{{ .CurrentDate | date .Format }}]",
+          "type": "time"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "segments": [
+        {
+          "foreground": "p:accent",
+          "properties": {
+            "home_icon": "󰜥",
+            "folder_icon": "…",
+            "style": "folder",
+            "max_depth": 1
+          },
+          "style": "plain",
+          "template": "{{ .Path }} ",
+          "type": "path"
+        },
+        {
+          "background": "transparent",
+          "style": "plain",
+          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent></>",
+          "type": "text",
+          "force": true
+        }
+      ],
+      "alignment": "left",
+      "type": "prompt",
+      "newline": true
+    }
+  ],
+  "final_space": true,
+  "version": 3
+}

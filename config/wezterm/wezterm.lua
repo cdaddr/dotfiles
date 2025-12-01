@@ -1,5 +1,6 @@
 -- Import the wezterm module
 local wezterm = require 'wezterm'
+local theme = require 'theme'
 local config = wezterm.config_builder()
 
 local MAX_TAB_WIDTH = 48
@@ -8,26 +9,13 @@ config.tab_max_width = MAX_TAB_WIDTH
 config.initial_cols = 160
 config.initial_rows=48
 
-local lightdark = 'light'
-local home = os.getenv('HOME')
-if home then
-  local f = io.open('/Users/brian/.config/lightdark')
-  if f then
-    lightdark = f:read('*l')
-  end
-end
--- print(io.open('/Users/brian/.config/lightdark'))
-
 config.inactive_pane_hsb = {
   saturation = 0.9,
   brightness = 0.5,
 }
 
-if lightdark == 'light' then
-  config.color_scheme = 'Catppuccin Latte'
-else
-  config.color_scheme = 'Catppuccin Macchiato'
-end
+-- Use theme from generated config
+config.color_scheme = theme.wezterm
 config.font_size = 18.0
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 -- 1234567890
@@ -106,39 +94,20 @@ function tab_title(tab_info)
   return title
 end
 
-local TABBAR = '#1e2030'
+-- Load theme colors
+local colors = theme.colors
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local GRAY, DARKGRAY, LIGHTGRAY, OVERLAY, SURFACE
   local palette = {
-    rosewater = "#f4dbd6",
-    flamingo = "#f0c6c6",
-    pink = "#f5bde6",
-    mauve = "#c6a0f6",
-    red = "#ed8796",
-    maroon = "#ee99a0",
-    peach = "#f5a97f",
-    yellow = "#eed49f",
-    green = "#a6da95",
-    teal = "#8bd5ca",
-    sky = "#91d7e3",
-    sapphire = "#7dc4e4",
-    blue = "#8aadf4",
-    lavender = "#b7bdf8",
-    text = "#cad3f5",
-    subtext1 = "#b8c0e0",
-    subtext0 = "#a5adcb",
-    overlay2 = "#939ab7",
-    overlay1 = "#8087a2",
-    overlay0 = "#6e738d",
-    surface2 = "#5b6078",
-    surface1 = "#494d64",
-    surface0 = "#363a4f",
-    base = "#24273a",
-    mantle = "#1e2030",
-    crust = "#181926",
-    black = "#000000",
-    none = TABBAR
+    primary = colors.primary,
+    accent = colors.accent,
+    muted = colors.muted,
+    error = colors.error,
+    fg_inverse = colors.fg_inverse,
+    bg_light = colors.bg_light,
+    bg_lighter = colors.bg_lighter,
+    bg_dark = colors.bg_dark,
+    none = colors.bg_dark
   }
 
   LOWER_LEFT = '\u{231D}'
@@ -197,16 +166,16 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
 
   local bg_tab, fg_tab, bg_number, fg_border
   if tab.is_active then
-    bg_tab = bg(palette.lavender)
-    fg_tab = fg(palette.black)
-    bg_number = bg(palette.blue)
-    fg_border = fg(palette.lavender)
+    bg_tab = bg(palette.accent)
+    fg_tab = fg(palette.fg_inverse)
+    bg_number = bg(palette.primary)
+    fg_border = fg(palette.accent)
 
   else
-    bg_tab = bg(palette.surface0)
-    fg_tab = fg(palette.overlay2)
-    bg_number = bg(palette.surface1)
-    fg_border = fg(palette.surface2)
+    bg_tab = bg(palette.bg_light)
+    fg_tab = fg(palette.muted)
+    bg_number = bg(palette.bg_light)
+    fg_border = fg(palette.bg_lighter)
   end
 
   c(bg_number, fg_border, text(LEFT_BORDER))
@@ -377,7 +346,7 @@ end
 
 config.colors = {
   tab_bar = {
-    background = TABBAR
+    background = colors.bg_dark
   },
 }
 config.debug_key_events = true

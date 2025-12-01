@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "primary": "#89b4fa",
+    "path": "#f5c2e7",
+    "accent": "#b4befe",
+    "muted": "#6c7086",
+    "error": "#f38ba8",
+    "fg": "#cdd6f4",
+    "fg_inverse": "#11111b",
+    "bg": "#1e1e2e",
+    "bg_dark": "#181825",
+    "bg_light": "#313244",
+    "bg_lighter": "#45475a",
+    "comment": "#7f849c",
+    "green": "#a6e3a1",
+    "peach": "#fab387",
+    "mauve": "#cba6f7",
+    "red": "#f38ba8",
+    "text": "#cdd6f4",
+    "yellow": "#f9e2af",
+    "maroon": "#eba0ac"
+  },
+  "wezterm": "Catppuccin Mocha",
+  "nvim": "catppuccin-mocha",
+  "vivid": "catppuccin-mocha",
+  "eza": "catppuccin",
+  "moor": "catppuccin-mocha"
+}

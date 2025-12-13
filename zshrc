@@ -6,13 +6,6 @@ export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
 # Load theme environment variables
 source "$HOME/.dotfiles/config/current-theme-env.zsh"
 
-# color themes
-# if [[ -n $INTELLIJ ]]; then
-#   export ZSH_THEME="catppuccin-latte"
-# else
-#   export ZSH_THEME="catppuccin-mocha"
-# fi
-
 if [[ -n $INTELLIJ ]]; then
   export LIGHTDARK=light
 else
@@ -204,4 +197,8 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
 
 eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/current-theme.omp.json)"
+
+if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then
+  unsetopt no_clobber
+fi
 

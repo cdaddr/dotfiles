@@ -1,9 +1,90 @@
+local unicode_picker = function()
+        local Snacks = require'snacks'
+        return Snacks.picker({
+          title = "Unicode Character",
+          format = "text",
+          finder = function()
+            local items = {}
+
+            local unicode_data_path = vim.fn.stdpath("config") .. "/lua/plugins/UnicodeData.txt"
+            local file = io.open(unicode_data_path, "r")
+
+            if not file then
+              vim.notify("UnicodeData.txt not found", vim.log.levels.ERROR)
+              return items
+            end
+
+            for line in file:lines() do
+              local parts = vim.split(line, ";")
+              if #parts >= 2 then
+                local hex_code = parts[1]
+                local name = parts[2]
+
+                if name ~= "<control>" and name ~= "" and not name:match("^<.*>$") then
+                  local codepoint = tonumber(hex_code, 16)
+
+                  if (codepoint >= 0x0020 and codepoint <= 0x00FF) or  -- Latin
+                     (codepoint >= 0x0370 and codepoint <= 0x04FF) or  -- Greek, Cyrillic
+                     (codepoint >= 0x0590 and codepoint <= 0x06FF) or  -- Hebrew, Arabic
+                     (codepoint >= 0x2000 and codepoint <= 0x2BFF) or  -- General Punctuation to Misc Symbols
+                     (codepoint >= 0x3000 and codepoint <= 0x30FF) or  -- CJK, Hiragana, Katakana
+                     (codepoint >= 0x1F000 and codepoint <= 0x1F6FF) then -- Emoticons, symbols
+
+                    local char = vim.fn.nr2char(codepoint)
+                    local hex = string.format("U+%04X", codepoint)
+
+                    -- Format: character  hex  name
+                    local text = string.format("%s  %s  %s", char, hex, name)
+
+                    table.insert(items, {
+                      value = char,
+                      text = text,
+                      codepoint = codepoint,
+                      hex = hex,
+                      name = name,
+                    })
+                  end
+                end
+              end
+            end
+
+            file:close()
+            return items
+          end,
+          confirm = function(picker, selected)
+            picker:close()
+            -- Insert the character at cursor position
+            local char = selected.value
+            vim.api.nvim_put({char}, 'c', true, true)
+          end,
+        })
+      end
 return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {
-      delay = 750,
+      delay = 400,
+      spec = {
+        { '<leader>f', group = "File" },
+        { '<leader>b', group = 'Buffers'},
+        { '<leader>g', group = 'Git'},
+        { '<leader>h', group = 'Gitsigns (hunks)' },
+        { '<leader>l', group = 'LSP' },
+        { '<leader>s', group = 'Search' },
+        { '<leader>t', group = 'Toggle' },
+        { '<leader>x', group = 'Execute' },
+      },
+      icons = {
+        mappings = false,
+        breadcrumb = "",
+        separator = "⇒", -- symbol used between a key and it's label
+        group = "+",
+      },
+
+      win = {
+        border = "double",
+      },
     },
     keys = {
       {
@@ -112,42 +193,43 @@ return {
       end
 
       return {
-      terminal = {},
-      picker = {
-        enabled = true,
-        layout = { preset = 'ivy', width = 0.9 },
-        formatters = {
-          file = {
-            filename_first = true,
+        terminal = {},
+        picker = {
+          enabled = true,
+          layout = { preset = 'ivy', width = 0.9 },
+          formatters = {
+            file = {
+              filename_first = true,
+            },
           },
-        },
-        sources = {
-          grep = {
-            format = grep_format,
+          sources = {
+            grep = {
+              format = grep_format,
+            },
+            grep_buffers = {
+              format = grep_format,
+            },
+            grep_word = {
+              format = grep_format,
+            },
           },
-          grep_buffers = {
-            format = grep_format,
-          },
-          grep_word = {
-            format = grep_format,
-          },
-        },
-        win = {
-          input = {
-            keys = {
-              ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
-              ["<m-K>"] = { "history_back", mode = { "i", "n" } },
-              ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
-              ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
+          win = {
+            input = {
+              keys = {
+                ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
+                ["<m-K>"] = { "history_back", mode = { "i", "n" } },
+                ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
+                ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
+              }
             }
-          }
+          },
         },
-      },
-      toggle = {
-        enabled = true,
-      },
+        toggle = {
+          enabled = true,
+        },
       }
     end,
+
     keys = {
       -- CMD shortcuts
       { "<D-o>", function() Snacks.picker.git_files() end, desc = "Find Files (Git)" },
@@ -170,6 +252,7 @@ return {
       { "<leader>fl", function() Snacks.picker.files({cwd = vim.fn.expand("%:p:h")}) end, desc = "Find Files (current file's cwd)" },
       -- buffers
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>bb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       -- git
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
       { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
@@ -178,19 +261,21 @@ return {
       { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
       { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
-      -- Grep
+      { "<leader>gn", function() Snacks.notifier.show_history() end, desc = "Notification History" },
+      { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
+      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+      -- search
       { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
       { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
       { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
-      -- search
-      { "<leader>sn", function() Snacks.picker.notifications() end, desc = "Notification History" },
       { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
       { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
       { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
       { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
       { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
       { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },
+      { "<leader>sO", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
       { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
       { "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
       { "<leader>sh", function() Snacks.picker.help() end, desc = "Help Pages" },
@@ -205,31 +290,26 @@ return {
       { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
       { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
       { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },
-      { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+      { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+      { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+      { "<leader>sU", unicode_picker, desc = "Unicode Character" },
       -- LSP
       { "<leader>ld", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
       { "<leader>lD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
       { "<leader>lr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
       { "<leader>lI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
       { "<leader>ly", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
-      { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
-      { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
       -- Other
       -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
       -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
-      { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
-      { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
-      { "<leader>gn", function() Snacks.notifier.show_history() end, desc = "Notification History" },
-      { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
-      { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
-      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
+      { "<leader>xR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
       -- { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       -- { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
+      { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
       { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
       { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
 
-      { "<leader>x", function() 
+      { "<leader>xx", function() 
         local Snacks = require'snacks'
         return Snacks.picker({
           format = "text",
@@ -263,7 +343,7 @@ return {
             Snacks.terminal("npm run " .. selected.value)
           end
         })
-      end}
+      end, desc = "npm script"}
     },
   }
 }

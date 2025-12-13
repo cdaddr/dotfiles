@@ -129,9 +129,6 @@ map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
 map("v", ">", ">gv")
 map("v", "<", "<gv")
 
--- cd to dir of file in buffer
-map("n", "<Leader>cd", ":cd %:p:h<CR>")
-
 -- stop q from starting a macro during hit-enter (:h hit-enter)
 vim.cmd([[
   fu s:hit_enter_prompt_no_recording() abort

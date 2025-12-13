@@ -2,11 +2,30 @@ local M = {}
 
 -- Color palette
 M.colors = {
+  primary = "#7E9CD8",
+  path = "#D27E99",
+  accent = "#957FB8",
+  muted = "#54546D",
+  error = "#E82424",
+  fg = "#DCD7BA",
+  fg_inverse = "#16161D",
+  bg = "#1F1F28",
+  bg_dark = "#16161D",
+  bg_light = "#363646",
+  bg_lighter = "#2A2A37",
+  comment = "#727169",
+  green = "#76946A",
+  peach = "#C8C093",
+  mauve = "#957FB8",
+  red = "#E82424",
+  text = "#DCD7BA",
+  yellow = "#C0A36E",
+  maroon = "#C34043"
 }
 
 -- Theme names for different tools
-M.wezterm = "Tokyo Night"
-M.nvim = "tokyonight"
-M.vivid = "tokyonight-night"
+M.wezterm = "Kanagawa (Gogh)"
+M.nvim = "kanagawa-wave"
+M.vivid = "gruvbox-dark"
 
 return M

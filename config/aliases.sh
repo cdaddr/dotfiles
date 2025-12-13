@@ -25,7 +25,7 @@ alias vim=nvim
 
 alias zrc='vim ~/.zshrc'
 alias vimdiff='nvim -d'
-alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim init.lua && popd'
+alias vrc='cd $XDG_CONFIG_HOME/nvim && nvim && popd'
 alias history='history 0'
 
 alias_reminder() {

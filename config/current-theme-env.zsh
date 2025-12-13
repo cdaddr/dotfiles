@@ -1,3 +1,3 @@
-export VIVID_THEME="tokyonight-night"
-export EZA_THEME="tokyonight"
-export MOOR_THEME="tokyonight-night"
+export VIVID_THEME="gruvbox-dark"
+export EZA_THEME="one_dark"
+export MOOR_THEME="kanagawa-wave"

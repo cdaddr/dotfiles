@@ -1,26 +1,9 @@
 return {
   'folke/flash.nvim',
+  lazy = false,
   keys = {
-    { "f", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-    { "F", mode = { "n", "x", "o" }, function() require("flash").jump({continue = true}) end, desc = "Flash" },
-    { "<F5>", mode = {"n", "x", "o"}, function ()
-    require("flash").jump({
-      pattern = ".", -- initialize pattern with any char
-      search = {
-        mode = function(pattern)
-          -- remove leading dot
-          if pattern:sub(1, 1) == "." then
-            pattern = pattern:sub(2)
-          end
-          -- return word pattern and proper skip pattern
-          return ([[\<%s\w*\>]]):format(pattern), ([[\<%s]]):format(pattern)
-        end,
-      },
-      -- select the range
-      jump = { pos = "range" },
-    })
-    end},
-    -- { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    { "S", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "<leader>S", mode = { "n", "x", "o" }, function() require("flash").jump({continue = true}) end, desc = "Flash" },
   },
   config = function(_, opts)
     vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#FF007C", bold = true })
@@ -32,11 +15,11 @@ return {
     require('flash').setup(
       vim.tbl_deep_extend('force', opts, {
         labels = "qwertyuiopzxcvbnm",
-        keys = { },
-        jump = {
+        -- keys = { },
+        -- jump = {
           -- pos = "range",
           -- autojump = true,
-        },
+        -- },
         label = {
           -- after = {0, 2},
           -- current = false,
@@ -54,9 +37,9 @@ return {
           search = {
             enabled = false,
           },
-          char = {
-            enabled = false,
-          },
+          -- char = {
+          --   enabled = false,
+          -- },
         },
         -- char_actions = function(motion)
           --   return {}

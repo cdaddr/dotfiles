@@ -16,7 +16,7 @@ config.inactive_pane_hsb = {
 
 -- Use theme from generated config
 config.color_scheme = theme.wezterm
-config.font_size = 18.0
+config.font_size = 17.0
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 -- 1234567890
 config.font = wezterm.font_with_fallback{
@@ -28,8 +28,10 @@ config.font = wezterm.font_with_fallback{
   {
     family = 'JetBrainsMono Nerd Font Mono',
     weight = "Regular",
+    scale = 1.2
   }
 }
+-- 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 -- config.use_cap_height_to_scale_fallback_fonts = true
 
 -- config.use_resize_increments = true
@@ -242,8 +244,8 @@ config.keys = {}
 -- end
 
 local keys = {
-  { mods = 'NONE', key = 'Delete', action = wezterm.action.SendString('\x1b[3~') },
-  { mods = 'NONE', key = 'Escape', action = wezterm.action.SendString( '\x1b[27u') },
+  { mods = 'NONE', key = 'Delete', action = wezterm.action.SendKey{ key = "Delete" }},
+  { mods = 'NONE', key = 'Escape', action = wezterm.action.SendKey{ key = "Escape" }},
   -- home/end
 	{ mods = 'CMD', key = "LeftArrow", action = wezterm.action.SendKey { key = 'Home', } },
 	{ mods = 'CMD', key = "RightArrow", action = wezterm.action.SendKey { key = 'End', } },

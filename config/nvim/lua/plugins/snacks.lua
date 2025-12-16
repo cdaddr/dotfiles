@@ -240,7 +240,7 @@ return {
       { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent" },
       { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep (cwd)" },
-      { "<leader>l/", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (Git root)" },
+      { "<leader>fl/", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (buffer dir)" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
@@ -303,6 +303,9 @@ return {
       -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
       -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
       { "<leader>xR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
+      { "<leader>xcd", function() vim.cmd.cd(vim.fn.expand('%:p:h')) end, desc = "cd to buffer's dir"},
+      { "<leader>xcp", require('util').copy_filename, desc = "Copy buffer path to clipboard"},
+
       -- { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       -- { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
       { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },

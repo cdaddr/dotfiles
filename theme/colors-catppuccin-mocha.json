@@ -22,7 +22,8 @@
   },
   "wezterm": "Catppuccin Mocha",
   "nvim": "catppuccin-mocha",
+  "lualine": "catppuccin-mocha",
   "vivid": "catppuccin-mocha",
-  "eza": "catppuccin",
+  "eza": "catppuccin-mocha",
   "moor": "catppuccin-mocha"
 }

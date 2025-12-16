@@ -1,6 +1,11 @@
 -- nvim config
 -- https://github.com/cdaddr/dotfiles
---
+
+
+-- Load theme from generated config
+local theme_file = vim.fn.expand('~/.dotfiles/config/current-theme.lua')
+local theme = dofile(theme_file)
+_G.theme = theme
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -55,9 +60,6 @@ end
 au("ColorScheme", { callback = set_dim_diagnostics })
 set_dim_diagnostics()
 
--- Load theme from generated config
-local theme_file = vim.fn.expand('~/.dotfiles/config/current-theme.lua')
-local theme = dofile(theme_file)
 vim.cmd.colorscheme(theme.nvim)
 
 local vimrc = aug("vimrc", {})
@@ -92,6 +94,7 @@ au("FileType", {
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
 cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
 cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
+cabbrev("<expr>", "Qa", "(getcmdtype() == ':') ? 'qa' : 'Qa'")
 cabbrev("vrc", ":e $MYVIMRC")
 
 -- insert mode niceties
@@ -117,13 +120,6 @@ map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
 -- map('t', '<esc>', "<C-\\><C-n>", { noremap = true, silent = true, desc = "Toggle terminal" })
 
 -- delete to black hole
--- map("n", "<Leader>d", '"_d')
--- map("n", "<Leader>D", '"_D')
--- map("n", "<Leader>x", '"_x')
--- map("n", "<Leader>s", '"_s')
--- map("n", "<Leader>S", '"_S')
--- map("n", "<Leader>c", '"_c')
--- map("n", "<Leader>C", '"_C')
 
 -- keep indenting
 map("v", ">", ">gv")
@@ -159,6 +155,13 @@ vim.cmd([[
 ]])
 
 au("TermOpen", {pattern = "*", command = [[ startinsert ]] })
+
+-- close command-line window with <Esc>
+au("CmdwinEnter", {
+  callback = function()
+    vim.keymap.set('n', '<Esc>', '<cmd>q<cr>', { buffer = true, silent = true })
+  end
+})
 
 -- restore cursor position
 au("BufRead", {

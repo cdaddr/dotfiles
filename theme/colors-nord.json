@@ -22,6 +22,7 @@
   },
   "wezterm": "Nord",
   "nvim": "nordic",
+  "lualine": "nordic",
   "vivid": "nord",
   "eza": "catppuccin",
   "moor": "nord"

@@ -26,6 +26,7 @@ M.colors = {
 -- Theme names for different tools
 M.wezterm = "Kanagawa (Gogh)"
 M.nvim = "kanagawa-wave"
+M.lualine = "kanagawa"
 M.vivid = "gruvbox-dark"
 
 return M

@@ -22,6 +22,7 @@
   },
   "wezterm": "Kanagawa (Gogh)",
   "nvim": "kanagawa-wave",
+  "lualine": "kanagawa",
   "vivid": "gruvbox-dark",
   "eza": "one_dark",
   "moor": "kanagawa-wave"

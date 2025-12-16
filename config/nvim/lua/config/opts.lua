@@ -18,8 +18,12 @@ vim.o.mouse = "a"
 vim.o.breakindent = true
 vim.o.title = true
 vim.o.titlestring = "%t - Nvim"
+vim.o.showmode = false
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append {'unnamedplus'}
+
+-- Folding defaults (treesitter as fallback)
+vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldenable = true
 vim.opt.foldlevel = 99

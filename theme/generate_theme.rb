@@ -91,6 +91,7 @@ def generate_lua_theme(colors, theme_names)
     -- Theme names for different tools
     M.wezterm = "#{theme_names['wezterm']}"
     M.nvim = "#{theme_names['nvim']}"
+    M.lualine = "#{theme_names['lualine']}"
     M.vivid = "#{theme_names['vivid']}"
 
     return M

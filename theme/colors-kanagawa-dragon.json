@@ -22,6 +22,7 @@
   },
   "wezterm": "Kanagawa Dragon (Gogh)",
   "nvim": "kanagawa-dragon",
+  "lualine": "kanagawa",
   "vivid": "gruvbox-dark",
   "eza": "one_dark",
   "moor": "kanagawa-dragon"

@@ -3,11 +3,11 @@ return {
     "catppuccin/nvim", name = "catppuccin", priority = 1000,
     config = function()
       require ('catppuccin').setup{
-        dim_inactive = {
-          enabled = true,
-          shade = "dark",
-          percentage = 0.20,
-        },
+        -- dim_inactive = {
+        --   enabled = false,
+        --   shade = "dark",
+        --   percentage = 0.20,
+        -- },
         integrations = {
           treesitter = true,
           mini = {
@@ -30,7 +30,7 @@ return {
     config = function()
       require("tokyonight").setup({
         style = "night", -- storm, moon, night, day
-        dim_inactive = true,
+        dim_inactive = false,
       })
     end
   },

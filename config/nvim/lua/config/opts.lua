@@ -19,6 +19,8 @@ vim.o.breakindent = true
 vim.o.title = true
 vim.o.titlestring = "%t - Nvim"
 vim.o.showmode = false
+vim.o.ignorecase = true
+vim.o.smartcase = true
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append {'unnamedplus'}
 

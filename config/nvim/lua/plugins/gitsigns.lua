@@ -30,6 +30,7 @@ return {
       vim.fn.setreg(register or '+', table.concat(old_lines, '\n'), "l")
     end
     require('gitsigns').setup({
+      numhl = true,
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
         -- Reset hunk under cursor

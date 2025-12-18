@@ -192,6 +192,14 @@ return {
         return ret
       end
 
+      local open_in_oil = function(picker)
+        local item = picker:current()
+        if item and item.file then
+          picker:close()
+          require("oil").open(picker:dir())
+        end
+      end
+
       return {
         terminal = {},
         picker = {
@@ -203,13 +211,19 @@ return {
             },
           },
           sources = {
+            files = {
+              actions = { open_in_oil = open_in_oil }
+            },
             grep = {
+              actions = { open_in_oil = open_in_oil },
               format = grep_format,
             },
             grep_buffers = {
+              actions = { open_in_oil = open_in_oil },
               format = grep_format,
             },
             grep_word = {
+              actions = { open_in_oil = open_in_oil },
               format = grep_format,
             },
           },
@@ -220,6 +234,7 @@ return {
                 ["<m-K>"] = { "history_back", mode = { "i", "n" } },
                 ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
                 ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
+                ["<C-o>"] = { "open_in_oil", mode = { "i", "n" } },
               }
             }
           },
@@ -286,7 +301,8 @@ return {
       { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List" },
       { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks" },
       { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages" },
-      { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
+      { "<leader>sp", function() Snacks.picker.lazy() end, desc = "lazy.nvim Plugin Spec" },
+      { "<leader>sP", function() Snacks.picker.files({cwd = require'lazy.core.config'.options.root}) end, desc = "Installed Plugin Source" },
       { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
       { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
       { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },

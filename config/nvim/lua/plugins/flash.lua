@@ -37,9 +37,11 @@ return {
           search = {
             enabled = false,
           },
-          -- char = {
-          --   enabled = false,
-          -- },
+          char = {
+            enabled = true,
+            keys = {
+            }
+          },
         },
         -- char_actions = function(motion)
           --   return {}

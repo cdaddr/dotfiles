@@ -3,6 +3,8 @@ local wezterm = require 'wezterm'
 local theme = require 'theme'
 local config = wezterm.config_builder()
 
+local colors = theme.colors
+
 local MAX_TAB_WIDTH = 48
 
 config.tab_max_width = MAX_TAB_WIDTH
@@ -50,27 +52,31 @@ config.show_new_tab_button_in_tab_bar = false
 config.enable_scroll_bar = false
 
 wezterm.on('update-status', function(window)
-	-- Grab the utf8 character for the "powerline" left facing
-	-- solid arrow.
-	local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
-	-- Grab the current window's configuration, and from it the
-	-- palette (this is the combination of your chosen colour scheme
-	-- including any overrides).
-	local color_scheme = window:effective_config().resolved_palette
-	local bg = color_scheme.background
-	local fg = color_scheme.foreground
-
-  local date = wezterm.strftime '%Y-%m-%d %I:%M:%S'
+  local date = wezterm.strftime '%Y-%m-%d'
+  local time = wezterm.strftime '%I:%M:%S'
+  local symbol_color = colors.primary
+  local text_color = colors.accent
 
 	window:set_right_status(wezterm.format({
-		-- First, we draw the arrow...
-		{ Background = { Color = 'none' } },
-		{ Foreground = { Color = bg } },
-		{ Text = SOLID_LEFT_ARROW },
-		-- Then we draw our text
-		{ Background = { Color = bg } },
-		{ Foreground = { Color = fg } },
-		{ Text = ' ' .. date .. ' ' .. wezterm.hostname() .. ' ' },
+		{ Background = { Color = colors.bg_dark } },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xeab0) }, -- 
+
+    { Foreground = { Color = text_color } },
+		{ Text = ' ' .. date .. '  '  },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xf017) }, -- 
+
+    { Foreground = { Color = text_color } },
+    { Text = ' ' .. time .. '  ' },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xf06f3) }, -- 
+
+    { Foreground = { Color = text_color } },
+    { Text = ' ' .. wezterm.hostname() .. '  ' },
 	}))
 end)
 
@@ -96,9 +102,6 @@ function tab_title(tab_info)
   return title
 end
 
--- Load theme colors
-local colors = theme.colors
-
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
   local palette = {
     primary = colors.primary,
@@ -108,6 +111,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
     fg_inverse = colors.fg_inverse,
     bg_light = colors.bg_light,
     bg_lighter = colors.bg_lighter,
+    bg = colors.bg,
     bg_dark = colors.bg_dark,
     none = colors.bg_dark
   }
@@ -348,7 +352,12 @@ end
 
 config.colors = {
   tab_bar = {
-    background = colors.bg_dark
+    background = colors.bg_dark,
+    inactive_tab_hover = {
+      bg_color = colors.bg_light,
+      fg_color = colors.muted,
+      italic = false,
+    },
   },
 }
 config.debug_key_events = true

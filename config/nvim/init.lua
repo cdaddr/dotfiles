@@ -16,10 +16,12 @@ require("config.lsp")
 
 local aug = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
+local vimrc = aug("vimrc", {})
+
 local cabbrev = vim.cmd.cabbrev
 local map = vim.keymap.set
 
-vim.diagnostic.config({virtual_text=true, virtual_lines=false, underline=true})
+vim.diagnostic.config({virtual_text=true, virtual_lines=false, underline=true, signs=false})
 
 -- dim diagnostic virtual text
 local function set_dim_diagnostics()
@@ -60,12 +62,28 @@ end
 au("ColorScheme", { callback = set_dim_diagnostics })
 set_dim_diagnostics()
 
-vim.cmd.colorscheme(theme.nvim)
+au("WinLeave", {
+  pattern = "*",
+  group = vimrc,
+  callback = function()
+    vim.opt.cursorline = false
+  end,
+  desc = "Window crosshair: Remove cursorline and colorcolumn when buffer loses focus",
+})
 
-local vimrc = aug("vimrc", {})
+au({ "WinEnter", "BufEnter", "BufNewFile" }, {
+  pattern = "*",
+  callback = function()
+    vim.opt.cursorline = true
+  end,
+  desc = "Window crosshair: Restore cursorline and colorcolumn when buffer gains focus",
+})
+
+vim.cmd.colorscheme(theme.nvim)
 
 au({ "BufWritePost" }, {
 	pattern = "init.lua",
+  group = vimrc,
   callback = function()
     vim.cmd("source %")
     vim.schedule(function() vim.cmd.colorscheme(theme.nvim) end)
@@ -89,6 +107,13 @@ au("FileType", {
   callback = function()
     vim.opt_local.conceallevel = 0
   end,
+})
+
+au("Filetype", {
+  pattern = "qf",
+  callback = function()
+    vim.keymap.set("n", "<esc>", "<cmd>cclose<cr>", {buffer = true})
+  end
 })
 
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")

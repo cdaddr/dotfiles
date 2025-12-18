@@ -22,6 +22,7 @@
   },
   "wezterm": "Tokyo Night",
   "nvim": "tokyonight",
+  "lualine": "tokyonight",
   "vivid": "tokyonight-night",
   "eza": "tokyonight",
   "moor": "tokyonight-night"

@@ -2,8 +2,16 @@ return {
   'folke/flash.nvim',
   lazy = false,
   keys = {
-    { "S", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "S", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash" },
     { "<leader>S", mode = { "n", "x", "o" }, function() require("flash").jump({continue = true}) end, desc = "Flash" },
+    { "<c-space>", function()
+      require'flash'.treesitter({
+        actions = {
+          ["<c-space>"] = "next",
+          ["<bs>"] = "prev",
+        }
+      })
+      end, mode = {"n", "x", "o"}, desc = "Treesitter incremental select"},
   },
   config = function(_, opts)
     vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#FF007C", bold = true })

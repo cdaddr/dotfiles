@@ -1,68 +1,69 @@
 local unicode_picker = function()
-        local Snacks = require'snacks'
-        return Snacks.picker({
-          title = "Unicode Character",
-          format = "text",
-          finder = function()
-            local items = {}
+  local Snacks = require'snacks'
+  return Snacks.picker({
+    title = "Unicode Character",
+    format = "text",
+    finder = function()
+      local items = {}
 
-            local unicode_data_path = vim.fn.stdpath("config") .. "/lua/plugins/UnicodeData.txt"
-            local file = io.open(unicode_data_path, "r")
+      local unicode_data_path = vim.fn.stdpath("config") .. "/lua/plugins/UnicodeData.txt"
+      local file = io.open(unicode_data_path, "r")
 
-            if not file then
-              vim.notify("UnicodeData.txt not found", vim.log.levels.ERROR)
-              return items
-            end
-
-            for line in file:lines() do
-              local parts = vim.split(line, ";")
-              if #parts >= 2 then
-                local hex_code = parts[1]
-                local name = parts[2]
-
-                if name ~= "<control>" and name ~= "" and not name:match("^<.*>$") then
-                  local codepoint = tonumber(hex_code, 16)
-
-                  if (codepoint >= 0x0020 and codepoint <= 0x00FF) or  -- Latin
-                     (codepoint >= 0x0370 and codepoint <= 0x04FF) or  -- Greek, Cyrillic
-                     (codepoint >= 0x0590 and codepoint <= 0x06FF) or  -- Hebrew, Arabic
-                     (codepoint >= 0x2000 and codepoint <= 0x2BFF) or  -- General Punctuation to Misc Symbols
-                     (codepoint >= 0x3000 and codepoint <= 0x30FF) or  -- CJK, Hiragana, Katakana
-                     (codepoint >= 0x1F000 and codepoint <= 0x1F6FF) then -- Emoticons, symbols
-
-                    local char = vim.fn.nr2char(codepoint)
-                    local hex = string.format("U+%04X", codepoint)
-
-                    -- Format: character  hex  name
-                    local text = string.format("%s  %s  %s", char, hex, name)
-
-                    table.insert(items, {
-                      value = char,
-                      text = text,
-                      codepoint = codepoint,
-                      hex = hex,
-                      name = name,
-                    })
-                  end
-                end
-              end
-            end
-
-            file:close()
-            return items
-          end,
-          confirm = function(picker, selected)
-            picker:close()
-            -- Insert the character at cursor position
-            local char = selected.value
-            vim.api.nvim_put({char}, 'c', true, true)
-          end,
-        })
+      if not file then
+        vim.notify("UnicodeData.txt not found", vim.log.levels.ERROR)
+        return items
       end
+
+      for line in file:lines() do
+        local parts = vim.split(line, ";")
+        if #parts >= 2 then
+          local hex_code = parts[1]
+          local name = parts[2]
+
+          if name ~= "<control>" and name ~= "" and not name:match("^<.*>$") then
+            local codepoint = tonumber(hex_code, 16)
+
+            if (codepoint >= 0x0020 and codepoint <= 0x00FF) or  -- Latin
+              (codepoint >= 0x0370 and codepoint <= 0x04FF) or  -- Greek, Cyrillic
+              (codepoint >= 0x0590 and codepoint <= 0x06FF) or  -- Hebrew, Arabic
+              (codepoint >= 0x2000 and codepoint <= 0x2BFF) or  -- General Punctuation to Misc Symbols
+              (codepoint >= 0x3000 and codepoint <= 0x30FF) or  -- CJK, Hiragana, Katakana
+              (codepoint >= 0x1F000 and codepoint <= 0x1F6FF) then -- Emoticons, symbols
+
+              local char = vim.fn.nr2char(codepoint)
+              local hex = string.format("U+%04X", codepoint)
+
+              -- Format: character  hex  name
+              local text = string.format("%s  %s  %s", char, hex, name)
+
+              table.insert(items, {
+                value = char,
+                text = text,
+                codepoint = codepoint,
+                hex = hex,
+                name = name,
+              })
+            end
+          end
+        end
+      end
+
+      file:close()
+      return items
+    end,
+    confirm = function(picker, selected)
+      picker:close()
+      -- Insert the character at cursor position
+      local char = selected.value
+      vim.api.nvim_put({char}, 'c', true, true)
+    end,
+  })
+end
 return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
+    --@type wk.Opts
     opts = {
       delay = 400,
       spec = {

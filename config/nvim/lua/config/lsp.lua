@@ -3,8 +3,8 @@ local servers = {
   "bashls",
   "shfmt",
   "stylua",
-  "lua_ls",
   "rubocop",
+  "lua_ls",
   "ruby_lsp",
   "jsonls",
   "pyright",
@@ -68,8 +68,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
       end, {noremap = true, buffer = true, desc = "Diagnostic to quickfix"})
     end
 
-    vim.keymap.set('n', '<leader>llf', vim.lsp.buf.format, {noremap = true, buffer = true, desc = "Format"})
-    vim.keymap.set('n', '<leader>llr', vim.lsp.buf.rename, {noremap = true, buffer = true, desc = "Rename"})
+    vim.keymap.set('n', '<leader>llf', vim.lsp.buf.format, {noremap = true, buffer = true, desc="Format buffer"})
+    vim.keymap.set('n', '<leader>llr', vim.lsp.buf.rename, {noremap = true, buffer = true, desc="Rename file"})
   end
 })
 

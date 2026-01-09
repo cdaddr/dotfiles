@@ -10,6 +10,9 @@ alias lld="ll --sort=modified"
 alias llt="ll -T --level=1"
 alias rg="rg --sort=path --follow --smart-case --column --colors='match:fg:red' --colors='line:fg:147,153,178' --colors='column:fg:147,153,178' --colors='path:fg:yellow'"
 alias rgs="rg --no-heading --no-line-number --no-column"
+alias gg="lazygit"
+alias h="atuin"
+alias hh="atuin history list --human"
 
 alias mkvenv='python3 -m venv .venv'
 alias venv='source .venv/bin/activate'

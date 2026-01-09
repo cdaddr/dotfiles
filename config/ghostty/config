@@ -1,0 +1,17 @@
+# font test 1234567890 Iil1 Oo0 def func if then else end
+
+font-family = "TX-02 SemiCondensed"
+font-family-bold = "TX-02 Bold SemiCondensed"
+font-family-italic = "TX-02 SemiCondensed Oblique"
+font-family-bold-italic = "TX-02 Bold SemiCondensed Oblique"
+font-size = 16
+adjust-cell-height = -2%
+
+keybind = "cmd+r=reload_config"
+theme = TokyoNight
+macos-icon = chalkboard
+macos-titlebar-style = tabs
+macos-titlebar-proxy-icon = hidden
+macos-option-as-alt = true
+
+

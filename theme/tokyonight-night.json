@@ -20,9 +20,9 @@
     "yellow": "#e0af68",
     "maroon": "#f7768e"
   },
-  "wezterm": "Tokyo Night",
-  "nvim": "tokyonight",
-  "lualine": "tokyonight",
+  "wezterm": "tokyonight_night",
+  "nvim": "tokyonight-night",
+  "lualine": "tokyonight-night",
   "vivid": "tokyonight-night",
   "eza": "tokyonight",
   "moor": "tokyonight-night"

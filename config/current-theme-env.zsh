@@ -1,3 +1,3 @@
-export VIVID_THEME="gruvbox-dark"
+export VIVID_THEME="tokyonight-storm"
 export EZA_THEME="one_dark"
-export MOOR_THEME="gruvbox"
+export MOOR_THEME="tokyonight-storm"

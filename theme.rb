@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 # See README.md for purpose and usage.
@@ -7,10 +8,11 @@ require 'pathname'
 require 'open-uri'
 
 SCRIPT_DIR = Pathname.new(__FILE__).dirname
-DOTFILES = SCRIPT_DIR.parent
+DOTFILES = SCRIPT_DIR
 CONFIG = DOTFILES / 'config'
 ZSH_CONFIG = CONFIG / 'zsh'
-THEME_DIR = SCRIPT_DIR
+THEME_DIR = SCRIPT_DIR / 'theme'
+TEMPLATE_DIR = THEME_DIR / 'template'
 
 def usage
   puts <<~USAGE
@@ -22,8 +24,8 @@ def usage
       theme-file.json - Theme definition file (e.g., theme/colors-tokyonight.json)
 
     Generates:
-      - config/zsh/current-theme.omp.json          (Oh My Posh theme)
-      - config/zsh/current-syntax-highlighting.zsh (ZSH syntax highlighting)
+      - theme/template/current-theme.omp.json          (Oh My Posh theme)
+      - theme/template/current-syntax-highlighting.zsh (ZSH syntax highlighting)
       - config/current-theme.lua                   (Lua palette for nvim/wezterm)
       - config/current-theme-env.zsh               (Environment variables)
       - ~/.config/eza/theme.yml                    (eza theme symlink, if eza-themes repo exists)
@@ -47,7 +49,7 @@ def usage
 end
 
 def generate_omp_theme(colors)
-  template_file = ZSH_CONFIG / 'omp-template.json'
+  template_file = TEMPLATE_DIR / 'omp-template.json'
   output_file = ZSH_CONFIG / 'current-theme.omp.json'
 
   template = JSON.parse(File.read(template_file))
@@ -58,7 +60,7 @@ def generate_omp_theme(colors)
 end
 
 def generate_zsh_syntax(colors)
-  template_file = THEME_DIR / 'zsh-syntax-template.zsh'
+  template_file = TEMPLATE_DIR / 'zsh-syntax-template.zsh'
   output_file = ZSH_CONFIG / 'current-syntax-highlighting.zsh'
 
   template = File.read(template_file)
@@ -150,8 +152,11 @@ def main
   theme_file = Pathname.new(ARGV[0])
 
   unless theme_file.exist?
-    puts "Error: Theme file not found: #{theme_file}"
-    exit 1
+    theme_file = Pathname.new(THEME_DIR / "#{ARGV[0]}.json")
+    unless theme_file.exist?
+      puts "Error: Theme file not found: #{theme_file}"
+      exit 1
+    end
   end
 
   theme_data = JSON.parse(File.read(theme_file))

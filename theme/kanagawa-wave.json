@@ -23,8 +23,8 @@
   "wezterm": "Kanagawa (Gogh)",
   "nvim": "kanagawa-wave",
   "lualine": "kanagawa",
-  "vivid": "gruvbox-dark",
+  "vivid": "tokyonight-storm",
   "eza": "one_dark",
-  "moor": "gruvbox",
+  "moor": "tokyonight-storm",
   "ghostty": "Kanagawa Wave"
 }

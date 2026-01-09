@@ -25,5 +25,6 @@
   "lualine": "catppuccin-mocha",
   "vivid": "catppuccin-mocha",
   "eza": "catppuccin-mocha",
-  "moor": "catppuccin-mocha"
+  "moor": "catppuccin-mocha",
+  "ghostty": "Catppuccin Mocha"
 }

@@ -27,6 +27,7 @@ def usage
       - config/current-theme.lua                   (Lua palette for nvim/wezterm)
       - config/current-theme-env.zsh               (Environment variables)
       - ~/.config/eza/theme.yml                    (eza theme symlink, if eza-themes repo exists)
+      - ~/.config/ghostty/theme                    (ghostty theme)
 
     Example:
   USAGE
@@ -131,6 +132,18 @@ def generate_eza_theme(theme_name)
   end
 end
 
+def generate_ghostty_theme(theme_names)
+  theme_file = CONFIG / 'ghostty/theme'
+  begin
+    File.open(theme_file, 'w') do |f|
+      f.puts "theme = #{theme_names['ghostty']}"
+    end
+    puts "- generated #{theme_file}"
+  rescue e
+    puts "Error generating ghostty theme: #{e}"
+  end
+end
+
 def main
   usage if ARGV.length != 1
 
@@ -156,6 +169,7 @@ def main
   generate_lua_theme(colors, theme_names)
   generate_zsh_env(theme_names)
   generate_eza_theme(theme_names['eza'])
+  generate_ghostty_theme(theme_names['eza'])
 end
 
 main

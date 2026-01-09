@@ -4,14 +4,18 @@ font-family = "TX-02 SemiCondensed"
 font-family-bold = "TX-02 Bold SemiCondensed"
 font-family-italic = "TX-02 SemiCondensed Oblique"
 font-family-bold-italic = "TX-02 Bold SemiCondensed Oblique"
-font-size = 16
+font-feature = "-calt -clig -liga"
+font-synthetic-style = false
+adjust-cell-width = -10%
+font-size = 18
 adjust-cell-height = -2%
+shell-integration = zsh
 
-keybind = "cmd+r=reload_config"
-theme = TokyoNight
+keybind = "global:cmd+r=reload_config"
 macos-icon = chalkboard
 macos-titlebar-style = tabs
 macos-titlebar-proxy-icon = hidden
 macos-option-as-alt = true
 
+config-file = theme
 

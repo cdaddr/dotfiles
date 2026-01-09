@@ -1,3 +1,5 @@
+-- theme/kanagawa-wave.json
+
 local M = {}
 
 -- Color palette

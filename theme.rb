@@ -78,12 +78,14 @@ def generate_zsh_syntax(colors)
   puts "- generated #{output_file}"
 end
 
-def generate_lua_theme(colors, theme_names)
+def generate_lua_theme(colors, theme_names, theme_file)
   output_file = CONFIG / 'current-theme.lua'
 
   colors_lua = colors.map { |k, v| "  #{k} = \"#{v}\"" }.join(",\n")
 
   lua_content = <<~LUA
+    -- #{theme_file}
+
     local M = {}
 
     -- Color palette
@@ -171,7 +173,7 @@ def main
 
   generate_omp_theme(colors)
   generate_zsh_syntax(colors)
-  generate_lua_theme(colors, theme_names)
+  generate_lua_theme(colors, theme_names, theme_file)
   generate_zsh_env(theme_names)
   generate_eza_theme(theme_names['eza'])
   generate_ghostty_theme(theme_names['eza'])

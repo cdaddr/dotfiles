@@ -342,8 +342,8 @@ return {
       -- { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
       -- { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
       { "<leader>xR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
-      { "<leader>xcd", function() vim.cmd.cd(vim.fn.expand('%:p:h')) end, desc = "cd to buffer's dir"},
-      { "<leader>xcp", require('util').copy_filename, desc = "Copy buffer path to clipboard"},
+      { "<leader>xc", function() vim.cmd.cd(vim.fn.expand('%:p:h')) end, desc = "cd to buffer's dir"},
+      { "<leader>xp", require('util').copy_filename, desc = "Copy buffer path to clipboard"},
 
       -- { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       -- { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },

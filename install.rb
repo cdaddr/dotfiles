@@ -32,13 +32,13 @@ end
   .config/dircolors
   .config/eza
   .config/fish
-  .config/fzf.zsh
+  .config/ghostty
   .config/git
   .config/ideavim
   .config/irb
   .config/jj
+  .config/kitty
   .config/lazygit
-  .config/mise
   .config/nvim
   .config/p10k.zsh
   .config/powerlevel10k
@@ -46,6 +46,8 @@ end
   .config/tmux
   .config/wezterm
   .config/zsh
+  .config/current-theme-env.zsh
+  .config/current-theme.lua
   .config/LS_COLORS.sh
   .config/Brewfile
   .hushlogin

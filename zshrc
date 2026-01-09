@@ -70,8 +70,6 @@ if type brew &>/dev/null; then
 fi
 
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "$ZSH_PLUGINS/zsh-z/zsh-z.plugin.zsh"
-export ZSHZ_CMD=z
 
 autoload -Uz compinit
 if [[ -n ${HOME}/.zcompdump(#qNmh+24) ]]; then
@@ -88,8 +86,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude '*~'"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export WORDCHARS="${WORDCHARS/\/}"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
@@ -176,14 +172,12 @@ export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
 ## From here down is all junk added by tools.  May need periodic cleanup.
 
+eval "$(zoxide init zsh)"
+
 if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     source "$HOME/.local/share/cargo/env"
     export PATH="$PATH:$CARGO_HOME/bin"
 fi
-
-# fzf shell integration
-source /opt/homebrew/opt/fzf/shell/completion.zsh
-source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 if [[ -f "$XDG_CONFIG_HOME/zsh-private.sh" ]]; then
     source "$XDG_CONFIG_HOME/zsh-private.sh"

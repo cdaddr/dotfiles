@@ -19,8 +19,6 @@ set -gx EZA_CONFIG_DIR "$XDG_CONFIG_HOME/eza"
 
 # Tool options
 set -gx HOMEBREW_NO_ENV_HINTS 1
-set -gx FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git --exclude '*~'"
-set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
 set -gx PRETTIERD_DEFAULT_CONFIG "$XDG_CONFIG_HOME/prettierdrc.toml"
 
 # Color theme detection

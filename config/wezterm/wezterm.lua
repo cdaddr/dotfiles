@@ -24,17 +24,17 @@ config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 config.font = wezterm.font_with_fallback{
   {
     family = 'TX-02',
-    stretch = 'SemiCondensed',
+    stretch = 'Condensed',
     weight = 300
   },
   {
-    family = 'JetBrainsMono Nerd Font Mono',
+    family = 'Symbols Nerd Font Mono',
     weight = "Regular",
-    scale = 1.2
+    scale = 0.8
   }
 }
 -- 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
--- config.use_cap_height_to_scale_fallback_fonts = true
+-- config.use_cap_height_*o_scale_fallback_fonts = true
 
 -- config.use_resize_increments = true
 config.window_close_confirmation = "NeverPrompt"
@@ -217,35 +217,12 @@ end)
 config.use_fancy_tab_bar = false
 config.mouse_wheel_scrolls_tabs = false
 config.swallow_mouse_click_on_window_focus = true
+config.swallow_mouse_click_on_pane_focus = true
 
 config.quit_when_all_windows_are_closed = false
 
 config.enable_kitty_keyboard = true
 config.keys = {}
--- map CMD+letter to <Space>w<letter> so I can remap them in nvim
--- wezterm prefix is <leader>wz, matching my nvim config
--- this only performed if the active process is neovim
--- local letter = string.byte("A")
--- while letter <= string.byte("z") do
---   local char = string.char(letter)
---   table.insert(config.keys,
---     { mods = "CMD",
---       key = char,
---       action = wezterm.action_callback(function(window, pane)
---         local process = pane:get_foreground_process_info()
---         if process and process.name and process.name:find("nvim") then
---           window:perform_action(
---             wezterm.action.Multiple {
---               wezterm.action.SendKey { key = 'Space' },
---               wezterm.action.SendKey { key = 'w' },
---               wezterm.action.SendKey { key = 'z' },
---               wezterm.action.SendKey { key = char }},
---           pane)
---         end
---       end)
---     })
---   letter = letter + 1
--- end
 
 local keys = {
   { mods = 'NONE', key = 'Delete', action = wezterm.action.SendKey{ key = "Delete" }},

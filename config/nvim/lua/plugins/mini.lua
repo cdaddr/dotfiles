@@ -11,6 +11,16 @@ return {
 
     require('mini.splitjoin').setup{}
 
+    local win_config = function() 
+      local pad = vim.o.cmdheight + 1
+      return { anchor = 'SE', col = vim.o.columns, row = vim.o.lines - pad }
+    end
+    require('mini.notify').setup{
+      window = {
+        config = win_config
+      }
+    }
+
     -- require('mini.pairs').setup{}
 
     require('mini.surround').setup{

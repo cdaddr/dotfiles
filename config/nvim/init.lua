@@ -14,6 +14,8 @@ require("config.opts")
 require("config.lazy")
 require("config.lsp")
 
+vim.cmd.colorscheme(theme.nvim)
+
 local aug = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
 local vimrc = aug("vimrc", {})
@@ -79,8 +81,6 @@ au({ "WinEnter", "BufEnter", "BufNewFile" }, {
   desc = "Window crosshair: Restore cursorline and colorcolumn when buffer gains focus",
 })
 
-vim.cmd.colorscheme(theme.nvim)
-
 au({ "BufWritePost" }, {
 	pattern = "init.lua",
   group = vimrc,
@@ -137,6 +137,8 @@ map("i", "<C-k>", "<C-o><C-k>", { silent = true })
 map("i", "<C-h>", "<C-o><C-h>", { silent = true })
 map("i", "<C-l>", "<C-o><C-l>", { silent = true })
 
+map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor" })
+
 map("n", "t", "<cmd>bnext<cr>", {desc = ":bnext"})
 
 map('n', '<leader>o', '<cmd>Oil<cr>', {desc = "Open Oil"}) -- visual mode reselect pasted text
@@ -190,22 +192,22 @@ au("CmdwinEnter", {
 
 -- restore cursor position
 au("BufRead", {
-	callback = function(opts)
-		au("BufWinEnter", {
-			once = true,
-			buffer = opts.buf,
-			callback = function()
-				local ft = vim.bo[opts.buf].filetype
-				local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-				if
-					not (ft:match("commit") and ft:match("rebase"))
-					and last_known_line > 1
-					and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-				then
-					vim.api.nvim_feedkeys([[g`"]], "nx", false)
-				end
-			end,
-		})
-	end,
-})
+  callback = function(opts)
+    au("BufWinEnter", {
+      once = true,
+      buffer = opts.buf,
+      callback = function()
+        local ft = vim.bo[opts.buf].filetype
+        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+        if
+          not (ft:match("commit") and ft:match("rebase"))
+          and last_known_line > 1
+          and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+        then
+            vim.api.nvim_feedkeys([[g`"]], "nx", false)
+          end
+        end,
+      })
+    end,
+  })
 

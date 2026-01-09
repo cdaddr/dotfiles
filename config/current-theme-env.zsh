@@ -1,3 +1,3 @@
-export VIVID_THEME="catppuccin-mocha"
-export EZA_THEME="catppuccin"
-export MOOR_THEME="catppuccin-mocha"
+export VIVID_THEME="gruvbox-dark"
+export EZA_THEME="one_dark"
+export MOOR_THEME="gruvbox"

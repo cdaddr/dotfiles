@@ -1,3 +1,3 @@
 return {
-  "ku1ik/vim-pasta"
+  -- "ku1ik/vim-pasta"
 }

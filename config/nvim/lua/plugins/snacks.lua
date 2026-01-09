@@ -278,7 +278,7 @@ return {
       { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent" },
       { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep (cwd)" },
-      { "<leader>fl/", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (buffer dir)" },
+      { "<leader>f?", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (buffer dir)" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },

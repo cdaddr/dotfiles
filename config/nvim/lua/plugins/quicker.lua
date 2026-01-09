@@ -1,5 +1,6 @@
 return {
   'stevearc/quicker.nvim',
+  lazy = false,
   ft = "qf",
   opts = {
     on_qf = function()

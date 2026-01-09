@@ -48,6 +48,8 @@ return {
       end
       -- sets the bg of the "middle" between section
       theme.normal.c.bg = util.copy_hl('LineNr').bg
+      theme.inactive.c.bg = util.copy_hl('LineNr').bg
+      theme.inactive.c.fg = util.copy_hl('WinSeparator').fg
 
       -- applies style, keeping section b / y bg
       local mid = function(color)
@@ -58,32 +60,34 @@ return {
 
       -- applies style, keeping section c / x bg
       local inner = function(color)
-        local bg_hl = util.copy_hl('LineNr')
-        local hl = util.copy_hl(color)
-        return { fg = hl.fg}
+        local bg_hl = util.copy_hl('SignColumn')
+        local hl = color and util.copy_hl(color) or {}
+        return vim.tbl_extend('force', hl, { bg = bg_hl.bg })
       end
 
       -- file icon (warning color) is lock if r/o, otherwise generic file icon (normal color)
-      local file_icon = {
-            function()
-              if is_readonly() then
-                return ""
-              end
-              return ''
-            end,
-            color = function()
-              if is_readonly() then
-                return mid('WarningMsg')
-              end
-              return mid('Keyword')
-            end,
-            padding = { left = 1, right = 0 },
-          }
+      local file_icon = function(colorfn, color)
+        return  {
+          function()
+            if is_readonly() then
+              return ""
+            end
+            return ''
+          end,
+          color = function()
+            if is_readonly() then
+              return colorfn('WarningMsg')
+            end
+            return colorfn(color)
+          end,
+          padding = { left = 1, right = 0 },
+        }
+      end
 
       local sections = {
         lualine_b = {
           -- lock / file icon
-          file_icon ,
+          file_icon(mid, 'Keyword'),
 
           -- filename (base)
           {
@@ -100,7 +104,6 @@ return {
               end
               return hl
             end,
-            icons_enabled = true,
           },
 
           -- modified marker
@@ -123,38 +126,42 @@ return {
         lualine_c = {
           -- relative path
           {
-            'filename',
-            path = 1,
-            fmt = function(item) return ' ' .. item end,
+            function() return vim.fn.fnamemodify(vim.fn.expand('%'), ':.') end,
+            icon = '',
             cond = function() return vim.fn.expand('%') ~= '' end,
             color = inner('Comment')
           },
           -- git branch
           {
             'branch',
-            fmt = function(item) return ' ' .. item end,
-            color = inner('Comment')
+            icon = '',
+            color = inner('Comment'),
+            padding = { left = 1, right = 0},
           },
           -- git diff numbers, from gitsigns
           {
             function()
               local git_status = vim.b.gitsigns_status_dict
               if git_status then
-                return string.format('+%d ~%d -%d', git_status.added or 0, git_status.changed or 0,
+                return string.format('[ +%d ~%d -%d ]', git_status.added or 0, git_status.changed or 0,
                   git_status.removed or 0)
               end
               return ''
             end,
-            color = inner('Comment')
-            -- padding = { left = 0, right = 1},
+            color = inner('Comment'),
+            padding = { left = 0, right = 1},
           },
         },
         lualine_x = {
           {
-            'lsp_status',
+            function() return vim.fn.fnamemodify(vim.fn.getcwd(), ':t') end,
+            icon = '',
             color = inner('Comment'),
-            icons_enabled = true,
+          },
+          {
+            'lsp_status',
             icon = '󰒋',
+            color = inner('Comment'),
           },
           {
             'diagnostics',
@@ -167,7 +174,6 @@ return {
               local code = vim.fn.char2nr(char)
               return string.format('U+%04X', code)
             end,
-            icons_enabled = true,
             icon = '',
             color = inner('Comment')
           },
@@ -175,7 +181,6 @@ return {
         lualine_y = {
           {
             'filetype',
-            icons_enabled = true,
             colored = false,
             color = mid(),
           },
@@ -190,11 +195,11 @@ return {
       local inactive_sections = {
         lualine_a = {},
         lualine_b = {
-          file_icon,
+          file_icon(inner, 'Comment'),
           {
-            'filename',
+            function() return vim.fn.fnamemodify(vim.fn.getcwd(), ':.') end,
             path = 1,
-            color = mid('Keyword'),
+            color = inner('Comment'),
           }
         },
         lualine_c = {},
@@ -206,13 +211,12 @@ return {
         extensions = { 'oil', 'quickfix', 'mason', 'lazy', 'fugitive', },
         options = {
           theme = theme,
-          icons_enabled = false,
+          icons_enabled = true,
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
-          -- globalstatus = true,
         },
         sections = sections,
-        inactive_sections = inactive_sections
+        inactive_sections = inactive_sections,
       })
     end
 

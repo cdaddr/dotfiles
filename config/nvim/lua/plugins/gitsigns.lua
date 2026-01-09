@@ -31,6 +31,7 @@ return {
     end
     require('gitsigns').setup({
       numhl = true,
+      signcolumn = true,
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
         -- Reset hunk under cursor
@@ -38,8 +39,27 @@ return {
         -- Reset visual selection
         vim.keymap.set('v', '<leader>hr', function() gs.reset_hunk({vim.fn.line('.'), vim.fn.line('v')}) end, {buffer = bufnr, desc = "Reset hunk"})
         vim.keymap.set('n', '<leader>hh', gs.preview_hunk, {desc = "Preview hunk"})
+        vim.keymap.set('n', '<leader>]h', gs.next_hunk, { desc = "Next hunk" })
+        vim.keymap.set('n', '<leader>]h', gs.prev_hunk, { desc = "Previous hunk" })
         vim.keymap.set('n', '<leader>hy', function() copy_old_hunk_to_register('+') end, {desc = 'Yank old hunk to default register'})
-      end
+      end,
+
+      signs = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
+      signs_staged = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
     })
   end
 }

@@ -4,6 +4,9 @@ return {
     filter_percent = 0.3,
     excluded_filetypes = {
       "help"
-    }
+    },
+    excluded_highlights = {
+      "StatusLine",
+    },
   }
 }

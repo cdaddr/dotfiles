@@ -73,8 +73,10 @@ return {
           local bufnr = event.buf
           local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
+          local EXCLUDE = { csv = true, tsv = true }
+
           -- Skip if no filetype
-          if filetype == "" then
+          if filetype == "" or EXCLUDE[filetype]  then
             return
           end
 
@@ -124,6 +126,10 @@ return {
     },
     opts = {
       multiwindow = true,
+      max_lines = 2,
+      line_numbers = false,
+      time_scope = 'inner',
+      mode = 'cursor',
     },
   },
   {

@@ -135,8 +135,9 @@ return {
           {
             'branch',
             icon = '',
-            color = inner('Comment'),
+            icons_enabled = true,
             padding = { left = 1, right = 0},
+            color = inner('Comment')
           },
           -- git diff numbers, from gitsigns
           {

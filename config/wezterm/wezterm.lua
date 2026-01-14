@@ -18,14 +18,22 @@ config.inactive_pane_hsb = {
 
 -- Use theme from generated config
 config.color_scheme = theme.wezterm
-config.font_size = 17.0
+
+config.font_size = 20.0
+
+-- Iosevka is kinda nice
+-- config.harfbuzz_features = { "cv01=2", "cv02=1", "cv03=1", "cv04=7", "cv05=5", "cv06=3", "cv07=2", "cv08=2", "cv09=3", "cv10=2", "cv20=1", "cv26=4", "cv54=8", "cv53=2", "calt=0", "dlig=0" }
+-- config.font = wezterm.font_with_fallback{{ family = 'Iosevka' }}
+
+-- abcdefghijklmnoqrstuvwxyz 1234567890 ilI1 oO0
+-- != == >= <= -> <-
+-- ABCDEFGHIJKLMNOQRSTUVWXYZ
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
--- 1234567890
 config.font = wezterm.font_with_fallback{
   {
     family = 'TX-02',
     stretch = 'Condensed',
-    weight = 300
+    weight = 500
   },
   {
     family = 'Symbols Nerd Font Mono',
@@ -33,9 +41,6 @@ config.font = wezterm.font_with_fallback{
     scale = 0.8
   }
 }
--- 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
--- config.use_cap_height_*o_scale_fallback_fonts = true
-
 -- config.use_resize_increments = true
 config.window_close_confirmation = "NeverPrompt"
 config.window_background_opacity = 1.00

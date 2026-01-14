@@ -45,43 +45,30 @@ else
     export LESS_TERMCAP_se=$'\e[0m'
     export LESS_TERMCAP_so=$'\e[7m'        # Standard reverse video
     export LESS_TERMCAP_ue=$'\e[0m'
-    export LESS_TERMCAP_ue=$'\e[0m'
     export LESS_TERMCAP_us=$'\e[4;32m'
 fi
 
-if command -v vivid >/dev/null &>/dev/null; then
+if command -v vivid &>/dev/null; then
   export LS_COLORS="$(vivid generate $VIVID_THEME)"
 fi
 
-source "$XDG_CONFIG_HOME/zsh/current-syntax-highlighting.zsh"
-source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-
-if type brew &>/dev/null; then
-  local prefix="$(brew --prefix)"
-  PATH="$prefix/opt/coreutils/libexec/gnubin:$PATH"
-
-    # if [[ `ls --color=auto 2>/dev/null` ]]; then
-    #     alias ls="LC_COLLATE=POSIX ls --group-directories-first --color=auto"
-    #     if type dircolors &>/dev/null && [[ -f "$XDG_CONFIG_HOME/dircolors" ]]; then
-    #         eval $(dircolors "$XDG_CONFIG_HOME/dircolors")
-    #     fi
-    # fi
-fi
+# Homebrew coreutils (Apple Silicon path)
+[[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
+# Completion system - cache dump file with zsh version
+# Rebuild manually with: comprebuild
 autoload -Uz compinit
-if [[ -n ${HOME}/.zcompdump(#qNmh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+_comp_dump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-${ZSH_VERSION}"
+[[ -d "${_comp_dump:h}" ]] || mkdir -p "${_comp_dump:h}"
+comprebuild() { compinit -u -d "$_comp_dump" && echo "Completion cache rebuilt." }
+compinit -C -u -d "$_comp_dump"
+unset _comp_dump
 autoload -Uz _git
 
 export EDITOR='nvim'
 export PAGER="moor --quit-if-one-screen --style=$MOOR_THEME"
-export LANG=en_CA.UTF-8
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
@@ -96,7 +83,6 @@ export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 
 setopt extended_history # save timestamps with history entries
 setopt hist_ignore_all_dups # remove older duplicate commands from history
-setopt hist_ignore_dups # don't save duplicate commands consecutively
 setopt hist_find_no_dups # don't display dupes from history
 setopt hist_ignore_space # don't save commands that start with a space
 setopt hist_verify # show history expansion before executing
@@ -127,7 +113,6 @@ setopt complete_in_word # complete mid-word
 
 zstyle ":completion:*" matcher-list '' # disable case-insensitive matching
 zstyle ':completion:*' menu select # enable interactive completion menu
-zstyle ':completion:*' rehash true # automatically find new executables in path
 zstyle ':completion:*:*:-command-:*:*' group-order aliases functions builtins commands # set completion grouping order
 zstyle ':completion:*' group-name '' # enable grouping of completion matches
 zstyle ':completion:*' squeeze-slashes true # remove duplicate slashes in paths
@@ -197,3 +182,6 @@ if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then
   unsetopt no_clobber
 fi
 
+# Syntax highlighting (must be last)
+source "$XDG_CONFIG_HOME/zsh/current-syntax-highlighting.zsh"
+source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

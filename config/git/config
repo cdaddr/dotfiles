@@ -3,6 +3,9 @@
 	abbrev = auto
   pager = delta
 	autocrlf = input
+	preloadindex = true
+	fscache = true
+	untrackedCache = true
   # pager = nvim -R -c 'set filetype=git' -
   # pager = less -FRSX
 ; [pager]
@@ -103,3 +106,5 @@
 [maintenance]
 	auto = true
 	strategy = incremental
+[feature]
+	manyFiles = true

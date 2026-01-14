@@ -13,11 +13,16 @@ local servers = {
   "svelte",
   "yamlls",
   "taplo", --toml
+  -- "djlsp",
+  "html",
 }
 
 for _, server in ipairs(servers) do
   vim.lsp.enable(server)
 end
+
+local t = vim.lsp.config['html'].filetypes
+t[#t+1] = 'htmldjango'
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup("my.lsp", {}),

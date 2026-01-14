@@ -126,7 +126,7 @@ return {
         lualine_c = {
           -- relative path
           {
-            function() return vim.fn.fnamemodify(vim.fn.expand('%'), ':.') end,
+            function() return vim.fn.fnamemodify(vim.fn.expand('%:~:.:p:h'), ':.') end,
             icon = '',
             cond = function() return vim.fn.expand('%') ~= '' end,
             color = inner('Comment')
@@ -198,8 +198,7 @@ return {
         lualine_b = {
           file_icon(inner, 'Comment'),
           {
-            function() return vim.fn.fnamemodify(vim.fn.getcwd(), ':.') end,
-            path = 1,
+            function() return vim.fn.fnamemodify(vim.fn.expand('%:~:.:p:h'), ':.') end,
             color = inner('Comment'),
           }
         },

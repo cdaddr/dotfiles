@@ -173,7 +173,7 @@ export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 ## From here down is all junk added by tools.  May need periodic cleanup.
 
 eval "$(zoxide init zsh)"
-eval "$(atuin init zsh)"
+eval "$(atuin init zsh --disable-up-arrow)"
 
 if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     source "$HOME/.local/share/cargo/env"

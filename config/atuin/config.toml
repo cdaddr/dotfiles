@@ -1,0 +1,11 @@
+enter_accept = true
+invert = true
+style = "full"
+show_tabs = true
+
+[sync]
+records = true
+
+[theme]
+name = "catppuccin-mocha-lavender"
+

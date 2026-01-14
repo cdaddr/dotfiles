@@ -6,6 +6,7 @@
 local theme_file = vim.fn.expand('~/.dotfiles/config/current-theme.lua')
 local theme = dofile(theme_file)
 _G.theme = theme
+_G.I = function(...) print(vim.inspect(...)) end
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -143,6 +144,15 @@ map("n", "t", "<cmd>bnext<cr>", {desc = ":bnext"})
 
 map('n', '<leader>o', '<cmd>Oil<cr>', {desc = "Open Oil"}) -- visual mode reselect pasted text
 map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
+
+map('n', '<C-w>N', '<cmd>botright new<cr>', { silent = true, desc = "open new split horizontally BOTTOM" })
+map('n', '<C-w><C-N>', '<cmd>botright new<cr>', { silent = true, desc = "open new split horizontally BOTTOM" })
+
+map('n', '<C-w>v', '<cmd>vnew<cr>', { silent = true, desc = "open new split vertically" })
+map('n', '<C-w><C-v>', '<cmd>vnew<cr>', { silent = true, desc = "open new split vertically" })
+
+map('n', '<C-w>V', '<cmd>topleft vnew<cr>', { silent = true, desc = "open new split vertically LEFT" })
+map('n', '<C-w><C-V>', '<cmd>topleft vnew<cr>', { silent = true, desc = "open new split vertically LEFT" })
 
 -- map('t', '<esc>', "<C-\\><C-n>", { noremap = true, silent = true, desc = "Toggle terminal" })
 

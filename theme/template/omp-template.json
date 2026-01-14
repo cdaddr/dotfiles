@@ -47,7 +47,7 @@
             "fetch_upstream_icon": false,
             "branch_identical_icon": ""
           },
-          "template": "{{ .HEAD }}[{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uF044 {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }} ] ",
+          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }}  ",
           "style": "plain",
           "type": "git"
         },

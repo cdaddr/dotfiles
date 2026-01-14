@@ -18,6 +18,11 @@ config.inactive_pane_hsb = {
 
 -- Use theme from generated config
 config.color_scheme = theme.wezterm
+config.default_cursor_style = 'BlinkingBar'
+config.cursor_thickness = 2
+config.cursor_blink_ease_in = 'Constant'
+config.cursor_blink_ease_out = 'Constant'
+config.cursor_blink_rate = 350
 
 config.font_size = 20.0
 

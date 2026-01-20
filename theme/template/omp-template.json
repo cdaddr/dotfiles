@@ -34,12 +34,12 @@
           "foreground": "p:path",
           "style": "plain",
           "type": "text",
-          "template": "\uf114 {{ .Env.PWD }} "
+          "template": "\ueaf7 {{ .Env.PWD }} "
         },
         {
           "foreground": "p:accent",
           "options": {
-            "branch_icon": "\ue725 ",
+            "branch_icon": "\udb81\ude2c ",
             "cherry_pick_icon": "\ue29b ",
             "disable_with_jj": true,
             "fetch_status": true,

@@ -110,7 +110,7 @@ return {
           {
             function()
               if vim.bo.modified then
-                return ""
+                return ""
               end
               return ''
             end,
@@ -134,7 +134,7 @@ return {
           -- git branch
           {
             'branch',
-            icon = '',
+            icon = '\u{f062c}',
             icons_enabled = true,
             padding = { left = 1, right = 0},
             color = inner('Comment')
@@ -144,7 +144,7 @@ return {
             function()
               local git_status = vim.b.gitsigns_status_dict
               if git_status then
-                return string.format('[ +%d ~%d -%d ]', git_status.added or 0, git_status.changed or 0,
+                return string.format(' +%d ~%d -%d', git_status.added or 0, git_status.changed or 0,
                   git_status.removed or 0)
               end
               return ''
@@ -161,7 +161,11 @@ return {
           },
           {
             'lsp_status',
-            icon = '󰒋',
+            icon = '',
+            symbols = {
+              done = '',
+              separator = '+'
+            },
             color = inner('Comment'),
           },
           {

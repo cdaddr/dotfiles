@@ -44,3 +44,5 @@ alias_reminder() {
 
 alias_reminder "du" "dua"
 alias_reminder "grep" "rg"
+
+# [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"

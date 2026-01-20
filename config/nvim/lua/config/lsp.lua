@@ -66,6 +66,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition, {buffer = true, desc = "Type definition"})
     vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, {buffer = true, desc = "References"})
     vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, {noremap = true, buffer = true, desc = "Diagnostic float"})
+    vim.keymap.set('n', '<leader>K', vim.diagnostic.open_float, {noremap = true, buffer = true, desc = "Diagnostic float"})
     for _, key in ipairs({'<leader>lE', '<F2>'}) do
       vim.keymap.set('n', key, function()
         vim.diagnostic.setqflist({open = false})

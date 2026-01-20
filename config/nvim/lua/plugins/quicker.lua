@@ -5,6 +5,7 @@ return {
   opts = {
     on_qf = function()
       vim.keymap.set('n', '<leader>q', function() require 'quicker'.close() end, {desc = "Close quickfix", buffer = true})
+      vim.keymap.set('n', 'q', function() require 'quicker'.close() end, {desc = "Close quickfix", buffer = true})
       vim.keymap.set('n', '<f2>', function() require 'quicker'.close() end, {desc = "Close quickfix", buffer = true})
     end
   },

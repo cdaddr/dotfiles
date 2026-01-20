@@ -11,11 +11,19 @@ return {
 
     require('mini.splitjoin').setup{}
 
+    -- local make_pick = function(key, fn, desc)
+    --   vim.keymap.set('n', key, fn, {desc = desc})
+    -- end
+    -- local pick = require('mini.pick')
+    -- pick.setup()
+    -- make_pick('<leader>p', pick.builtin.files, "Pick files")
+
     local win_config = function() 
       local pad = vim.o.cmdheight + 1
       return { anchor = 'SE', col = vim.o.columns, row = vim.o.lines - pad }
     end
     require('mini.notify').setup{
+      lsp_progress = { enable = false },
       window = {
         config = win_config
       }
@@ -25,13 +33,13 @@ return {
 
     require('mini.surround').setup{
       mappings = {
-        add = 'mS', -- Add surrounding in Normal and Visual modes
-        delete = 'mD', -- Delete surrounding
-        find = 'mL', -- Find surrounding (to the right)
-        find_left = 'mH', -- Find surrounding (to the left)
-        highlight = 'mM', -- Highlight surrounding
-        replace = 'mR', -- Replace surrounding
-        update_n_lines = 'mN', -- Update `n_lines`
+        add = 'ys', -- Add surrounding in Normal and Visual modes
+        delete = 'yd', -- Delete surrounding
+        find = 'yl', -- Find surrounding (to the right)
+        find_left = 'yh', -- Find surrounding (to the left)
+        highlight = 'ym', -- Highlight surrounding
+        replace = 'yc', -- Replace surrounding
+        update_n_lines = 'yn', -- Update `n_lines`
 
         suffix_last = 'l', -- Suffix to search with "prev" method
         suffix_next = 'n', -- Suffix to search with "next" method

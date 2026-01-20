@@ -80,7 +80,7 @@ return {
       icons = {
         mappings = false,
         breadcrumb = "",
-        separator = "⇒", -- symbol used between a key and it's label
+        separator = "⇒",
         group = "+",
       },
 
@@ -253,6 +253,7 @@ return {
             input = {
               keys = {
                 ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
+                ["<s-d-cr>"] = { "edit_split", mode = { "i", "n" } },
                 ["<m-K>"] = { "history_back", mode = { "i", "n" } },
                 ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
                 ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
@@ -299,7 +300,7 @@ return {
       { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
       { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
-      { "<leader>gn", function() Snacks.notifier.show_history() end, desc = "Notification History" },
+      { "<leader>gn", function() require'mini.notify'.show_history() end, desc = "Notification History" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       -- search

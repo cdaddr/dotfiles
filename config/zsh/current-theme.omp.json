@@ -54,12 +54,12 @@
           "foreground": "p:path",
           "style": "plain",
           "type": "text",
-          "template": " {{ .Env.PWD }} "
+          "template": " {{ .Env.PWD }} "
         },
         {
           "foreground": "p:accent",
           "options": {
-            "branch_icon": " ",
+            "branch_icon": "󰘬 ",
             "cherry_pick_icon": " ",
             "disable_with_jj": true,
             "fetch_status": true,

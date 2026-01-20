@@ -1,6 +1,9 @@
 -- Import the wezterm module
 local wezterm = require 'wezterm'
+local theme = require 'theme'
 local config = wezterm.config_builder()
+
+local colors = theme.colors
 
 local MAX_TAB_WIDTH = 48
 
@@ -8,37 +11,41 @@ config.tab_max_width = MAX_TAB_WIDTH
 config.initial_cols = 160
 config.initial_rows=48
 
-local lightdark = 'light'
-local home = os.getenv('HOME')
-if home then
-  local f = io.open('/Users/brian/.config/lightdark')
-  if f then
-    lightdark = f:read('*l')
-  end
-end
--- print(io.open('/Users/brian/.config/lightdark'))
+config.inactive_pane_hsb = {
+  saturation = 0.9,
+  brightness = 0.5,
+}
 
-if lightdark == 'light' then
-  config.color_scheme = 'Catppuccin Latte'
-else
-  config.color_scheme = 'Catppuccin Macchiato'
-end
-config.font_size = 18.0
+-- Use theme from generated config
+config.color_scheme = theme.wezterm
+config.default_cursor_style = 'BlinkingBar'
+config.cursor_thickness = 2
+config.cursor_blink_ease_in = 'Constant'
+config.cursor_blink_ease_out = 'Constant'
+config.cursor_blink_rate = 350
+
+config.font_size = 20.0
+
+-- Iosevka is kinda nice
+-- config.harfbuzz_features = { "cv01=2", "cv02=1", "cv03=1", "cv04=7", "cv05=5", "cv06=3", "cv07=2", "cv08=2", "cv09=3", "cv10=2", "cv20=1", "cv26=4", "cv54=8", "cv53=2", "calt=0", "dlig=0" }
+-- config.font = wezterm.font_with_fallback{{ family = 'Iosevka' }}
+
+-- abcdefghijklmnoqrstuvwxyz 1234567890 ilI1 oO0
+-- != == >= <= -> <-
+-- ABCDEFGHIJKLMNOQRSTUVWXYZ
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
--- 1234567890
 config.font = wezterm.font_with_fallback{
   {
     family = 'TX-02',
-    stretch = 'SemiCondensed',
-    weight = 300
+    stretch = 'Condensed',
+    weight = 500
   },
   {
-    family = 'JetBrainsMono Nerd Font Mono',
-    weight = 300,
+    family = 'Symbols Nerd Font Mono',
+    weight = "Regular",
+    scale = 0.8
   }
 }
--- config.use_cap_height_to_scale_fallback_fonts = true
-
 -- config.use_resize_increments = true
 config.window_close_confirmation = "NeverPrompt"
 config.window_background_opacity = 1.00
@@ -55,27 +62,31 @@ config.show_new_tab_button_in_tab_bar = false
 config.enable_scroll_bar = false
 
 wezterm.on('update-status', function(window)
-	-- Grab the utf8 character for the "powerline" left facing
-	-- solid arrow.
-	local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
-	-- Grab the current window's configuration, and from it the
-	-- palette (this is the combination of your chosen colour scheme
-	-- including any overrides).
-	local color_scheme = window:effective_config().resolved_palette
-	local bg = color_scheme.background
-	local fg = color_scheme.foreground
-
-  local date = wezterm.strftime '%Y-%m-%d %I:%M:%S'
+  local date = wezterm.strftime '%Y-%m-%d'
+  local time = wezterm.strftime '%I:%M:%S'
+  local symbol_color = colors.primary
+  local text_color = colors.accent
 
 	window:set_right_status(wezterm.format({
-		-- First, we draw the arrow...
-		{ Background = { Color = 'none' } },
-		{ Foreground = { Color = bg } },
-		{ Text = SOLID_LEFT_ARROW },
-		-- Then we draw our text
-		{ Background = { Color = bg } },
-		{ Foreground = { Color = fg } },
-		{ Text = ' ' .. date .. ' ' .. wezterm.hostname() .. ' ' },
+		{ Background = { Color = colors.bg_dark } },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xeab0) }, -- 
+
+    { Foreground = { Color = text_color } },
+		{ Text = ' ' .. date .. '  '  },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xf017) }, -- 
+
+    { Foreground = { Color = text_color } },
+    { Text = ' ' .. time .. '  ' },
+
+    { Foreground = { Color = symbol_color } },
+    { Text = utf8.char(0xf06f3) }, -- 
+
+    { Foreground = { Color = text_color } },
+    { Text = ' ' .. wezterm.hostname() .. '  ' },
 	}))
 end)
 
@@ -101,39 +112,18 @@ function tab_title(tab_info)
   return title
 end
 
-local TABBAR = '#1e2030'
-
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local GRAY, DARKGRAY, LIGHTGRAY, OVERLAY, SURFACE
   local palette = {
-    rosewater = "#f4dbd6",
-    flamingo = "#f0c6c6",
-    pink = "#f5bde6",
-    mauve = "#c6a0f6",
-    red = "#ed8796",
-    maroon = "#ee99a0",
-    peach = "#f5a97f",
-    yellow = "#eed49f",
-    green = "#a6da95",
-    teal = "#8bd5ca",
-    sky = "#91d7e3",
-    sapphire = "#7dc4e4",
-    blue = "#8aadf4",
-    lavender = "#b7bdf8",
-    text = "#cad3f5",
-    subtext1 = "#b8c0e0",
-    subtext0 = "#a5adcb",
-    overlay2 = "#939ab7",
-    overlay1 = "#8087a2",
-    overlay0 = "#6e738d",
-    surface2 = "#5b6078",
-    surface1 = "#494d64",
-    surface0 = "#363a4f",
-    base = "#24273a",
-    mantle = "#1e2030",
-    crust = "#181926",
-    black = "#000000",
-    none = TABBAR
+    primary = colors.primary,
+    accent = colors.accent,
+    muted = colors.muted,
+    error = colors.error,
+    fg_inverse = colors.fg_inverse,
+    bg_light = colors.bg_light,
+    bg_lighter = colors.bg_lighter,
+    bg = colors.bg,
+    bg_dark = colors.bg_dark,
+    none = colors.bg_dark
   }
 
   LOWER_LEFT = '\u{231D}'
@@ -192,16 +182,16 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
 
   local bg_tab, fg_tab, bg_number, fg_border
   if tab.is_active then
-    bg_tab = bg(palette.lavender)
-    fg_tab = fg(palette.black)
-    bg_number = bg(palette.blue)
-    fg_border = fg(palette.lavender)
+    bg_tab = bg(palette.accent)
+    fg_tab = fg(palette.fg_inverse)
+    bg_number = bg(palette.primary)
+    fg_border = fg(palette.accent)
 
   else
-    bg_tab = bg(palette.surface0)
-    fg_tab = fg(palette.overlay2)
-    bg_number = bg(palette.surface1)
-    fg_border = fg(palette.surface2)
+    bg_tab = bg(palette.bg_light)
+    fg_tab = fg(palette.muted)
+    bg_number = bg(palette.bg_light)
+    fg_border = fg(palette.bg_lighter)
   end
 
   c(bg_number, fg_border, text(LEFT_BORDER))
@@ -237,56 +227,84 @@ end)
 config.use_fancy_tab_bar = false
 config.mouse_wheel_scrolls_tabs = false
 config.swallow_mouse_click_on_window_focus = true
-config.underline_position = "-8"
-config.underline_thickness = "1px"
+config.swallow_mouse_click_on_pane_focus = true
 
 config.quit_when_all_windows_are_closed = false
 
+config.enable_kitty_keyboard = true
 config.keys = {}
--- map CMD+letter to <Space>w<letter> so I can remap them in nvim
--- wezterm prefix is <leader>wz, matching my nvim config
--- this only performed if the active process is neovim
-local letter = string.byte("A")
-while letter <= string.byte("z") do
-  local char = string.char(letter)
-  table.insert(config.keys,
-    { mods = "CMD",
-      key = char,
-      action = wezterm.action_callback(function(window, pane)
-        local process = pane:get_foreground_process_info()
-        if process and process.name and process.name:find("nvim") then
-          window:perform_action(
-            wezterm.action.Multiple {
-              wezterm.action.SendKey { key = 'Space' },
-              wezterm.action.SendKey { key = 'w' },
-              wezterm.action.SendKey { key = 'z' },
-              wezterm.action.SendKey { key = char }},
-          pane)
-        end
-      end)
-    })
-  letter = letter + 1
-end
 
 local keys = {
+  { mods = 'NONE', key = 'Delete', action = wezterm.action.SendKey{ key = "Delete" }},
+  { mods = 'NONE', key = 'Escape', action = wezterm.action.SendKey{ key = "Escape" }},
   -- home/end
 	{ mods = 'CMD', key = "LeftArrow", action = wezterm.action.SendKey { key = 'Home', } },
 	{ mods = 'CMD', key = "RightArrow", action = wezterm.action.SendKey { key = 'End', } },
 
   -- split
-	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right' } },
-	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down' } },
+	{ mods = 'CMD', key = "d", action = wezterm.action.SplitPane { direction = 'Right', size = { Percent = 25 } } },
+	{ mods = 'CMD', key = "D", action = wezterm.action.SplitPane { direction = 'Down', size = { Percent = 25 } } },
+	{ mods = 'CMD', key = "\\", action = wezterm.action.SplitPane { direction = 'Right' } },
+	{ mods = 'CMD', key = "-", action = wezterm.action.SplitPane { direction = 'Down' } },
   { mods = 'CMD', key = "t", action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
 
+  -- toggle zoom for output pane (bottom/right pane, only works with exactly 2 panes)
+  { mods = 'CMD', key = "z", action = wezterm.action_callback(function(window, pane)
+    local tab = window:active_tab()
+    local panes = tab:panes_with_info()
+
+    if #panes ~= 2 then
+      window:toast_notification('wezterm', 'Zoom toggle requires exactly 2 panes', nil, 1000)
+      return
+    end
+
+    -- Determine if horizontal or vertical split
+    local is_horizontal = panes[1].top ~= panes[2].top
+
+    -- Find the output pane (bottom-most for horizontal, right-most for vertical)
+    local output_pane, other_pane
+    if is_horizontal then
+      if panes[1].top > panes[2].top then
+        output_pane = panes[1]
+        other_pane = panes[2]
+      else
+        output_pane = panes[2]
+        other_pane = panes[1]
+      end
+    else
+      if panes[1].left > panes[2].left then
+        output_pane = panes[1]
+        other_pane = panes[2]
+      else
+        output_pane = panes[2]
+        other_pane = panes[1]
+      end
+    end
+
+    if output_pane.is_zoomed then
+      -- Output pane is zoomed, unzoom and switch to other pane
+      window:perform_action(wezterm.action.TogglePaneZoomState, output_pane.pane)
+      other_pane.pane:activate()
+    else
+      -- Switch to output pane and zoom it
+      output_pane.pane:activate()
+      window:perform_action(wezterm.action.TogglePaneZoomState, output_pane.pane)
+    end
+  end) },
+
   -- wezterm defaults we want to keep
-  { mods = 'CMD', key = 'c', action = wezterm.action.CopyTo 'Clipboard' },
-  { mods = 'CMD', key = 'v', action = wezterm.action.PasteFrom 'Clipboard' },
-  { mods = 'CMD', key = 'n', action = wezterm.action.SpawnWindow },
-  { mods = 'CMD', key = 'r', action = wezterm.action.ReloadConfiguration },
-  { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
-  { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
-  { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
-  { mods = 'CMD', key = 'f', action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
+  -- { mods = 'CMD', key = 'c', action = wezterm.action.CopyTo 'Clipboard' },
+  -- { mods = 'CMD', key = 'v', action = wezterm.action.PasteFrom 'Clipboard' },
+  -- { mods = 'CMD', key = 'n', action = wezterm.action.SpawnWindow },
+  -- { mods = 'CMD', key = 'r', action = wezterm.action.ReloadConfiguration },
+  -- { mods = 'CMD', key = 'w', action = wezterm.action.CloseCurrentTab{ confirm = true } },
+  -- { mods = 'CMD', key = '{', action = wezterm.action.ActivateTabRelative(-1) },
+  -- { mods = 'CMD', key = '}', action = wezterm.action.ActivateTabRelative(1) },
+  -- { mods = 'CMD', key = 'f', action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
+  { mods = 'CMD', key = 'f', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD|SHIFT', key = 'f', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD', key = 'F', action = wezterm.action.DisableDefaultAssignment},
+  { mods = 'CMD|SHIFT', key = 'F', action = wezterm.action.DisableDefaultAssignment},
 
   -- command palette
 	{ mods = 'CMD|SHIFT', key = "P", action = wezterm.action.ActivateCommandPalette },
@@ -321,8 +339,14 @@ end
 
 config.colors = {
   tab_bar = {
-    background = TABBAR
+    background = colors.bg_dark,
+    inactive_tab_hover = {
+      bg_color = colors.bg_light,
+      fg_color = colors.muted,
+      italic = false,
+    },
   },
 }
+config.debug_key_events = true
 
 return config

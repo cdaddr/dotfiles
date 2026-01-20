@@ -8,22 +8,94 @@ vim.o.splitright = true
 vim.o.undofile = true
 vim.o.showmatch = true
 vim.o.cursorline = true
+vim.o.cursorlineopt = 'both'
 vim.o.winheight = 3
 vim.o.winminheight = 3
 vim.o.scrolloff = 5
 vim.o.suffixesadd = ".md"
-vim.o.signcolumn = "yes:2"
 vim.o.timeoutlen = 1000
 vim.o.mouse = "a"
 vim.o.breakindent = true
 vim.o.title = true
 vim.o.titlestring = "%t - Nvim"
+vim.o.showmode = false
+vim.o.ignorecase = true
+vim.o.smartcase = true
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append {'unnamedplus'}
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+vim.opt.laststatus = 0
+
+-- _G.FoldColumn = function()
+--   local foldsigns = {
+--     open = '-',
+--     close = '+',
+--     seps = { '┊', '┆', },
+--   }
+--   local lnum = vim.v.lnum
+--   local foldlevel = vim.fn.foldlevel(vim.v.lnum)
+--   local prev_foldlevel = lnum > 1 and vim.fn.foldlevel(lnum - 1) or 0
+--
+--   local foldtext = ' '
+--   if foldlevel > 0 then
+--     if vim.fn.foldclosed(vim.v.lnum) == lnum then
+--       foldtext = foldsigns.open
+--     elseif foldlevel > prev_foldlevel then
+--       foldtext = foldsigns.close
+--     else
+--       foldtext = foldsigns.seps[foldlevel] or foldsigns.seps[#foldsigns.seps]
+--     end
+--   end
+--   return foldtext
+-- end
+-- _G.Signs = function()
+--   local signs = vim.fn.sign_getplaced(vim.api.nvim_get_current_buf(), {lnum = vim.v.lnum})[1].signs
+--   if #signs > 0 then
+--     return vim.fn.sign_getdefined(signs[1].name)[1].text or ' '
+--   end
+--   return ' '
+-- end
+
+-- vim.opt.signcolumn="auto:1"
+-- vim.opt.statuscolumn = '%{v:lua.Signs()}%#FoldColumn#%{v:lua.FoldColumn()}%#LineNr#%{v:virtnum < 0 ? "↳" : v:lnum}'
+vim.opt.foldtext = ''
+
+-- Folding defaults (treesitter as fallback)
+local function formatFold(txt)
+  txt = txt:gsub('%s+', '')
+  if #txt > 16 then
+    txt = txt:sub(1,4)
+  end
+  return txt
+end
+
+function _G.FoldText()
+  local line = formatFold(vim.fn.getline(vim.v.foldstart))
+  local line_end = formatFold(vim.fn.getline(vim.v.foldend+1))
+  local count = vim.v.foldend - vim.v.foldstart
+  local icon = ''
+
+  return string.format('%s %s … %s (%d lines)', icon, (line or 'Fold'), line_end, count)
+end
+vim.opt.foldtext = "v:lua.FoldText()"
+
+-- vim.api.nvim_create_autocmd({ "FileType" }, {
+--   callback = function()
+--     local parser_installed = pcall(vim.treesitter.get_parser, bufnr, parser_name)
+--     if parser_installed then
+--       vim.opt.foldmethod = "expr"
+--       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+--     else
+--       vim.opt.foldmethod = "syntax"
+--     end
+--   end,
+-- })
+
 vim.opt.foldenable = true
 vim.opt.foldlevel = 99
-vim.opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
+-- vim.opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
+
 vim.go.background = "dark"
 vim.opt.termguicolors = true
 vim.opt.relativenumber = false
+vim.opt.exrc = true

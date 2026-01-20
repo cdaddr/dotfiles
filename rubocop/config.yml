@@ -1,0 +1,7 @@
+# disable function lines warning
+
+Layout/LineLength:
+  Max: 99
+
+Metrics:
+  Enabled: false

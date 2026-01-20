@@ -1,0 +1,115 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "primary": "#7E9CD8",
+    "path": "#D27E99",
+    "accent": "#957FB8",
+    "muted": "#54546D",
+    "error": "#E82424",
+    "fg": "#DCD7BA",
+    "fg_inverse": "#16161D",
+    "bg": "#1F1F28",
+    "bg_dark": "#16161D",
+    "bg_light": "#363646",
+    "bg_lighter": "#2A2A37",
+    "comment": "#727169",
+    "green": "#76946A",
+    "peach": "#C8C093",
+    "mauve": "#957FB8",
+    "red": "#E82424",
+    "text": "#DCD7BA",
+    "yellow": "#C0A36E",
+    "maroon": "#C34043"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "template": "\u0000"
+        }
+      ],
+      "newline": true,
+      "force": true
+    },
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{.Icon}}",
+          "type": "os"
+        },
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
+          "type": "session"
+        },
+        {
+          "foreground": "p:path",
+          "style": "plain",
+          "type": "text",
+          "template": " {{ .Env.PWD }} "
+        },
+        {
+          "foreground": "p:accent",
+          "options": {
+            "branch_icon": "󰘬 ",
+            "cherry_pick_icon": " ",
+            "disable_with_jj": true,
+            "fetch_status": true,
+            "fetch_push_status": true,
+            "fetch_upstream_icon": false,
+            "branch_identical_icon": ""
+          },
+          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ .Rebase }}  ",
+          "style": "plain",
+          "type": "git"
+        },
+        {
+          "foreground": "p:muted",
+          "options": {
+            "time_format": "3:04 pm"
+          },
+          "style": "plain",
+          "template": " {{ .CurrentDate | date .Format }}",
+          "type": "time"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "segments": [
+        {
+          "foreground": "p:accent",
+          "options": {
+            "home_icon": "󰜥",
+            "folder_icon": "…",
+            "style": "folder",
+            "max_depth": 1
+          },
+          "style": "plain",
+          "template": "{{ .Path }} ",
+          "type": "path"
+        },
+        {
+          "background": "transparent",
+          "style": "plain",
+          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent></>",
+          "type": "text",
+          "force": true
+        }
+      ],
+      "alignment": "left",
+      "type": "prompt",
+      "newline": true
+    }
+  ],
+  "final_space": true,
+  "version": 3
+}

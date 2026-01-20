@@ -1,12 +1,22 @@
 [core]
 	excludesfile = ~/.gitignore
 	abbrev = auto
-  pager = moor
+  pager = delta
 	autocrlf = input
+	preloadindex = true
+	fscache = true
+	untrackedCache = true
   # pager = nvim -R -c 'set filetype=git' -
   # pager = less -FRSX
 ; [pager]
 ;   diff = nvim -R -c 'set filetype=git diff' -
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true
+  side-by-side = true
+  line-numbers = true
+  syntax-theme = zenburn
 [color]
 	status = auto
 	branch = auto
@@ -93,3 +103,8 @@
 
 [url "https://github.com/"]
 	insteadOf = git://github.com/
+[maintenance]
+	auto = true
+	strategy = incremental
+[feature]
+	manyFiles = true

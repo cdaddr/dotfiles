@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {},
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "template": "\u0000"
+        }
+      ],
+      "newline": true,
+      "force": true
+    },
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{.Icon}}",
+          "type": "os"
+        },
+        {
+          "foreground": "p:primary",
+          "style": "plain",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
+          "type": "session"
+        },
+        {
+          "foreground": "p:path",
+          "style": "plain",
+          "type": "text",
+          "template": "\ueaf7 {{ .Env.PWD }} "
+        },
+        {
+          "foreground": "p:accent",
+          "options": {
+            "branch_icon": "\udb81\ude2c ",
+            "cherry_pick_icon": "\ue29b ",
+            "disable_with_jj": true,
+            "fetch_status": true,
+            "fetch_push_status": true,
+            "fetch_upstream_icon": false,
+            "branch_identical_icon": ""
+          },
+          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }}  ",
+          "style": "plain",
+          "type": "git"
+        },
+        {
+          "foreground": "p:muted",
+          "options": {
+            "time_format": "3:04 pm"
+          },
+          "style": "plain",
+          "template": "\uf43a {{ .CurrentDate | date .Format }}",
+          "type": "time"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "segments": [
+        {
+          "foreground": "p:accent",
+          "options": {
+            "home_icon": "󰜥",
+            "folder_icon": "…",
+            "style": "folder",
+            "max_depth": 1
+          },
+          "style": "plain",
+          "template": "{{ .Path }} ",
+          "type": "path"
+        },
+        {
+          "background": "transparent",
+          "style": "plain",
+          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent>\uf101</>",
+          "type": "text",
+          "force": true
+        }
+      ],
+      "alignment": "left",
+      "type": "prompt",
+      "newline": true
+    }
+  ],
+  "final_space": true,
+  "version": 3
+}

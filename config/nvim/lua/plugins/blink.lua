@@ -13,16 +13,16 @@ return {
 					cmp.show({ providers = { "snippets" } })
 				end,
 			},
-			["<C-b>"] = {
-				function(cmp)
-					cmp.show({ providers = { "buffer" } })
-				end,
-			},
-			["<C-f>"] = {
-				function(cmp)
-					cmp.show({ providers = { "path" } })
-				end,
-			},
+			-- ["<C-b>"] = {
+			-- 	function(cmp)
+			-- 		cmp.show({ providers = { "buffer" } })
+			-- 	end,
+			-- },
+			-- ["<C-f>"] = {
+			-- 	function(cmp)
+			-- 		cmp.show({ providers = { "path" } })
+			-- 	end,
+			-- },
 			["<C-e>"] = { "hide" },
 			["<C-y>"] = { "select_and_accept" },
 			-- ['<CR>'] = { 'accept', 'fallback' },
@@ -73,24 +73,21 @@ return {
 		},
 
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
+			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+      providers = {
+        lazydev = {
+          name = "LazyDev",
+          module = "lazydev.integrations.blink",
+          score_offset = 100,
+        },
+        lsp = {
+          fallbacks = {}
+        },
+      },
 		},
 
 		cmdline = {
 			enabled = false,
-			-- completion = {
-			--   menu = {
-			--     auto_show = true
-			--   },
-			--   list = {
-			--     selection = { preselect = true, auto_insert = true},
-			--   },
-			--   ghost_text = { enabled = true },
-			-- },
-			-- keymap = {
-			--   ['<tab>'] = { 'show', 'select_next', },
-			--   ['<c-l>'] = { function(cmd) cmd.accept(); cmd.show(); end },
-			-- },
 		},
 
 		fuzzy = {
@@ -102,5 +99,5 @@ return {
 			},
 		},
 	},
-	opts_extend = { "sources.default" },
+	-- opts_extend = { "sources.default" },
 }

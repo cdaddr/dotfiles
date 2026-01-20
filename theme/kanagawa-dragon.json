@@ -1,0 +1,30 @@
+{
+  "colors": {
+    "primary": "#8EA4A2",
+    "path": "#A292A3",
+    "accent": "#658594",
+    "muted": "#727169",
+    "error": "#C4746E",
+    "fg": "#DCD7BA",
+    "fg_inverse": "#16161D",
+    "bg": "#1F1F28",
+    "bg_dark": "#16161D",
+    "bg_light": "#2A2A37",
+    "bg_lighter": "#2B2B34",
+    "comment": "#716E61",
+    "green": "#8A9A7B",
+    "peach": "#B6927B",
+    "mauve": "#A292A3",
+    "red": "#C4746E",
+    "text": "#DCD7BA",
+    "yellow": "#C0A36E",
+    "maroon": "#C4746E"
+  },
+  "wezterm": "Kanagawa Dragon (Gogh)",
+  "nvim": "kanagawa-dragon",
+  "lualine": "kanagawa",
+  "vivid": "tokyonight-night",
+  "eza": "one_dark",
+  "moor": "tokyonight-night",
+  "ghostty": "Kanagawa Wave"
+}

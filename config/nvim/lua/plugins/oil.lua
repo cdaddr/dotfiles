@@ -9,6 +9,10 @@ return {
       "mtime",
       "icon",
     },
+    confirmation = {
+      border = "single",
+      win_options = { winblend = 0 },
+    },
     constrain_cursor = "name",
     watch_for_changes = true,
     keymaps = {

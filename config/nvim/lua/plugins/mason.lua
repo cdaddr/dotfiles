@@ -1,20 +1,19 @@
 return {
   {
-    "mason-org/mason-lspconfig.nvim",
+    "mason-org/mason.nvim",
+    opts = {
+      -- ensure_installed = {
+      --   "lua_ls",
+      --   "prettier",
+      --   "sql-formatter",
+      --   "stylua",
+      --   "svelte-language-server",
+      --   "tailwindcss-language-server",
+      --   "vtsls",
+      -- }
+    },
     dependencies = {
-      { "mason-org/mason.nvim", opts = {} },
       "neovim/nvim-lspconfig",
     },
-    opts = {
-      automatic_enable = true,
-    },
-    ensure_installed = {
-      "prettier",
-      "sql-formatter",
-      "stylua",
-      "svelte-language-server",
-      "tailwindcss-language-server",
-      "vtsls",
-    }
   },
 }

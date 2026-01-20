@@ -271,5 +271,5 @@ if (isIdeStartup) {
 }
 
 // Show loading message
-val notification = Notification("Harpoon", "Harpoon", "Harpoon Live Plugin loaded!", NotificationType.INFORMATION)
-notification.notify(null)
+// val notification = Notification("Harpoon", "Harpoon", "Harpoon Live Plugin loaded!", NotificationType.INFORMATION)
+// notification.notify(null)

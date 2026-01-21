@@ -6,6 +6,7 @@ return {
   opts = {
     keymap = {
       preset = "none",
+      ["<Tab>"] = { "accept", "snippet_forward", "fallback" },
       ["<S-Tab>"] = { "show", "accept" },
       ["<C-space>"] = { "show", "accept" },
       ["<C-s>"] = {
@@ -39,12 +40,6 @@ return {
 
       ["<S-up>"] = { "scroll_documentation_up", "fallback" },
       ["<S-down>"] = { "scroll_documentation_down", "fallback" },
-
-      ["<Tab>"] = { "accept", "snippet_forward", "fallback" },
-    },
-
-    appearance = {
-      nerd_font_variant = "mono",
     },
 
     completion = {
@@ -73,7 +68,7 @@ return {
     },
 
     sources = {
-      default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+      default = { "lazydev", "snippets", "lsp", "path", "buffer" },
       providers = {
         lazydev = {
           name = "LazyDev",

@@ -34,13 +34,25 @@ return {
       desc = "Format buffer",
     },
   },
+  init = function()
+    local toggleFormatOnSave = function()
+      vim.b.disable_format_on_save = not vim.b.disable_format_on_save
+      vim.notify((vim.b.disable_format_on_save and "Disabled" or "Enabled") .. " format-on-save")
+    end
+    vim.api.nvim_create_user_command("FormatDisable", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
+    vim.keymap.set("n", "<leader>uf", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
+    vim.keymap.set("n", "<leader>xf", function()
+      require("conform").format()
+    end, { desc = "Format file" })
+  end,
   opts = {
+    undojoin = true,
     formatters_by_ft = {
       lua = { "stylua" },
       python = { "isort", "black" },
       rust = { "rustfmt" },
       sql = { "sql_formatter" },
-      json = { "prettier" },
+      json = { "prettierd", "prettier" },
       javascript = { "prettierd", "prettier", stop_after_first = true },
       typescript = { "prettierd", "prettier", stop_after_first = true },
       svelte = { "prettierd", "prettier", stop_after_first = true },
@@ -49,14 +61,15 @@ return {
     },
     format_on_save = function(bufnr)
       local conform = require("conform")
+      if vim.b.disable_format_on_save then
+        return false
+      end
 
-      -- Check if conform has formatters
       local formatters = conform.list_formatters(bufnr)
       if #formatters > 0 then
         return { timeout_ms = 500 }
       end
 
-      -- Check if LSP can format
       local clients = vim.lsp.get_clients({ bufnr = bufnr })
       for _, client in ipairs(clients) do
         if client.supports_method("textDocument/formatting") then
@@ -64,8 +77,6 @@ return {
         end
       end
 
-      -- No formatter available, skip format on save
-      -- (vim native gq isn't appropriate for auto-save)
       return false
     end,
   },

@@ -1,5 +1,5 @@
 return {
-	"Fildo7525/pretty_hover",
+  "Fildo7525/pretty_hover",
 }
 
 -- function hov(f, arg)

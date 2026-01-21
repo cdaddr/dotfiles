@@ -1,6 +1,6 @@
 " Vim indent file
-" Language:	QED
-" Author:	Brian Carper <brian@carper.ca>
+" Language: QED
+" Author: Brian Carper <brian@carper.ca>
 
 setlocal indentexpr=QEDIndent()
 function! QEDIndent()

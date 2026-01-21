@@ -191,6 +191,7 @@ if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then
 fi
 
 # Syntax highlighting (must be last)
+source "$ZSH_PLUGINS/pnpm.sh"
 source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
 source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
 source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

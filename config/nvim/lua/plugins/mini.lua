@@ -31,9 +31,12 @@ return {
 
     require("mini.pairs").setup({
       mappings = {
-        ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^[({%a\\].", register = { cr = false } },
-        ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
-        ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+        ['"'] = false,
+        ["'"] = false,
+        ["`"] = false,
+        -- ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+        -- ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+        -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
       },
     })
 

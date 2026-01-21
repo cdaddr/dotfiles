@@ -1,3 +1,5 @@
+-- this installs a few themes; current colorscheme is selected in init.lua
+-- ... via theme.rb templating, so don't change it manually
 return {
   {
     "catppuccin/nvim", name = "catppuccin", priority = 1000,
@@ -42,7 +44,8 @@ return {
     config = function()
       require("kanagawa").setup({
         compile = false,
-        commentStyle = { italic = false },
+        commentStyle = { italic = true },
+        keywordStyle = {italic = false },
         overrides = function(colors)
           local theme = colors.theme
           local palette = colors.palette

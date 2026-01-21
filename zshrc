@@ -2,6 +2,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
+export FPATH="$ZSH_PLUGINS/functions:$FPATH"
 
 # Load theme environment variables
 source "$HOME/.dotfiles/config/current-theme-env.zsh"
@@ -121,6 +122,13 @@ zstyle ':completion:*' squeeze-slashes true # remove duplicate slashes in paths
 zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f' # format for group descriptions (duplicate)
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} 'ma=00;30;48;5;111' # override selected item colors to black text
 
+zstyle ':completion:*:*:git:*' script $XDG_CONFIG_HOME/bash/git-completion.bash
+
+
+# zstyle ':completion::complete:git-checkout:argument-rest:headrefs' command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
+# zstyle ':completion::*:git::*' remote-branches false
+# zstyle ':completion::complete:git-checkout:*' tag-refs false
+
 # free up ^Q ^S ^P ^O
 stty stop undef start undef rprnt undef discard undef
 
@@ -183,5 +191,6 @@ if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then
 fi
 
 # Syntax highlighting (must be last)
-source "$XDG_CONFIG_HOME/zsh/current-syntax-highlighting.zsh"
+source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
+source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
 source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

@@ -1,12 +1,13 @@
 -- nvim config
 -- https://github.com/cdaddr/dotfiles
 
-
 -- Load theme from generated config
-local theme_file = vim.fn.expand('~/.dotfiles/config/current-theme.lua')
+local theme_file = vim.fn.expand("~/.dotfiles/config/current-theme.lua")
 local theme = dofile(theme_file)
 _G.theme = theme
-_G.I = function(...) print(vim.inspect(...)) end
+_G.I = function(...)
+  print(vim.inspect(...))
+end
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -24,21 +25,23 @@ local vimrc = aug("vimrc", {})
 local cabbrev = vim.cmd.cabbrev
 local map = vim.keymap.set
 
-vim.diagnostic.config({virtual_text=true, virtual_lines=false, underline=true, signs=false})
+vim.diagnostic.config({ virtual_text = true, virtual_lines = false, underline = true, signs = false })
 
 -- dim diagnostic virtual text
 local function set_dim_diagnostics()
-  local error_hl = vim.api.nvim_get_hl(0, {name = 'DiagnosticError'})
-  local warn_hl = vim.api.nvim_get_hl(0, {name = 'DiagnosticWarn'})
-  local info_hl = vim.api.nvim_get_hl(0, {name = 'DiagnosticInfo'})
-  local hint_hl = vim.api.nvim_get_hl(0, {name = 'DiagnosticHint'})
-  local bg_hl = vim.api.nvim_get_hl(0, {name = 'Normal'})
+  local error_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+  local warn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
+  local info_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
+  local hint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
+  local bg_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
 
   local function dim_color(fg, bg, percent)
     percent = percent or 0.5
-    if not fg or not bg then return nil end
+    if not fg or not bg then
+      return nil
+    end
     local function hex_to_rgb(hex)
-      return tonumber(hex:sub(1,2), 16), tonumber(hex:sub(3,4), 16), tonumber(hex:sub(5,6), 16)
+      return tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16)
     end
     local function rgb_to_hex(r, g, b)
       return string.format("%02x%02x%02x", math.floor(r), math.floor(g), math.floor(b))
@@ -56,10 +59,10 @@ local function set_dim_diagnostics()
   vim.cmd("hi DiagnosticUnderlineWarn gui=undercurl guisp=#" .. dim_color(warn_hl.fg, bg))
   vim.cmd("hi DiagnosticUnderlineInfo gui=undercurl guisp=#" .. dim_color(info_hl.fg, bg))
   vim.cmd("hi DiagnosticUnderlineHint gui=undercurl guisp=#" .. dim_color(hint_hl.fg, bg))
-  vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextError', { fg = tonumber(dim_color(error_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextWarn', { fg = tonumber(dim_color(warn_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextInfo', { fg = tonumber(dim_color(info_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextHint', { fg = tonumber(dim_color(hint_hl.fg, bg), 16) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = tonumber(dim_color(error_hl.fg, bg), 16) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = tonumber(dim_color(warn_hl.fg, bg), 16) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = tonumber(dim_color(info_hl.fg, bg), 16) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = tonumber(dim_color(hint_hl.fg, bg), 16) })
 end
 
 au("ColorScheme", { callback = set_dim_diagnostics })
@@ -82,25 +85,16 @@ au({ "WinEnter", "BufEnter", "BufNewFile" }, {
   desc = "Window crosshair: Restore cursorline and colorcolumn when buffer gains focus",
 })
 
-au({ "BufWritePost" }, {
-	pattern = "init.lua",
-  group = vimrc,
-  callback = function()
-    vim.cmd("source %")
-    vim.schedule(function() vim.cmd.colorscheme(theme.nvim) end)
-  end
-})
-
 au({ "FileType" }, {
-	group = vimrc,
-	pattern = "ruby",
-	command = "setlocal indentkeys-=.",
+  group = vimrc,
+  pattern = "ruby",
+  command = "setlocal indentkeys-=.",
 })
 
 au("TextYankPost", {
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 au("FileType", {
@@ -113,8 +107,8 @@ au("FileType", {
 au("Filetype", {
   pattern = "qf",
   callback = function()
-    vim.keymap.set("n", "<esc>", "<cmd>cclose<cr>", {buffer = true})
-  end
+    vim.keymap.set("n", "<esc>", "<cmd>cclose<cr>", { buffer = true })
+  end,
 })
 
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
@@ -140,19 +134,21 @@ map("i", "<C-l>", "<C-o><C-l>", { silent = true })
 
 map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor" })
 
-map("n", "t", "<cmd>bnext<cr>", {desc = ":bnext"})
+map("n", "t", "<cmd>bnext<cr>", { desc = ":bnext" })
 
-map('n', '<leader>o', '<cmd>Oil<cr>', {desc = "Open Oil"}) -- visual mode reselect pasted text
+map("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open Oil" }) -- visual mode reselect pasted text
 map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
 
-map('n', '<C-w>N', '<cmd>botright new<cr>', { silent = true, desc = "open new split horizontally BOTTOM" })
-map('n', '<C-w><C-N>', '<cmd>botright new<cr>', { silent = true, desc = "open new split horizontally BOTTOM" })
+map("n", "<C-w>N", "<cmd>botright new<cr>", { silent = true, desc = "open new split horizontally BOTTOM" })
+map("n", "<C-w><C-N>", "<cmd>botright new<cr>", { silent = true, desc = "open new split horizontally BOTTOM" })
 
-map('n', '<C-w>v', '<cmd>vnew<cr>', { silent = true, desc = "open new split vertically" })
-map('n', '<C-w><C-v>', '<cmd>vnew<cr>', { silent = true, desc = "open new split vertically" })
+map("n", "<C-w>v", "<cmd>vnew<cr>", { silent = true, desc = "open new split vertically" })
+map("n", "<C-w><C-v>", "<cmd>vnew<cr>", { silent = true, desc = "open new split vertically" })
 
-map('n', '<C-w>V', '<cmd>topleft vnew<cr>', { silent = true, desc = "open new split vertically LEFT" })
-map('n', '<C-w><C-V>', '<cmd>topleft vnew<cr>', { silent = true, desc = "open new split vertically LEFT" })
+map("n", "<C-w>V", "<cmd>topleft vnew<cr>", { silent = true, desc = "open new split vertically LEFT" })
+map("n", "<C-w><C-V>", "<cmd>topleft vnew<cr>", { silent = true, desc = "open new split vertically LEFT" })
+
+map("n", "<leader>P", '"_Dp', { silent = true, desc = "Paste to end of line" })
 
 -- map('t', '<esc>', "<C-\\><C-n>", { noremap = true, silent = true, desc = "Toggle terminal" })
 
@@ -191,13 +187,13 @@ vim.cmd([[
   augroup END
 ]])
 
-au("TermOpen", {pattern = "*", command = [[ startinsert ]] })
+au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
 
 -- close command-line window with <Esc>
 au("CmdwinEnter", {
   callback = function()
-    vim.keymap.set('n', '<Esc>', '<cmd>q<cr>', { buffer = true, silent = true })
-  end
+    vim.keymap.set("n", "<Esc>", "<cmd>q<cr>", { buffer = true, silent = true })
+  end,
 })
 
 -- restore cursor position
@@ -214,10 +210,9 @@ au("BufRead", {
           and last_known_line > 1
           and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
         then
-            vim.api.nvim_feedkeys([[g`"]], "nx", false)
-          end
-        end,
-      })
-    end,
-  })
-
+          vim.api.nvim_feedkeys([[g`"]], "nx", false)
+        end
+      end,
+    })
+  end,
+})

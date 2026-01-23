@@ -8,7 +8,7 @@ vim.o.splitright = true
 vim.o.undofile = true
 vim.o.showmatch = true
 vim.o.cursorline = true
-vim.o.cursorlineopt = 'both'
+vim.o.cursorlineopt = "both"
 vim.o.winheight = 3
 vim.o.winminheight = 3
 vim.o.scrolloff = 5
@@ -22,7 +22,7 @@ vim.o.showmode = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.opt.nrformats:append({ "alpha" })
-vim.opt.clipboard:append {'unnamedplus'}
+vim.opt.clipboard:append({ "unnamedplus" })
 
 vim.opt.laststatus = 0
 
@@ -56,40 +56,30 @@ vim.opt.laststatus = 0
 --   return ' '
 -- end
 
--- vim.opt.signcolumn="auto:1"
+vim.opt.signcolumn = "yes"
 -- vim.opt.statuscolumn = '%{v:lua.Signs()}%#FoldColumn#%{v:lua.FoldColumn()}%#LineNr#%{v:virtnum < 0 ? "↳" : v:lnum}'
-vim.opt.foldtext = ''
+vim.opt.foldtext = ""
 
 -- Folding defaults (treesitter as fallback)
 local function formatFold(txt)
-  txt = txt:gsub('%s+', '')
+  txt = txt:gsub("^%s+", "")
   if #txt > 16 then
-    txt = txt:sub(1,4)
+    txt = txt:sub(1, 16)
   end
   return txt
 end
 
 function _G.FoldText()
-  local line = formatFold(vim.fn.getline(vim.v.foldstart))
-  local line_end = formatFold(vim.fn.getline(vim.v.foldend+1))
+  local line = vim.fn.getline(vim.v.foldstart)
+  local line_end = formatFold(vim.fn.getline(vim.v.foldend + 1))
   local count = vim.v.foldend - vim.v.foldstart
-  local icon = ''
+  --local icon = ""
 
-  return string.format('%s %s … %s (%d lines)', icon, (line or 'Fold'), line_end, count)
+  return string.format("%s  ⋯", (line or "Fold"))
 end
 vim.opt.foldtext = "v:lua.FoldText()"
 
--- vim.api.nvim_create_autocmd({ "FileType" }, {
---   callback = function()
---     local parser_installed = pcall(vim.treesitter.get_parser, bufnr, parser_name)
---     if parser_installed then
---       vim.opt.foldmethod = "expr"
---       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
---     else
---       vim.opt.foldmethod = "syntax"
---     end
---   end,
--- })
+-- foldmethod is set per-buffer in autocmds.lua (treesitter > lsp > syntax)
 
 vim.opt.foldenable = true
 vim.opt.foldlevel = 99

@@ -1,36 +1,37 @@
 return {
   "luukvbaal/statuscol.nvim",
+  init = function()
+    vim.o.fillchars = "eob: ,fold: ,foldopen:+,foldsep:|,foldinner: ,foldclose:󰅀"
+  end,
+
   config = function()
     local builtin = require("statuscol.builtin")
     -- vim.o.foldcolumn = "no"
     -- vim.o.signcolumn = "no"
-    vim.o.fillchars = 'eob: ,fold: ,foldopen:+,foldsep:|,foldinner: ,foldclose:-'
 
     local foldcol = function()
       local foldsigns = {
-        open = '+',
-        close = '–',
-        seps = { '┊', '┆', '│', },
-
-        --     seps = { '┊', '┆', }, -- open fold middle marker , '┃' 
+        closed = "%#SignColumn#▷",
+        opened = "%#StatusColFold#▽",
+        seps = { "%#StatusColFold#┊", "%#StatusColFold#┆", "%#StatusColFold#│" },
       }
       local lnum = vim.v.lnum
       local foldlevel = vim.fn.foldlevel(vim.v.lnum)
       local prev_foldlevel = lnum > 1 and vim.fn.foldlevel(lnum - 1) or 0
 
-      local foldtext = ' '
+      local foldtext = " "
       if foldlevel > 0 then
         if vim.fn.foldclosed(vim.v.lnum) == lnum then
-          foldtext = foldsigns.open
+          foldtext = foldsigns.closed
         elseif foldlevel > prev_foldlevel then
-          foldtext = foldsigns.close
+          foldtext = foldsigns.opened
         else
           foldtext = foldsigns.seps[foldlevel] or foldsigns.seps[#foldsigns.seps]
         end
       end
       return foldtext
     end
-    require'statuscol'.setup({
+    require("statuscol").setup({
       setopt = true,
       segments = {
         {
@@ -39,19 +40,19 @@ return {
           condition = { builtin.not_empty },
         },
         {
-          text = { foldcol, " " },
-          click = "v:lua.ScFa",
-          hl = "FoldColumn",
-          colwidth = 2,
-          maxwidth = 2,
-          condition = { builtin.not_empty },
-        },
-        {
           text = { builtin.lnumfunc, " " },
           condition = { true, builtin.not_empty },
           click = "v:lua.ScLa",
-        }
-      }
+        },
+        {
+          text = { foldcol },
+          click = "v:lua.ScFa",
+          fillchar = "x",
+          colwidth = 1,
+          maxwidth = 1,
+          condition = { builtin.not_empty },
+        },
+      },
     })
-  end
+  end,
 }

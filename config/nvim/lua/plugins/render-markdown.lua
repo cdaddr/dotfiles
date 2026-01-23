@@ -9,17 +9,20 @@ return {
     },
     code = {
       conceal_delimiters = true,
-      border = 'thick',
+      border = "thick",
       inline_pad = 1,
-      language_border = '',
+      language_border = "",
     },
     anti_conceal = {
       ignore = {
         code_border = true,
-      }
+      },
     },
     completions = {
       blink = { enabled = true },
     },
-  }
+    sign = {
+      enabled = false,
+    },
+  },
 }

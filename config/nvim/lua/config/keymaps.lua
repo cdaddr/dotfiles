@@ -11,10 +11,14 @@ map("n", "<C-j>", "<C-w>j", { desc = "select window down <C-w>j" })
 map("n", "<C-k>", "<C-w>k", { desc = "select window up <C-w>k" })
 map("n", "<C-h>", "<C-w>h", { desc = "select window left <C-w>h" })
 map("n", "<C-l>", "<C-w>l", { desc = "select window right <C-w>l" })
-map("i", "<C-j>", "<C-o><C-j>", { desc = "select window down <C-w>j" })
-map("i", "<C-k>", "<C-o><C-k>", { desc = "select window up <C-w>k" })
-map("i", "<C-h>", "<C-o><C-h>", { desc = "select window left <C-w>h" })
-map("i", "<C-l>", "<C-o><C-l>", { desc = "select window right <C-w>l" })
+map("i", "<C-k>", function()
+  Snacks.picker.icons({
+    confirm = function(picker, item)
+      picker:close()
+      vim.api.nvim_put({ item.icon }, "c", false, true)
+    end,
+  })
+end, { desc = "Insert icon" })
 
 map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor" })
 

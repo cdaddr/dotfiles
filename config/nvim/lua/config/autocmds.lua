@@ -1,5 +1,6 @@
 local aug = vim.api.nvim_create_augroup
 local au = vim.api.nvim_create_autocmd
+local util = require("util")
 local vimrc = aug("vimrc", {})
 
 au("WinLeave", {
@@ -83,38 +84,84 @@ local function set_dim_diagnostics()
   local hint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
   local bg_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
 
-  local function dim_color(fg, bg, percent)
-    percent = percent or 0.5
-    if not fg or not bg then
-      return nil
-    end
-    local function hex_to_rgb(hex)
-      return tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16)
-    end
-    local function rgb_to_hex(r, g, b)
-      return string.format("%02x%02x%02x", math.floor(r), math.floor(g), math.floor(b))
-    end
-    local fr, fg_val, fb = hex_to_rgb(string.format("%06x", fg))
-    local br, bg_val, bb = hex_to_rgb(string.format("%06x", bg))
-    local r = br * percent + fr * percent
-    local g = bg_val * percent + fg_val * percent
-    local b = bb * percent + fb * percent
-    return rgb_to_hex(r, g, b)
-  end
-
   local bg = bg_hl.bg or 0x16161D
-  vim.cmd("hi DiagnosticUnderlineError gui=undercurl guisp=#" .. dim_color(error_hl.fg, bg))
-  vim.cmd("hi DiagnosticUnderlineWarn gui=undercurl guisp=#" .. dim_color(warn_hl.fg, bg))
-  vim.cmd("hi DiagnosticUnderlineInfo gui=undercurl guisp=#" .. dim_color(info_hl.fg, bg))
-  vim.cmd("hi DiagnosticUnderlineHint gui=undercurl guisp=#" .. dim_color(hint_hl.fg, bg))
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = tonumber(dim_color(error_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = tonumber(dim_color(warn_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = tonumber(dim_color(info_hl.fg, bg), 16) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = tonumber(dim_color(hint_hl.fg, bg), 16) })
+  vim.cmd("hi DiagnosticUnderlineError gui=undercurl guisp=#" .. util.blend_hex(error_hl.fg, bg, 0.5))
+  vim.cmd("hi DiagnosticUnderlineWarn gui=undercurl guisp=#" .. util.blend_hex(warn_hl.fg, bg, 0.5))
+  vim.cmd("hi DiagnosticUnderlineInfo gui=undercurl guisp=#" .. util.blend_hex(info_hl.fg, bg, 0.5))
+  vim.cmd("hi DiagnosticUnderlineHint gui=undercurl guisp=#" .. util.blend_hex(hint_hl.fg, bg, 0.5))
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = util.blend(error_hl.fg, bg, 0.5) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = util.blend(warn_hl.fg, bg, 0.5) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = util.blend(info_hl.fg, bg, 0.5) })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = util.blend(hint_hl.fg, bg, 0.5) })
 end
 
 au("ColorScheme", { callback = set_dim_diagnostics })
 set_dim_diagnostics()
+
+-- muted fold column for statuscol
+local function set_muted_fold_column()
+  local linenr_hl = vim.api.nvim_get_hl(0, { name = "LineNr" })
+  local normal_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
+
+  local fg = linenr_hl.fg
+  local bg = normal_hl.bg or 0x16161D
+
+  if fg then
+    vim.api.nvim_set_hl(0, "StatusColFold", {
+      fg = util.blend(fg, bg, 0.5),
+      bg = linenr_hl.bg,
+    })
+  else
+    vim.api.nvim_set_hl(0, "StatusColFold", { link = "FoldColumn" })
+  end
+end
+
+au("ColorScheme", { callback = set_muted_fold_column })
+set_muted_fold_column()
+
+-- folding: treesitter > lsp > syntax
+local function setup_folding(bufnr)
+  local win = vim.fn.bufwinid(bufnr)
+  if win == -1 then return end
+
+  -- try treesitter first
+  local has_parser = pcall(vim.treesitter.get_parser, bufnr)
+  if has_parser then
+    vim.wo[win].foldmethod = "expr"
+    vim.wo[win].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    return
+  end
+
+  -- try LSP folding
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  for _, client in ipairs(clients) do
+    if client.server_capabilities.foldingRangeProvider then
+      vim.wo[win].foldmethod = "expr"
+      vim.wo[win].foldexpr = "v:lua.vim.lsp.foldexpr()"
+      return
+    end
+  end
+
+  -- fallback to syntax
+  vim.wo[win].foldmethod = "syntax"
+end
+
+au("FileType", {
+  group = vimrc,
+  callback = function(args)
+    setup_folding(args.buf)
+  end,
+  desc = "Set up folding: treesitter > lsp > syntax",
+})
+
+au("LspAttach", {
+  group = vimrc,
+  callback = function(args)
+    -- re-evaluate folding when LSP attaches (in case treesitter wasn't available)
+    setup_folding(args.buf)
+  end,
+  desc = "Re-evaluate folding on LSP attach",
+})
 
 -- stop q from starting a macro during hit-enter (:h hit-enter)
 vim.cmd([[

@@ -5,6 +5,34 @@ function M.int_to_hex(int)
   return string.format("#%06x", int)
 end
 
+-- Convert integer color to RGB components
+function M.int_to_rgb(int)
+  return bit.rshift(int, 16), bit.band(bit.rshift(int, 8), 0xFF), bit.band(int, 0xFF)
+end
+
+-- Convert RGB components to integer color
+function M.rgb_to_int(r, g, b)
+  return bit.bor(bit.lshift(r, 16), bit.lshift(g, 8), b)
+end
+
+-- Blend two integer colors together
+-- amount: 0 = all fg, 1 = all bg
+function M.blend(fg, bg, amount)
+  if not fg or not bg then return fg or bg end
+  local fr, fg_g, fb = M.int_to_rgb(fg)
+  local br, bg_g, bb = M.int_to_rgb(bg)
+  local r = math.floor(fr * (1 - amount) + br * amount)
+  local g = math.floor(fg_g * (1 - amount) + bg_g * amount)
+  local b = math.floor(fb * (1 - amount) + bb * amount)
+  return M.rgb_to_int(r, g, b)
+end
+
+-- Blend and return as hex string (for vim.cmd highlight commands)
+function M.blend_hex(fg, bg, amount)
+  local blended = M.blend(fg, bg, amount)
+  return blended and string.format("%06x", blended) or nil
+end
+
 function M.copy_hl(name)
   local hl = vim.api.nvim_get_hl(0, { name = name })
   return vim.tbl_extend('force', hl, {

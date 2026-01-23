@@ -1,8 +1,23 @@
 local unicode_picker = function()
-  local Snacks = require'snacks'
+  local Snacks = require("snacks")
+
   return Snacks.picker({
     title = "Unicode Character",
     format = "text",
+    layout = { preset = "select", hidden = { "preview" } },
+    filter = {
+      -- Transform the pattern before matching: strip U+/0x prefix, lowercase
+      transform = function(picker, filter)
+        local pattern = filter.pattern
+        if pattern and pattern ~= "" then
+          -- Strip U+ or 0x prefix (case-insensitive) and lowercase
+          local normalized = pattern:lower():gsub("^u%+", ""):gsub("^0x", "")
+          if normalized ~= pattern then
+            filter.pattern = normalized
+          end
+        end
+      end,
+    },
     finder = function()
       local items = {}
 
@@ -23,24 +38,31 @@ local unicode_picker = function()
           if name ~= "<control>" and name ~= "" and not name:match("^<.*>$") then
             local codepoint = tonumber(hex_code, 16)
 
-            if (codepoint >= 0x0020 and codepoint <= 0x00FF) or  -- Latin
-              (codepoint >= 0x0370 and codepoint <= 0x04FF) or  -- Greek, Cyrillic
-              (codepoint >= 0x0590 and codepoint <= 0x06FF) or  -- Hebrew, Arabic
-              (codepoint >= 0x2000 and codepoint <= 0x2BFF) or  -- General Punctuation to Misc Symbols
-              (codepoint >= 0x3000 and codepoint <= 0x30FF) or  -- CJK, Hiragana, Katakana
-              (codepoint >= 0x1F000 and codepoint <= 0x1F6FF) then -- Emoticons, symbols
-
+            if
+              (codepoint >= 0x0020 and codepoint <= 0x00FF) -- Latin
+              or (codepoint >= 0x0370 and codepoint <= 0x04FF) -- Greek, Cyrillic
+              or (codepoint >= 0x0590 and codepoint <= 0x06FF) -- Hebrew, Arabic
+              or (codepoint >= 0x2000 and codepoint <= 0x2BFF) -- General Punctuation to Misc Symbols
+              or (codepoint >= 0x3000 and codepoint <= 0x30FF) -- CJK, Hiragana, Katakana
+              or (codepoint >= 0x1F000 and codepoint <= 0x1F6FF) -- Emoticons, symbols
+            then
               local char = vim.fn.nr2char(codepoint)
-              local hex = string.format("U+%04X", codepoint)
+              local hex_upper = string.format("%04X", codepoint)
+              local hex_lower = hex_upper:lower()
+              local hex_display = "U+" .. hex_upper
 
               -- Format: character  hex  name
-              local text = string.format("%s  %s  %s", char, hex, name)
+              local text = string.format("%s  %s  %s", char, hex_display, name)
+
+              -- Search includes bare hex (both cases) and name - no 0x/U+ prefix
+              local search = string.format("%s %s %s", hex_upper, hex_lower, name)
 
               table.insert(items, {
                 value = char,
                 text = text,
+                search = search,
                 codepoint = codepoint,
-                hex = hex,
+                hex = hex_display,
                 name = name,
               })
             end
@@ -55,7 +77,7 @@ local unicode_picker = function()
       picker:close()
       -- Insert the character at cursor position
       local char = selected.value
-      vim.api.nvim_put({char}, 'c', true, true)
+      vim.api.nvim_put({ char }, "c", true, true)
     end,
   })
 end

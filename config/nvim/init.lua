@@ -12,7 +12,7 @@ vim.g.maplocalleader = "\\"
 require("config.opts")
 require("config.lazy")
 require("config.lsp")
-require("config.mappings")
+require("config.keymaps")
 require("config.autocmds")
 
 vim.cmd.colorscheme(theme.nvim)

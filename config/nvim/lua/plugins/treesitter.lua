@@ -1,5 +1,20 @@
 -- modified version of code from this config
 -- https://github.com/fredrikaverpil/dotfiles/blob/main/nvim-fredrik/lua/fredrik/plugins/core/treesitter.lua
+-- NOTES
+-- Custom queries files go in $MYVIMRC/queries, NOT $MYVIMRC/after/queries.  Use `; extends` modeline to
+--   extend files loaded later.
+--
+-- docs: https://tree-sitter.github.io/tree-sitter
+--
+-- finding query files:
+--   :lua= vim.treesitter.query.get_files("sql", "highlights")
+--
+-- The gist: grammar maps nodes => descriptors, colorscheme maps descriptors => highlight groups
+--   sql code `where bar = 123`
+--   => parser gives (where (keyword_where) predicate: (binary_expression left: (field name: (identifier)) right: (literal))))))
+--   => highlights.scm gives (field name: (identifier)) => @variable.member.sql for `bar`
+--   => @variable.member.sql linked to @variable.member (not sure where???)
+--   => colorscheme provides highlight for @variable.member
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -9,9 +24,7 @@ return {
     build = ":TSUpdate",
     ---@class TSConfig
     opts = {
-      -- custom handling of parsers
-      ensure_installed =
-      {
+      ensure_installed = {
         "bash",
         "c",
         "clojure",
@@ -28,6 +41,7 @@ return {
         "jsdoc",
         "json",
         "jsx",
+        "lua",
         "luadoc",
         "markdown",
         "markdown_inline",
@@ -38,6 +52,7 @@ return {
         "rust",
         "scss",
         "scheme",
+        "sql",
         "ssh_config",
         "svelte",
         "toml",
@@ -46,7 +61,7 @@ return {
         "vimdoc",
         "yaml",
         "zsh",
-      }
+      },
     },
     config = function(_, opts)
       -- install parsers from custom opts.ensure_installed
@@ -76,7 +91,7 @@ return {
           local EXCLUDE = { csv = true, tsv = true }
 
           -- Skip if no filetype
-          if filetype == "" or EXCLUDE[filetype]  then
+          if filetype == "" or EXCLUDE[filetype] then
             return
           end
 
@@ -127,9 +142,10 @@ return {
     opts = {
       multiwindow = true,
       max_lines = 2,
-      line_numbers = false,
-      time_scope = 'inner',
-      mode = 'cursor',
+      line_numbers = true,
+      time_scope = "inner",
+      mode = "cursor",
+      separator = "─",
     },
   },
   {
@@ -137,15 +153,80 @@ return {
     branch = "main",
     lazy = false,
     keys = {
-      {"<leader>xs", function() require("nvim-treesitter-textobjects.swap").swap_next "@parameter.inner" end, desc = "Swap with next node", mode = {'n'} },
-      {"<leader>xS", function() require("nvim-treesitter-textobjects.swap").swap_previous "@parameter.inner" end, desc = "Swap with next node", mode = {'n'} },
-      {"af", function() require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects") end, desc = "Select outer function", mode = { "x", "o" },},
-      {"if", function() require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects") end, desc = "Select inner function", mode = { "x", "o" },},
-      {"ac", function() require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects") end, desc = "Select outer class", mode = { "x", "o" },},
-      {"ic", function() require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects") end, desc = "Select inner class", mode = { "x", "o" },},
-      {"as", function() require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals") end, desc = "Select local scope", mode = { "x", "o" },},
+      {
+        "<leader>xs",
+        function()
+          require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
+        end,
+        desc = "Swap with next node",
+        mode = { "x", "o" },
+      },
+      {
+        "<leader>xS",
+        function()
+          require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
+        end,
+        desc = "Swap with next node",
+        mode = { "x", "o" },
+      },
+      {
+        "af",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+        end,
+        desc = "Select outer function",
+        mode = { "x", "o" },
+      },
+      {
+        "if",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+        end,
+        desc = "Select inner function",
+        mode = { "x", "o" },
+      },
+      {
+        "ac",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+        end,
+        desc = "Select outer class",
+        mode = { "x", "o" },
+      },
+      {
+        "ic",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+        end,
+        desc = "Select inner class",
+        mode = { "x", "o" },
+      },
+      {
+        "aa",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@attribute.outer", "textobjects")
+        end,
+        desc = "Select outer attribute",
+        mode = { "x", "o" },
+      },
+      {
+        "ia",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@attribute.inner", "textobjects")
+        end,
+        desc = "Select inner attribute",
+        mode = { "x", "o" },
+      },
+      {
+        "as",
+        function()
+          require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals")
+        end,
+        desc = "Select local scope",
+        mode = { "x", "o" },
+      },
     },
     ---@module "nvim-treesitter-textobjects"
-    opts = { multiwindow = true },
+    opts = { multiwindow = true, lookahead = true },
   },
 }

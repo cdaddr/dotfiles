@@ -122,13 +122,17 @@ set_muted_fold_column()
 -- folding: treesitter > lsp > syntax
 local function setup_folding(bufnr)
   local win = vim.fn.bufwinid(bufnr)
-  if win == -1 then return end
+  if win == -1 then
+    return
+  end
 
   -- try treesitter first
   local has_parser = pcall(vim.treesitter.get_parser, bufnr)
   if has_parser then
     vim.wo[win].foldmethod = "expr"
     vim.wo[win].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<cr>", "za", { desc = "Toggle open/close fold under cursor" })
+
     return
   end
 

@@ -15,6 +15,7 @@ local servers = {
   "taplo", --toml
   -- "djlsp",
   "html",
+  "tailwindcss",
 }
 
 for _, server in ipairs(servers) do
@@ -23,6 +24,10 @@ end
 
 local t = vim.lsp.config["html"].filetypes
 t[#t + 1] = "htmldjango"
+t[#t + 1] = "tailwindcss"
+
+local t = vim.lsp.config["svelte"].filetypes
+t[#t + 1] = "tailwindcss"
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("my.lsp", {}),

@@ -11,7 +11,11 @@ return {
       conceal_delimiters = true,
       border = "thick",
       inline_pad = 1,
+      position = "right",
       language_border = "",
+      highlight_language = "Comment",
+      highlight_border = "Constant",
+      disable_background = true,
     },
     anti_conceal = {
       ignore = {

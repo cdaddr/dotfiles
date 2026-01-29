@@ -1,12 +1,10 @@
-
 {
   "if": {
     "prefix": "if",
-    "body": [
-      "{#if ${1:cond}}",
-      "  ${2}",
-      "{/if}"
-    ]
+    "body": ["{#if ${1:cond}}", "  ${2}", "{/if}"]
+  },
+  "jst": {
+    "prefix": "jst",
+    "body": ["{JSON.stringify(${1})}"]
   }
 }
-

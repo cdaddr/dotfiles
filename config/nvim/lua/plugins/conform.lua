@@ -51,7 +51,7 @@ return {
       lua = { "stylua" },
       python = { "isort", "black" },
       rust = { "rustfmt" },
-      sql = { "sql_formatter" },
+      sql = { "pg_format" },
       json = { "prettierd", "prettier" },
       javascript = { "prettierd", "prettier", stop_after_first = true },
       typescript = { "prettierd", "prettier", stop_after_first = true },

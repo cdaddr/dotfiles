@@ -1,3 +1,4 @@
+-- stylua: ignore start
 local unicode_picker = function()
   local Snacks = require("snacks")
 
@@ -274,11 +275,27 @@ return {
           win = {
             input = {
               keys = {
+                ["<Esc>"] = {
+                  function(picker)
+                    local mode = vim.fn.mode()
+                    if mode == "i" then
+                      local line = vim.api.nvim_get_current_line()
+                      if line == "" then
+                        picker:close()
+                      else
+                        vim.cmd("stopinsert")
+                      end
+                    else
+                      picker:close()
+                    end
+                  end,
+                  mode = { "i", "n" },
+                },
                 ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
                 ["<s-d-cr>"] = { "edit_split", mode = { "i", "n" } },
                 ["<m-K>"] = { "history_back", mode = { "i", "n" } },
                 ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
-                ["<C-p>"] = { "focus_preview", mode = { "i", "n" } },
+                ["<M-p>"] = { "focus_preview", mode = { "i", "n" } },
                 ["<C-o>"] = { "open_in_oil", mode = { "i", "n" } },
               }
             }
@@ -300,7 +317,7 @@ return {
 
       { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent" },
       { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)" },
-      { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep (cwd)" },
+      { "<leader>/", function() Snacks.picker.grep({}) end, desc = "Grep (cwd)" },
       { "<leader>f?", function() Snacks.picker.grep({cwd = vim.fn.expand("%:p:h")}) end, desc = "Grep (buffer dir)" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
       -- find
@@ -412,3 +429,4 @@ return {
     },
   }
 }
+-- stylua: ignore end

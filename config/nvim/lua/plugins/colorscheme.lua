@@ -1,5 +1,6 @@
 -- this installs a few themes; current colorscheme is selected in init.lua
 -- ... via theme.rb templating, so don't change it manually
+local util = require("util")
 return {
   {
     "catppuccin/nvim",
@@ -51,11 +52,16 @@ return {
         overrides = function(colors)
           local palette = colors.palette
           local gutter_bg = palette.sumiInk1
-
+          local gutter_bg = palette.sumiInk1
+          local normal_bg = palette.sumiInk3
           return {
-            NormalFloat = { bg = gutter_bg },
-            FloatBorder = { bg = gutter_bg },
-            FloatTitle = { bg = gutter_bg },
+            NormalFloat = { bg = "none" },
+            FloatBorder = { bg = palette.sumiInk0 },
+            FloatTitle = { bg = "none" },
+            Pmenu = { bg = "none" },
+            PmenuExtra = { bg = "none" },
+            PmenuThumb = { bg = palette.springViolet1 },
+            PmenuSbar = { bg = palette.sumiInk4 },
             Visual = { bold = true },
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
@@ -80,6 +86,10 @@ return {
             -- set their background accordingly if you wish to keep them dark and borderless
             LazyNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             MasonNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
+            SnacksPickerCursorLine = { bg = normal_bg },
+            BlinkCmpMenuBorder = { bg = "none" },
+            TreesitterContextLineNumber = { bg = gutter_bg },
+            TreesitterContextLineNumberBottom = { bg = gutter_bg },
           }
         end,
       })

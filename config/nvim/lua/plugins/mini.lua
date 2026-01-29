@@ -1,3 +1,4 @@
+local util = require("util")
 return {
   "echasnovski/mini.nvim",
   config = function()
@@ -26,6 +27,29 @@ return {
       lsp_progress = { enable = false },
       window = {
         config = win_config,
+      },
+    })
+
+    local hipatterns = require("mini.hipatterns")
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      callback = function()
+        local hi_warning = util.copy_hl("WarningMsg")
+        vim.notify(vim.inspect(hi_warning))
+        vim.api.nvim_set_hl(0, "MiniHipatternsWS", { bg = hi_warning.fg })
+      end,
+      desc = "Setup mini.hipatterns",
+    })
+
+    hipatterns.setup({
+      delay = { text_change = 5 },
+      highlighters = {
+        fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+        hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+        todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+        note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+        -- trailing_whitespace = { pattern = "%f[%s]%s*$", group = "MiniHipatternsWS" },
+        -- tabs = { pattern = "\t", group = "MiniHipatternsWS" },
       },
     })
 

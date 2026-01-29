@@ -6,7 +6,7 @@ vim.o.number = true
 vim.o.numberwidth = 1
 vim.o.splitright = true
 vim.o.undofile = true
-vim.o.showmatch = true
+vim.o.showmatch = false
 vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
 vim.o.winheight = 3
@@ -21,8 +21,13 @@ vim.o.titlestring = "%t - Nvim"
 vim.o.showmode = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
+vim.o.list = true
+vim.o.listchars = "tab: ,trail:·,nbsp:␣"
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append({ "unnamedplus" })
+vim.o.winborder = "rounded"
+-- vim.o.textwidth = 120
+-- vim.o.colorcolumn = "+1"
 
 vim.opt.laststatus = 0
 
@@ -75,7 +80,7 @@ function _G.FoldText()
   local count = vim.v.foldend - vim.v.foldstart
   --local icon = ""
 
-  return string.format("%s  ⋯", (line or "Fold"))
+  return string.format("%s ⋯", (line or "Fold"))
 end
 vim.opt.foldtext = "v:lua.FoldText()"
 

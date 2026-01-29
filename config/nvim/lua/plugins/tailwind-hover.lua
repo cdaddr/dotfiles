@@ -1,0 +1,11 @@
+return {}
+-- {
+--   "ruicsh/tailwind-hover.nvim",
+--   keys = {
+--     { "<F10>", "<cmd>TailwindHover<cr>", desc = "Tailwind: Hover" },
+--   },
+--   opts = {},
+--   dependencies = {
+--     "nvim-treesitter/nvim-treesitter",
+--   },
+-- }

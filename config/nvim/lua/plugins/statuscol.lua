@@ -1,11 +1,23 @@
 return {
   "luukvbaal/statuscol.nvim",
   init = function()
-    vim.o.fillchars = "eob: ,fold: ,foldopen:+,foldsep:|,foldinner: ,foldclose:󰅀"
+    vim.o.fillchars = "eob: ,fold: ,foldopen:▽,foldsep:|,foldinner: ,foldclose:▷"
   end,
 
   config = function()
     local builtin = require("statuscol.builtin")
+
+    -- Custom fold click handler
+    _G.FoldClick = function(minwid, clicks, button, mods)
+      local line = vim.fn.getmousepos().line
+      if button == "l" then
+        if vim.fn.foldclosed(line) ~= -1 then
+          vim.cmd(line .. "foldopen")
+        else
+          vim.cmd(line .. "foldclose")
+        end
+      end
+    end
     -- vim.o.foldcolumn = "no"
     -- vim.o.signcolumn = "no"
 
@@ -40,17 +52,17 @@ return {
           condition = { builtin.not_empty },
         },
         {
-          text = { builtin.lnumfunc, " " },
-          condition = { true, builtin.not_empty },
-          click = "v:lua.ScLa",
-        },
-        {
-          text = { foldcol },
-          click = "v:lua.ScFa",
+          text = { foldcol, " " },
+          click = "v:lua.FoldClick",
           fillchar = "x",
           colwidth = 1,
           maxwidth = 1,
           condition = { builtin.not_empty },
+        },
+        {
+          text = { builtin.lnumfunc, " " },
+          condition = { true, builtin.not_empty },
+          click = "v:lua.ScLa",
         },
       },
     })

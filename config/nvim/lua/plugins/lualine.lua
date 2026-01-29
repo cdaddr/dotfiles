@@ -175,9 +175,23 @@ return {
           -- unicode hex of char under cursor
           {
             function()
-              local char = vim.fn.strcharpart(vim.fn.getline('.'), vim.fn.col('.') - 1, 1)
-              local code = vim.fn.char2nr(char)
-              return string.format('U+%04X', code)
+              local line = vim.fn.getline('.')
+              if line == '' then return '' end
+
+              local byte_col = vim.fn.col('.') - 1 -- convert to 0-indexed byte position
+              local char_idx = vim.fn.charidx(line, byte_col)
+              if char_idx < 0 then return '' end
+
+              -- Get character including composing chars (4th arg = true)
+              local char = vim.fn.strcharpart(line, char_idx, 1, true)
+              if char == '' then return '' end
+
+              -- Split into individual codepoints and format each
+              local codes = {}
+              for _, c in ipairs(vim.fn.str2list(char)) do
+                table.insert(codes, string.format('U+%04X', c))
+              end
+              return table.concat(codes, ' ')
             end,
             icon = '',
             color = inner('Comment')

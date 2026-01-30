@@ -20,6 +20,8 @@ map("i", "<C-k>", function()
   })
 end, { desc = "Insert icon" })
 
+map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor", buffer = true })
+
 map("n", "t", "<cmd>bnext<cr>", { desc = ":bnext" })
 map("n", "T", "<cmd>bprevious<cr>", { desc = ":bprevious" })
 

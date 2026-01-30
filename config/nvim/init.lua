@@ -5,6 +5,7 @@
 local theme_file = vim.fn.expand("~/.dotfiles/config/current-theme.lua")
 local theme = dofile(theme_file)
 _G.theme = theme
+_G.DOTFILES = vim.env.HOME .. "/.dotfiles"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"

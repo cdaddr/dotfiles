@@ -3,6 +3,8 @@ return {
   dependencies = { "rafamadriz/friendly-snippets" },
 
   version = "1.*",
+
+  ---@type blink.cmp.Config
   opts = {
     keymap = {
       preset = "none",

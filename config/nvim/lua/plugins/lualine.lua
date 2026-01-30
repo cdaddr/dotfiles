@@ -1,15 +1,73 @@
-local util = require 'util'
+local util = require("util")
+
+-- Repo-wide git status (cached, updated on events)
+local git_repo_status = { added = 0, modified = 0, removed = 0, conflicts = 0 }
+local git_status_job = nil
+
+local function update_git_repo_status()
+  local cwd = vim.fn.getcwd()
+  -- Check if we're in a git repo
+  if vim.fn.isdirectory(cwd .. "/.git") == 0 and vim.fn.systemlist("git rev-parse --git-dir 2>/dev/null")[1] == nil then
+    git_repo_status = { added = 0, modified = 0, removed = 0, conflicts = 0 }
+    return
+  end
+
+  -- Cancel any existing job
+  if git_status_job then
+    vim.fn.jobstop(git_status_job)
+  end
+
+  git_status_job = vim.fn.jobstart({ "git", "status", "--porcelain" }, {
+    stdout_buffered = true,
+    on_stdout = function(_, data)
+      local added, modified, removed, conflicts = 0, 0, 0, 0
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          local status = line:sub(1, 2)
+          -- Merge conflicts (unmerged states)
+          if status:match("^[UD][UD]") or status == "AA" then
+            conflicts = conflicts + 1
+          -- Untracked or new files
+          elseif status:match("^%?%?") or status:match("^A") or status:match("^ A") then
+            added = added + 1
+          -- Deleted
+          elseif status:match("^D") or status:match("^ D") then
+            removed = removed + 1
+          -- Modified, renamed, copied
+          elseif status:match("[MRC]") then
+            modified = modified + 1
+          end
+        end
+      end
+      git_repo_status = { added = added, modified = modified, removed = removed, conflicts = conflicts }
+      -- Trigger lualine refresh
+      vim.schedule(function()
+        if package.loaded["lualine"] then
+          require("lualine").refresh()
+        end
+      end)
+    end,
+  })
+end
+
+-- Set up autocmds to refresh git status
+vim.api.nvim_create_autocmd({ "BufWritePost", "FocusGained", "DirChanged" }, {
+  callback = update_git_repo_status,
+})
+
+-- Initial update (deferred)
+vim.defer_fn(update_git_repo_status, 100)
 
 local function is_new_file()
-  local filename = vim.fn.expand('%')
-  return filename ~= ''
-      and filename:match('^%a+ ://') == nil
-      and vim.bo.buftype == ''
-      and vim.fn.filereadable(filename) == 0
+  local filename = vim.fn.expand("%")
+  return filename ~= ""
+    and filename:match("^%a+ ://") == nil
+    and vim.bo.buftype == ""
+    and vim.fn.filereadable(filename) == 0
 end
 
 local function is_unnamed()
-  return vim.fn.expand('%:t') == ''
+  return vim.fn.expand("%:t") == ""
 end
 
 -- Get the LSP root directory for the current buffer
@@ -25,11 +83,11 @@ end
 local function get_relative_path()
   local root = get_lsp_root()
   if not root then
-    return vim.fn.expand('%:.') -- fallback to cwd-relative
+    return vim.fn.expand("%:.") -- fallback to cwd-relative
   end
 
-  local file = vim.fn.expand('%:p')
-  return vim.fn.fnamemodify(file, ':.' .. root)
+  local file = vim.fn.expand("%:p")
+  return vim.fn.fnamemodify(file, ":." .. root)
 end
 
 local function is_readonly()
@@ -42,41 +100,41 @@ return {
   config = function()
     local setup_lualine = function()
       -- load theme, with fallback
-      local status, theme = pcall(require, 'lualine.themes.' .. _G.theme.lualine)
+      local status, theme = pcall(require, "lualine.themes." .. _G.theme.lualine)
       if not status then
-        theme = require 'lualine.themes.catppuccin'
+        theme = require("lualine.themes.catppuccin")
       end
       -- sets the bg of the "middle" between section
-      theme.normal.c.bg = util.copy_hl('LineNr').bg
-      theme.inactive.c.bg = util.copy_hl('LineNr').bg
-      theme.inactive.c.fg = util.copy_hl('WinSeparator').fg
+      theme.normal.c.bg = util.copy_hl("LineNr").bg
+      theme.inactive.c.bg = util.copy_hl("LineNr").bg
+      theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
 
       -- applies style, keeping section b / y bg
       local mid = function(color)
-        local bg_hl = util.copy_hl('DiffChange')
+        local bg_hl = util.copy_hl("DiffChange")
         local hl = color and util.copy_hl(color) or {}
-        return vim.tbl_extend('force', hl, { bg = bg_hl.bg })
+        return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
       end
 
       -- applies style, keeping section c / x bg
       local inner = function(color)
-        local bg_hl = util.copy_hl('SignColumn')
+        local bg_hl = util.copy_hl("SignColumn")
         local hl = color and util.copy_hl(color) or {}
-        return vim.tbl_extend('force', hl, { bg = bg_hl.bg })
+        return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
       end
 
       -- file icon (warning color) is lock if r/o, otherwise generic file icon (normal color)
       local file_icon = function(colorfn, color)
-        return  {
+        return {
           function()
             if is_readonly() then
               return ""
             end
-            return ''
+            return ""
           end,
           color = function()
             if is_readonly() then
-              return colorfn('WarningMsg')
+              return colorfn("WarningMsg")
             end
             return colorfn(color)
           end,
@@ -87,20 +145,20 @@ return {
       local sections = {
         lualine_b = {
           -- lock / file icon
-          file_icon(mid, 'Keyword'),
+          file_icon(mid, "Keyword"),
 
           -- filename (base)
           {
-            'filename',
+            "filename",
             file_status = false,
             newfile_status = false,
             symbols = {
               unnamed = "New File",
             },
             color = function(section)
-              local hl = mid('Keyword')
+              local hl = mid("Keyword")
               if is_new_file() or is_unnamed() then
-                hl.gui = 'italic'
+                hl.gui = "italic"
               end
               return hl
             end,
@@ -112,126 +170,187 @@ return {
               if vim.bo.modified then
                 return ""
               end
-              return ''
+              return ""
             end,
-            color = mid('diffNewFile'),
+            color = mid("diffNewFile"),
             padding = { left = 0, right = 1 },
           },
           -- buffer diff numbers
           {
-            'diff',
-            color = mid()
+            "diff",
+            source = function()
+              local git_status = vim.b.gitsigns_status_dict
+              if git_status then
+                return {
+                  added = git_status.added or 0,
+                  modified = git_status.changed or 0,
+                  removed = git_status.removed or 0,
+                }
+              end
+            end,
+            color = mid(),
           },
         },
         lualine_c = {
           -- relative path
           {
-            function() return vim.fn.fnamemodify(vim.fn.expand('%:~:.:p:h'), ':.') end,
-            icon = '',
-            cond = function() return vim.fn.expand('%') ~= '' end,
-            color = inner('Comment')
+            function()
+              return vim.fn.fnamemodify(vim.fn.expand("%:~:.:p:h"), ":.")
+            end,
+            icon = "",
+            cond = function()
+              return vim.fn.expand("%") ~= ""
+            end,
+            color = inner("Comment"),
           },
           -- git branch
           {
-            'branch',
-            icon = '\u{f062c}',
+            "branch",
+            icon = "\u{f062c}",
             icons_enabled = true,
-            padding = { left = 1, right = 0},
-            color = inner('Comment')
+            padding = { left = 1, right = 0 },
+            color = inner("Comment"),
           },
-          -- git diff numbers, from gitsigns
+          -- repo-wide git status (custom component to avoid lualine diff state issues)
           {
             function()
-              local git_status = vim.b.gitsigns_status_dict
-              if git_status then
-                return string.format(' +%d ~%d -%d', git_status.added or 0, git_status.changed or 0,
-                  git_status.removed or 0)
+              local parts = {}
+              if git_repo_status.added > 0 then
+                table.insert(parts, "+" .. git_repo_status.added)
               end
-              return ''
+              if git_repo_status.modified > 0 then
+                table.insert(parts, "~" .. git_repo_status.modified)
+              end
+              if git_repo_status.removed > 0 then
+                table.insert(parts, "-" .. git_repo_status.removed)
+              end
+              if git_repo_status.conflicts > 0 then
+                table.insert(parts, "!" .. git_repo_status.conflicts)
+              end
+              return table.concat(parts, " ")
             end,
-            color = inner('Comment'),
-            padding = { left = 0, right = 1},
+            color = inner("Comment"),
+            cond = function()
+              return git_repo_status.added > 0
+                or git_repo_status.modified > 0
+                or git_repo_status.removed > 0
+                or git_repo_status.conflicts > 0
+            end,
           },
         },
         lualine_x = {
           {
-            function() return vim.fn.fnamemodify(vim.fn.getcwd(), ':t') end,
-            icon = '',
-            color = inner('Comment'),
+            function()
+              return vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+            end,
+            icon = "",
+            color = inner("Comment"),
+            on_click = function()
+              vim.cmd("Oil")
+            end,
           },
           {
-            'lsp_status',
-            icon = '',
+            "lsp_status",
+            icon = "",
             symbols = {
-              done = '',
-              separator = '+'
+              done = "",
+              separator = "|",
             },
-            color = inner('Comment'),
+            fmt = function(txt)
+              if txt then
+                return "⨉" .. tostring(#vim.split(txt, "|"))
+              end
+              return txt
+            end,
+            color = inner("Comment"),
+            on_click = function()
+              vim.cmd("checkhealth lsp")
+            end,
+          },
+          -- code format-on-save enabled indicator, see conform.lua
+          {
+            function()
+              if not vim.b.disable_format_on_save then
+                return "󰁨 "
+              end
+            end,
+            padding = 0,
+            color = inner("Comment"),
           },
           {
-            'diagnostics',
-            sections = { 'error', 'warn' }
+            "diagnostics",
+            sections = { "error", "warn" },
           },
           -- unicode hex of char under cursor
           {
             function()
-              local line = vim.fn.getline('.')
-              if line == '' then return '' end
-
-              local byte_col = vim.fn.col('.') - 1 -- convert to 0-indexed byte position
-              local char_idx = vim.fn.charidx(line, byte_col)
-              if char_idx < 0 then return '' end
-
-              -- Get character including composing chars (4th arg = true)
-              local char = vim.fn.strcharpart(line, char_idx, 1, true)
-              if char == '' then return '' end
-
-              -- Split into individual codepoints and format each
-              local codes = {}
-              for _, c in ipairs(vim.fn.str2list(char)) do
-                table.insert(codes, string.format('U+%04X', c))
+              local line = vim.fn.getline(".")
+              if line == "" then
+                return ""
               end
-              return table.concat(codes, ' ')
+
+              local byte_col = vim.fn.col(".") - 1 -- convert to 0-indexed byte position
+              local char_idx = vim.fn.charidx(line, byte_col)
+              if char_idx < 0 then
+                return ""
+              end
+
+              local char = vim.fn.strcharpart(line, char_idx, 1)
+              if char == "" then
+                return ""
+              end
+
+              -- Get codepoint using vim's char2nr (handles multibyte)
+              local codepoint = vim.fn.char2nr(char)
+              if codepoint == 0 then
+                return ""
+              end
+              return string.format("U+%04X", codepoint)
             end,
-            icon = '',
-            color = inner('Comment')
+            icon = "",
+            color = inner("Comment"),
+            draw_empty = true,
           },
         },
         lualine_y = {
           {
-            'filetype',
+            "filetype",
             colored = false,
             color = mid(),
           },
         },
         lualine_z = {
           {
-            '%-2P 󰕱 %-2p 󰕭 %-2c',
-            fmt = function(item) return ' ' .. item end,
+            "%-2P 󰕱 %-3p 󰕭 %-2c",
+            fmt = function(item)
+              return " " .. item
+            end,
           },
         },
       }
       local inactive_sections = {
         lualine_a = {},
         lualine_b = {
-          file_icon(inner, 'Comment'),
+          file_icon(inner, "Comment"),
           {
-            function() return vim.fn.fnamemodify(vim.fn.expand('%:~:.:p:h'), ':.') end,
-            color = inner('Comment'),
-          }
+            function()
+              return vim.fn.fnamemodify(vim.fn.expand("%:~:.:p:h"), ":.")
+            end,
+            color = inner("Comment"),
+          },
         },
         lualine_c = {},
         lualine_x = {},
         lualine_y = {},
         lualine_z = {},
       }
-      require('lualine').setup({
-        extensions = { 'oil', 'quickfix', 'mason', 'lazy', 'fugitive', },
+      require("lualine").setup({
+        extensions = { "oil", "quickfix", "mason", "lazy", "fugitive" },
         options = {
           theme = theme,
           icons_enabled = true,
-          component_separators = { left = '', right = '' },
-          section_separators = { left = '', right = '' },
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
         },
         sections = sections,
         inactive_sections = inactive_sections,
@@ -242,7 +361,7 @@ return {
     setup_lualine()
 
     -- Clear lualine's built-in ColorScheme autocmd that resets config
-    vim.api.nvim_clear_autocmds({ group = 'lualine' })
+    vim.api.nvim_clear_autocmds({ group = "lualine" })
 
     -- Re-apply our config after colorscheme loads
     vim.api.nvim_create_autocmd("ColorScheme", {

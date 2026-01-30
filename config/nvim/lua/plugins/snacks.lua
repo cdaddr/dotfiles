@@ -82,13 +82,16 @@ local unicode_picker = function()
     end,
   })
 end
+
+---@type LazySpec[]
 return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    --@type wk.Opts
+    ---@type wk.Opts
     opts = {
-      delay = 400,
+      foo = 123,
+      delay = 200,
       spec = {
         { '<leader>f', group = "File" },
         { '<leader>b', group = 'Buffers'},
@@ -144,8 +147,8 @@ return {
       Snacks.toggle.animate():map("<leader>ua")
       Snacks.toggle.indent():map("<leader>ug")
       Snacks.toggle.scroll():map("<leader>uS")
-      Snacks.toggle.profiler():map("<leader>dpp")
-      Snacks.toggle.profiler_highlights():map("<leader>dph")
+      Snacks.toggle.profiler():map("<leader>upp")
+      Snacks.toggle.profiler_highlights():map("<leader>uph")
 
       if vim.lsp.inlay_hint then
         Snacks.toggle.inlay_hints():map("<leader>uh")
@@ -245,6 +248,7 @@ return {
         end
       end
 
+      ---@type snacks.Config
       return {
         terminal = {},
         picker = {
@@ -300,6 +304,11 @@ return {
               }
             }
           },
+          prompt = "? ",
+          -- debug = {
+          --   scores = true, grep = true,
+          --   files = true
+          -- }
         },
         toggle = {
           enabled = true,
@@ -322,12 +331,13 @@ return {
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Files (Config)" },
+      { "<leader>fl", function() Snacks.picker.files({cwd = vim.fn.expand("%:p:h")}) end, desc = "Find Files (buffer dir)" },
+      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config"), follow = true, ignored = true }) end, desc = "Find Files (nvim config)" },
+      { "<leader>fC", function() Snacks.picker.files({ cwd = _G.DOTFILES, follow = true, ignored = true }) end, desc = "Find Files ($XDG_CONFIG_HOME)" },
       { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
       { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Files (Git)" },
       { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
       { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
-      { "<leader>fl", function() Snacks.picker.files({cwd = vim.fn.expand("%:p:h")}) end, desc = "Find Files (current file's cwd)" },
       -- buffers
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>bb", function() Snacks.picker.buffers() end, desc = "Buffers" },
@@ -387,11 +397,11 @@ return {
 
       -- { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       -- { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
-      { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+      -- { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
       { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
       { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
 
-      { "<leader>xx", function() 
+      { "<leader>xx", function()
         local Snacks = require'snacks'
         return Snacks.picker({
           format = "text",

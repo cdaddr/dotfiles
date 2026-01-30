@@ -2,6 +2,8 @@ return {
   "stevearc/quicker.nvim",
   lazy = false,
   ft = "qf",
+  ---
+  ---@type quicker.SetupOptions
   opts = {
     -- stylua: ignore
     on_qf = function()

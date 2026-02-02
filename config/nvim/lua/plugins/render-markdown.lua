@@ -3,9 +3,25 @@ return {
   ft = { "markdown", "lua" },
 
   opts = {
+    render_modes = { "n", "c", "t", "i" },
     heading = {
       border = true,
+      above = "▂",
+      below = "▀🮂",
+      border_virtual = true,
       -- 『1』『2』『3』『4』『5』『6』『7』『8』『9』『0』
+      icons = {
+        "⒈ ",
+        "⒉ ",
+        "⒊ ",
+        "⒋ ",
+        "⒌ ",
+        "⒍ ",
+        "⒎ ",
+        "⒏ ",
+        "⒐ ",
+        "⒑ ",
+      },
     },
     code = {
       conceal_delimiters = true,
@@ -23,6 +39,7 @@ return {
       },
     },
     completions = {
+      lsp = { enabled = true },
       blink = { enabled = true },
     },
     sign = {

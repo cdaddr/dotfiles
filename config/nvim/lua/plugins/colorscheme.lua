@@ -71,7 +71,7 @@ return {
             GitSignsAdd = { bg = gutter_bg },
             GitSignsUntracked = { bg = gutter_bg },
             GitSignsDelete = { bg = gutter_bg },
-            WinSeparator = { bg = palette.sumiInk4, fg = palette.sumiInk3 },
+            WinSeparator = { bg = palette.sumiInk4, fg = palette.oniViolet },
             StatusLine = { bg = gutter_bg },
             StatusLineNC = { bg = gutter_bg },
             Folded = { bg = palette.sumiInk1 },

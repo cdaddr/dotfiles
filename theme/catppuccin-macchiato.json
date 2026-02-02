@@ -24,6 +24,8 @@
   "nvim": "catppuccin-macchiato",
   "vivid": "catppuccin-macchiato",
   "eza": "catppuccin-macchiato",
-  "moor": "catppuccin-macchiato",
+  "bat": "Catppuccin Macchiato",
+  "less_search_bg": "183",
+  "less_search_fg": "0",
   "ghostty": "Catppuccin Macchiato"
 }

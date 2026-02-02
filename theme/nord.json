@@ -25,6 +25,8 @@
   "lualine": "nordic",
   "vivid": "nord",
   "eza": "catppuccin",
-  "moor": "nord",
+  "bat": "Nord",
+  "less_search_bg": "183",
+  "less_search_fg": "0",
   "ghostty": "Nord"
 }

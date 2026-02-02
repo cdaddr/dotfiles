@@ -25,5 +25,7 @@
   "lualine": "tokyonight-night",
   "vivid": "tokyonight-night",
   "eza": "tokyonight",
-  "moor": "tokyonight-night"
+  "bat": "TwoDark",
+  "less_search_bg": "183",
+  "less_search_fg": "0"
 }

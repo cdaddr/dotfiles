@@ -25,6 +25,8 @@
   "lualine": "kanagawa",
   "vivid": "tokyonight-storm",
   "eza": "one_dark",
-  "moor": "tokyonight-storm",
+  "bat": "OneHalfDark",
+  "less_search_bg": "183",
+  "less_search_fg": "0",
   "ghostty": "Kanagawa Wave"
 }

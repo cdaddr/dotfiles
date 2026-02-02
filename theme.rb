@@ -109,10 +109,22 @@ end
 def generate_zsh_env(theme_names)
   output_file = CONFIG / 'current-theme-env.zsh'
 
+  # Convert simple color numbers to escape codes if needed
+  search_bg = theme_names['less_search_bg']
+  search_fg = theme_names['less_search_fg']
+
+  # If it's just a number, convert to 256-color escape code
+  search_bg = "\\e[48;5;#{search_bg}m" if search_bg =~ /^\d+$/
+  search_fg = "\\e[38;5;#{search_fg}m" if search_fg =~ /^\d+$/
+
   zsh_content = <<~ZSH
     export VIVID_THEME="#{theme_names['vivid']}"
     export EZA_THEME="#{theme_names['eza']}"
-    export MOOR_THEME="#{theme_names['moor']}"
+    export BAT_THEME="#{theme_names['bat']}"
+
+    # LESS_TERMCAP for search highlighting in pagers
+    export LESS_TERMCAP_so=$'#{search_bg}#{search_fg}'
+    export LESS_TERMCAP_se=$'\\e[0m'
   ZSH
 
   File.write(output_file, zsh_content)

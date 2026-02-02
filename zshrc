@@ -45,6 +45,13 @@ unset _comp_dump
 autoload -Uz _git
 
 export EDITOR='nvim'
+<<<<<<< HEAD
+||||||| parent of 6b3ef03 (zsh fix pager highlighting, try using bat)
+export PAGER="moor --quit-if-one-screen --style=$MOOR_THEME"
+=======
+export PAGER="bat --style=plain --paging=always"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+>>>>>>> 6b3ef03 (zsh fix pager highlighting, try using bat)
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
@@ -159,17 +166,46 @@ fi
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
 
-# add a newline before each prompt, but not on the very first prompt after startup
+# flags
 typeset -g __omp_seen=0
+typeset -g __omp_last_was_clear=0
 
+# preexec: record the command text in $1
+__omp_record_cmd() {
+  case "$1" in
+    clear|clear\ *) __omp_last_was_clear=1 ;;
+    *)              __omp_last_was_clear=0 ;;
+  esac
+}
+
+# precmd: print a blank line except on first prompt; skip once after `clear`
 __omp_add_newline_precmd() {
   if (( __omp_seen )); then
-    print ''        # print one blank line
+    if (( __omp_last_was_clear )); then
+      __omp_last_was_clear=0   # consume the skip so future empty Enters still print
+    else
+      print ''                 # actual newline before prompt
+    fi
   else
-    __omp_seen=1    # first prompt: set flag but don't print
+    __omp_seen=1
   fi
 }
-precmd_functions+=(__omp_add_newline_precmd)
+
+# register hooks
+if type add-zsh-hook >/dev/null 2>&1; then
+  add-zsh-hook preexec  __omp_record_cmd
+  add-zsh-hook precmd   __omp_add_newline_precmd
+else
+  preexec_functions+=(__omp_record_cmd)
+  precmd_functions+=(__omp_add_newline_precmd)
+fi
+if type add-zsh-hook >/dev/null 2>&1; then
+  add-zsh-hook preexec  __omp_record_cmd
+  add-zsh-hook precmd   __omp_add_newline_precmd
+else
+  preexec_functions+=(__omp_record_cmd)
+  precmd_functions+=(__omp_add_newline_precmd)
+fi
 eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/current-theme.omp.json)"
 
 if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then

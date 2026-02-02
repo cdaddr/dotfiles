@@ -14,7 +14,7 @@ vim.o.winminheight = 3
 vim.o.scrolloff = 5
 vim.o.suffixesadd = ".md"
 vim.o.timeout = true
-vim.o.timeoutlen = 1 -- lets which-key trigger instantly
+-- vim.o.timeoutlen = 1000
 vim.o.mouse = "a"
 vim.o.breakindent = true
 vim.o.title = true
@@ -29,8 +29,7 @@ vim.opt.clipboard:append({ "unnamedplus" })
 vim.o.winborder = "rounded"
 -- vim.o.textwidth = 120
 -- vim.o.colorcolumn = "+1"
-
-vim.opt.laststatus = 0
+-- vim.opt.laststatus = 0
 
 -- _G.FoldColumn = function()
 --   local foldsigns = {

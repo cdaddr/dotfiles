@@ -11,13 +11,7 @@ return {
   "miversen33/sunglasses.nvim",
   opts = {
     filter_percent = 0.3,
-    -- excluded_filetypes = {
-    --   "help",
-    --   "qf",
-    --   "oil",
-    --   "man",
-    --   "Trouble",
-    -- },
+    excluded_filetypes = disable_filetypes,
     excluded_highlights = {
       "StatusLine",
       "WinSeparator",

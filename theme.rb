@@ -160,6 +160,31 @@ def generate_ghostty_theme(theme_names)
   end
 end
 
+def generate_kitty_theme(colors, kitty_colors)
+  template_file = TEMPLATE_DIR / 'kitty-template.conf'
+  output_file = CONFIG / 'kitty/current-theme.conf'
+
+  template = File.read(template_file)
+
+  # Replace color placeholders from the main colors palette
+  colors.each do |name, value|
+    template.gsub!("{{#{name}}}", value)
+  end
+
+  # Replace kitty-specific colors
+  kitty_colors.each do |name, value|
+    template.gsub!("{{#{name}}}", value)
+  end
+
+  unreplaced = template.scan(/\{\{(\w+)\}\}/).flatten.uniq
+  if unreplaced.any?
+    puts "Warning: Unreplaced placeholders in kitty theme: #{unreplaced.join(', ')}"
+  end
+
+  File.write(output_file, template)
+  puts "- generated #{output_file}"
+end
+
 def main
   usage if ARGV.length != 1
 
@@ -181,7 +206,8 @@ def main
   end
 
   colors = theme_data['colors']
-  theme_names = theme_data.reject { |k, _| k == 'colors' }
+  kitty_colors = theme_data['kitty'] || {}
+  theme_names = theme_data.reject { |k, _| k == 'colors' || k == 'kitty' }
 
   generate_omp_theme(colors)
   generate_zsh_syntax(colors)
@@ -189,6 +215,7 @@ def main
   generate_zsh_env(theme_names)
   generate_eza_theme(theme_names['eza'])
   generate_ghostty_theme(theme_names['eza'])
+  generate_kitty_theme(colors, kitty_colors)
 end
 
 main

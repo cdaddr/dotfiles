@@ -13,12 +13,6 @@ else
   export LIGHTDARK=$(cat $XDG_CONFIG_HOME/lightdark 2>/dev/null || echo 'dark')
 fi
 
-if [[ $LIGHTDARK == "light" ]]; then
-  export ZSH_THEME="catppuccin-frappe"
-else
-  export ZSH_THEME="catppuccin-macchiato"
-fi
-
 export PAGER="less"
 export DELTA_PAGER="less -n"
 export MANPAGER="nvim +Man!"
@@ -165,6 +159,17 @@ fi
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
 
+# add a newline before each prompt, but not on the very first prompt after startup
+typeset -g __omp_seen=0
+
+__omp_add_newline_precmd() {
+  if (( __omp_seen )); then
+    print ''        # print one blank line
+  else
+    __omp_seen=1    # first prompt: set flag but don't print
+  fi
+}
+precmd_functions+=(__omp_add_newline_precmd)
 eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/current-theme.omp.json)"
 
 if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then

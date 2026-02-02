@@ -1,15 +1,11 @@
 [core]
-	excludesfile = ~/.gitignore
-	abbrev = auto
+  excludesfile = ~/.gitignore
+  abbrev = auto
   pager = delta
-	autocrlf = input
-	preloadindex = true
-	fscache = true
-	untrackedCache = true
-  # pager = nvim -R -c 'set filetype=git' -
-  # pager = less -FRSX
-; [pager]
-;   diff = nvim -R -c 'set filetype=git diff' -
+  autocrlf = input
+  preloadindex = true
+  fscache = true
+  untrackedCache = true
 [interactive]
   diffFilter = delta --color-only
 [delta]
@@ -18,23 +14,23 @@
   line-numbers = true
   syntax-theme = zenburn
 [color]
-	status = auto
-	branch = auto
-	ui = auto
-  diff = auto
-	pager = true
+  status = auto
+  branch = auto
+  ui = auto
+  diff = false
+  pager = true
 [column]
   ui = auto
 [credential]
-	helper = cache --timeout=3600
+  helper = cache --timeout=3600
 [user]
-	name = Brian Carper
-	email = brian@carper.ca
+  name = Brian Carper
+  email = brian@carper.ca
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [commit]
   verbose = true
@@ -54,22 +50,22 @@
   pruneTags = true
   all = true
 [pull]
-	rebase = true
+  rebase = true
 [push]
   default = simple
   autoSetupRemote = true
   followTags = true
 [rebase]
-	autoStash = true
+  autoStash = true
   autoSquash = true
   updateRefs = true
 [init]
-	defaultBranch = main
+  defaultBranch = main
 [merge]
-	conflictStyle = zdiff3
+  conflictStyle = zdiff3
 [log]
   date = iso-local
-	abbrevCommit = true
+  abbrevCommit = true
 [status]
     showUntrackedFiles = all
 [rerere]
@@ -81,30 +77,32 @@
 
 [alias]
   alias = config --get-regexp '^alias.'
-	last = log -1 HEAD
-	co = checkout
-	ci = commit
-	st = status -sb
-	stat = diff --stat
-	c = commit
-	ca = commit -a
-	br = branch -a
-	ls = ls-tree -rt --abbrev
-	amend = commit --amend
-	history = log --follow -p
-	unstage = restore --staged
-	wt = restore --worktree --staged
+  last = log -1 HEAD
+  co = checkout
+  ci = commit
+  st = status -sb
+  stat = diff --stat
+  c = commit
+  ca = commit -a
+  br = branch -a
+  ls = ls-tree -rt --abbrev
+  amend = commit --amend
+  history = log --follow -p
+  unstage = restore --staged
+  wt = restore --worktree --staged
   out = "log @{u}.."
-	logstat = log --stat
-	logf = log --pretty=fuller
-	logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
+  logstat = log --stat
+  logf = log --pretty=fuller
+  logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
   logg = log --date=format:'%a %b %e, %Y' --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%cd%C(reset) %C(blue)%an%C(reset) %C(green)%d%C(reset)' --graph
   lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
 
 [url "https://github.com/"]
-	insteadOf = git://github.com/
+  insteadOf = git://github.com/
 [maintenance]
-	auto = true
-	strategy = incremental
+  auto = true
+  strategy = incremental
 [feature]
-	manyFiles = true
+  manyFiles = true
+
+# vim: ft=gitconfig

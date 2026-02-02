@@ -19,35 +19,17 @@ else
   export ZSH_THEME="catppuccin-macchiato"
 fi
 
-# Set LESS_TERMCAP variables based on ZSH_THEME for Catppuccin colors
-if [[ "$LIGHTDARK" == "dark" ]]; then
-    # Catppuccin Mocha (dark theme)
-    export LESS_TERMCAP_mb=$'\e[1;31m'     # Begin blinking - Red
-    export LESS_TERMCAP_md=$'\e[1;94m'     # Begin bold - Blue
-    export LESS_TERMCAP_me=$'\e[0m'        # End mode
-    export LESS_TERMCAP_se=$'\e[0m'        # End standout-mode
-    export LESS_TERMCAP_so=$'\e[48;5;147m\e[38;5;235m' # Begin standout - Inverted: Lavender bg, Surface0 fg
-    export LESS_TERMCAP_ue=$'\e[0m'        # End underline
-    export LESS_TERMCAP_us=$'\e[4;38;5;150m' # Begin underline - Green
-elif [[ "$LIGHTDARK" == "light" ]]; then
-    # Catppuccin Latte (light theme)
-    export LESS_TERMCAP_mb=$'\e[1;91m'     # Begin blinking - Red
-    export LESS_TERMCAP_md=$'\e[1;34m'     # Begin bold - Blue
-    export LESS_TERMCAP_me=$'\e[0m'        # End mode
-    export LESS_TERMCAP_se=$'\e[0m'        # End standout-mode
-    export LESS_TERMCAP_so=$'\e[48;5;98m\e[38;5;254m'  # Begin standout - Inverted: Mauve bg, Surface0 fg
-    export LESS_TERMCAP_ue=$'\e[0m'        # End underline
-    export LESS_TERMCAP_us=$'\e[4;38;5;64m' # Begin underline - Green
-else
-    # Default/fallback - use basic inverted colors
-    export LESS_TERMCAP_mb=$'\e[1;31m'
-    export LESS_TERMCAP_md=$'\e[1;34m'
-    export LESS_TERMCAP_me=$'\e[0m'
-    export LESS_TERMCAP_se=$'\e[0m'
-    export LESS_TERMCAP_so=$'\e[7m'        # Standard reverse video
-    export LESS_TERMCAP_ue=$'\e[0m'
-    export LESS_TERMCAP_us=$'\e[4;32m'
-fi
+export PAGER="less"
+export DELTA_PAGER="less -n"
+export MANPAGER="nvim +Man!"
+export LESS="-R -N -S -g -i -F -X" # raw ANSI color, lineno, chop, exit onescreen, don't clear, search, case-insensitive
+export LESS_TERMCAP_mb=$'\e[1;31m'     # Begin blinking - Red
+export LESS_TERMCAP_md=$'\e[1;94m'     # Begin bold - Blue
+export LESS_TERMCAP_me=$'\e[0m'        # End mode
+export LESS_TERMCAP_se=$'\e[0m'        # End standout-mode
+export LESS_TERMCAP_so=$'\e[48;5;147m\e[38;5;235m' # Begin standout - Inverted: Lavender bg, Surface0 fg
+export LESS_TERMCAP_ue=$'\e[0m'        # End underline
+export LESS_TERMCAP_us=$'\e[4;38;5;150m' # Begin underline - Green
 
 if command -v vivid &>/dev/null; then
   export LS_COLORS="$(vivid generate $VIVID_THEME)"
@@ -69,7 +51,6 @@ unset _comp_dump
 autoload -Uz _git
 
 export EDITOR='nvim'
-export PAGER="moor --quit-if-one-screen --style=$MOOR_THEME"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8

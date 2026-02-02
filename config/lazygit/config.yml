@@ -1,27 +1,29 @@
 gui:
+  scrollHeight: 8
   theme:
     activeBorderColor:
-      - '#b7bdf8'
+      - '#FFA066'
       - bold
     inactiveBorderColor:
-      - '#a5adcb'
+      - '#54546D'
     optionsTextColor:
-      - '#8aadf4'
+      - '#8BA4B0'
     selectedLineBgColor:
-      - '#363a4f'
+      - '#2D4F67'
     cherryPickedCommitBgColor:
-      - '#494d64'
+      - '#2A2A37'
     cherryPickedCommitFgColor:
-      - '#b7bdf8'
+      - '#8BA4B0'
+      - bold
     unstagedChangesColor:
-      - '#ed8796'
+      - '#C4746E'
     defaultFgColor:
-      - '#cad3f5'
+      - '#DCD7BA'
     searchingActiveBorderColor:
-      - '#eed49f'
+      - '#C8C093'
 
   authorColors:
     '*': '#b7bdf8'
 git:
   pagers:
-    - pager: delta --dark --paging=never
+    - pager: diff-so-fancy

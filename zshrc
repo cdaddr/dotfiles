@@ -45,13 +45,8 @@ unset _comp_dump
 autoload -Uz _git
 
 export EDITOR='nvim'
-<<<<<<< HEAD
-||||||| parent of 6b3ef03 (zsh fix pager highlighting, try using bat)
-export PAGER="moor --quit-if-one-screen --style=$MOOR_THEME"
-=======
 export PAGER="bat --style=plain --paging=always"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
->>>>>>> 6b3ef03 (zsh fix pager highlighting, try using bat)
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8

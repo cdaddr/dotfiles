@@ -1,4 +1,3 @@
--- stylua: ignore start
 local unicode_picker = function()
   local Snacks = require("snacks")
 
@@ -83,6 +82,7 @@ local unicode_picker = function()
   })
 end
 
+-- stylua: ignore start
 ---@type LazySpec[]
 return {
   {
@@ -244,7 +244,24 @@ return {
         local item = picker:current()
         if item and item.file then
           picker:close()
-          require("oil").open(picker:dir())
+          local dir = vim.fn.fnamemodify(item.file, ":h")
+          require("oil").open(dir)
+        end
+      end
+
+      -- close picker if in input mode and typed input is blank
+      -- always close if in normal mode
+      local close_if_no_input = function(picker)
+        local mode = vim.fn.mode()
+        if mode == "i" then
+          local line = vim.api.nvim_get_current_line()
+          if line == "" then
+            picker:close()
+          else
+            vim.cmd("stopinsert")
+          end
+        else
+          picker:close()
         end
       end
 
@@ -259,50 +276,48 @@ return {
               filename_first = true,
             },
           },
+          actions = { close_if_no_input = close_if_no_input, open_in_oil = open_in_oil },
           sources = {
             files = {
-              actions = { open_in_oil = open_in_oil }
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
+            },
+            git_files = {
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
+            },
+            recent = {
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
+            },
+            buffers = {
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
+            },
+            smart = {
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
             },
             grep = {
-              actions = { open_in_oil = open_in_oil },
               format = grep_format,
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
             },
             grep_buffers = {
-              actions = { open_in_oil = open_in_oil },
               format = grep_format,
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
             },
             grep_word = {
-              actions = { open_in_oil = open_in_oil },
               format = grep_format,
+              win = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = {"n", "i"}, desc = "Open in Oil"}}}}
             },
           },
           win = {
             input = {
               keys = {
-                ["<Esc>"] = {
-                  function(picker)
-                    local mode = vim.fn.mode()
-                    if mode == "i" then
-                      local line = vim.api.nvim_get_current_line()
-                      if line == "" then
-                        picker:close()
-                      else
-                        vim.cmd("stopinsert")
-                      end
-                    else
-                      picker:close()
-                    end
-                  end,
-                  mode = { "i", "n" },
-                },
+                ["<Esc>"] = {"close_if_no_input", mode = { "i", "n" } },
+                ["<C-c>"] = { function() vim.cmd("stopinsert") end, mode = "i", desc = "Normal mode" },
                 ["<s-cr>"] = { "edit_vsplit", mode = { "i", "n" } },
                 ["<s-d-cr>"] = { "edit_split", mode = { "i", "n" } },
                 ["<m-K>"] = { "history_back", mode = { "i", "n" } },
                 ["<m-J>"] = { "history_forward", mode = { "i", "n" } },
                 ["<M-p>"] = { "focus_preview", mode = { "i", "n" } },
-                ["<C-o>"] = { "open_in_oil", mode = { "i", "n" } },
               }
-            }
+            },
           },
           prompt = "? ",
           -- debug = {

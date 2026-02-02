@@ -62,7 +62,7 @@ return {
             PmenuExtra = { bg = "none" },
             PmenuThumb = { bg = palette.springViolet1 },
             PmenuSbar = { bg = palette.sumiInk4 },
-            Visual = { bold = true },
+            -- Visual = { bold = true },
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
             CursorLineNr = { bg = gutter_bg },
@@ -90,6 +90,13 @@ return {
             BlinkCmpMenuBorder = { bg = "none" },
             TreesitterContextLineNumber = { bg = gutter_bg },
             TreesitterContextLineNumberBottom = { bg = gutter_bg },
+
+            RenderMarkdownH1Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+            RenderMarkdownH2Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+            RenderMarkdownH3Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+            RenderMarkdownH4Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+            RenderMarkdownH5Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+            RenderMarkdownH6Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
           }
         end,
       })

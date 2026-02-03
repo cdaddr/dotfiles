@@ -56,7 +56,7 @@ return {
           local normal_bg = palette.sumiInk3
           return {
             NormalFloat = { bg = "none" },
-            FloatBorder = { bg = palette.sumiInk0 },
+            FloatBorder = { bg = "none" },
             FloatTitle = { bg = "none" },
             Pmenu = { bg = "none" },
             PmenuExtra = { bg = "none" },

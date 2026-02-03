@@ -11,21 +11,12 @@ map("n", "<C-j>", "<C-w>j", { desc = "select window down <C-w>j" })
 map("n", "<C-k>", "<C-w>k", { desc = "select window up <C-w>k" })
 map("n", "<C-h>", "<C-w>h", { desc = "select window left <C-w>h" })
 map("n", "<C-l>", "<C-w>l", { desc = "select window right <C-w>l" })
-map("i", "<C-k>", function()
-  Snacks.picker.icons({
-    confirm = function(picker, item)
-      picker:close()
-      vim.api.nvim_put({ item.icon }, "c", false, true)
-    end,
-  })
-end, { desc = "Insert icon" })
 
 map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor", buffer = true })
 
 map("n", "t", "<cmd>bnext<cr>", { desc = ":bnext" })
 map("n", "T", "<cmd>bprevious<cr>", { desc = ":bprevious" })
 
-map("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open Oil" }) -- visual mode reselect pasted text
 map("n", "gp", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
 
 map("n", "<C-w>N", "<cmd>botright new<cr>", { desc = "open new split horizontally BOTTOM" })

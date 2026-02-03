@@ -9,6 +9,9 @@ return {
       { "size", align = "left", highlight = "Constant" },
       "icon",
     },
+    float = {
+      padding = 4,
+    },
     confirmation = {
       border = "single",
       win_options = { winblend = 0 },
@@ -18,10 +21,18 @@ return {
     keymaps = {
       -- ["<esc>"] = { "actions.close", mode = "n" },
       ["q"] = { "actions.close", mode = "n" },
+      ["<s-cr>"] = { "actions.select", opts = { vertical = true, close = true }, mode = "n" },
+      ["<s-d-cr>"] = { "actions.select", opts = { horizontal = true, close = true }, mode = "n" },
     },
   },
   keys = {
-    { "<Leader>o", "<cmd>Oil<cr>", desc = "Open Oil" },
+    {
+      "<Leader>o",
+      function()
+        require("oil").open_float()
+      end,
+      desc = "Open Oil",
+    },
   },
   lazy = false,
 }

@@ -4,14 +4,10 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
 export FPATH="$ZSH_PLUGINS/functions:$FPATH"
 
-# Load theme environment variables
-source "$HOME/.dotfiles/config/current-theme-env.zsh"
-
-if [[ -n $INTELLIJ ]]; then
-  export LIGHTDARK=light
-else
-  export LIGHTDARK=$(cat $XDG_CONFIG_HOME/lightdark 2>/dev/null || echo 'dark')
-fi
+export EDITOR='nvim'
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 
 export PAGER="less"
 export DELTA_PAGER="less -n"
@@ -25,11 +21,8 @@ export LESS_TERMCAP_so=$'\e[48;5;147m\e[38;5;235m' # Begin standout - Inverted: 
 export LESS_TERMCAP_ue=$'\e[0m'        # End underline
 export LESS_TERMCAP_us=$'\e[4;38;5;150m' # Begin underline - Green
 
-if command -v vivid &>/dev/null; then
-  export LS_COLORS="$(vivid generate $VIVID_THEME)"
-fi
+source "$HOME/.dotfiles/config/current-theme-env.zsh"
 
-# Homebrew coreutils (Apple Silicon path)
 [[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -43,21 +36,6 @@ comprebuild() { compinit -u -d "$_comp_dump" && echo "Completion cache rebuilt."
 compinit -C -u -d "$_comp_dump"
 unset _comp_dump
 autoload -Uz _git
-
-export EDITOR='nvim'
-export PAGER="bat --style=plain --paging=always"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-
-export WORDCHARS="${WORDCHARS/\/}"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export GOPATH="$XDG_DATA_HOME/go"
-export HOMEBREW_NO_ENV_HINTS=1
-export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
-
 
 setopt extended_history # save timestamps with history entries
 setopt hist_ignore_all_dups # remove older duplicate commands from history
@@ -101,7 +79,6 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} 'ma=00;30;48;5;111
 
 zstyle ':completion:*:*:git:*' script $XDG_CONFIG_HOME/bash/git-completion.bash
 
-
 # zstyle ':completion::complete:git-checkout:argument-rest:headrefs' command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 # zstyle ':completion::*:git::*' remote-branches false
 # zstyle ':completion::complete:git-checkout:*' tag-refs false
@@ -132,15 +109,20 @@ fi
 
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-
-# export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
-# help() {
-#   "$@" --help 2>&1 | bat --plain --language=help
-# }
-
-export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
-
+############################################################################
 ## From here down is all junk added by tools.  May need periodic cleanup.
+
+if command -v vivid &>/dev/null; then
+  export LS_COLORS="$(vivid generate $VIVID_THEME)"
+fi
+
+export WORDCHARS="${WORDCHARS/\/}"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export GOPATH="$XDG_DATA_HOME/go"
+export HOMEBREW_NO_ENV_HINTS=1
+export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
+export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh --disable-up-arrow)"

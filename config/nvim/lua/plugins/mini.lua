@@ -52,16 +52,16 @@ return {
       },
     })
 
-    require("mini.pairs").setup({
-      mappings = {
-        ['"'] = false,
-        ["'"] = false,
-        ["`"] = false,
-        -- ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^[({%a\\].", register = { cr = false } },
-        -- ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
-        -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
-      },
-    })
+    -- require("mini.pairs").setup({
+    --   mappings = {
+    --     ['"'] = false,
+    --     ["'"] = false,
+    --     ["`"] = false,
+    --     -- ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+    --     -- ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+    --     -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^[({%a\\].", register = { cr = false } },
+    --   },
+    -- })
 
     -- require("mini.surround").setup({
     --  respect_selection_type = true,

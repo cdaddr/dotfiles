@@ -1,11 +1,9 @@
 return {
   "windwp/nvim-autopairs",
-  config = function(_, opts)
-    local npairs = require("nvim-autopairs")
-    opts.check_ts = true
-    opts.enable_check_bracket_line = true
-    opts.ignored_next_char = "[%w%.]"
-    opts.map_cr = true
-    return opts
-  end
+  opts = {
+    check_ts = true,
+    enable_check_bracket_line = true,
+    ignored_next_char = [=[[%w%%%'%[%(%{%%)%]%}"%.%`%$]]=],
+    map_cr = true,
+  },
 }

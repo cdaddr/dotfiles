@@ -34,14 +34,19 @@ return {
       ["<Down>"] = { "select_next", "fallback" },
       ["<C-n>"] = { "select_next", "fallback_to_mappings" },
       ["<C-j>"] = { "select_next", "fallback_to_mappings" },
+      ["<C-d>"] = { "select_next", "fallback_to_mappings" },
       ["<Up>"] = { "select_prev", "fallback" },
       ["<C-p>"] = { "select_prev", "fallback_to_mappings" },
       ["<C-k>"] = { "select_prev", "fallback_to_mappings" },
+      ["<C-u>"] = { "select_prev", "fallback_to_mappings" },
 
       ["<C-K>"] = { "show_signature", "hide_signature", "fallback" },
+      ["<f1>"] = { "show_documentation", "fallback" },
 
       ["<S-up>"] = { "scroll_documentation_up", "fallback" },
+      ["<PageUp>"] = { "scroll_documentation_up", "fallback" },
       ["<S-down>"] = { "scroll_documentation_down", "fallback" },
+      ["<PageDown>"] = { "scroll_documentation_down", "fallback" },
     },
 
     completion = {
@@ -52,14 +57,7 @@ return {
         enabled = true,
       },
       documentation = {
-        draw = function(opts)
-          if opts.item and opts.item.documentation and opts.item.documentation.value then
-            local out = require("pretty_hover.parser").parse(opts.item.documentation.value)
-            opts.item.documentation.value = out:string()
-          end
-
-          opts.default_implementation(opts)
-        end,
+        auto_show = true,
       },
       list = {
         selection = { preselect = true, auto_insert = true },

@@ -45,5 +45,8 @@ return {
     sign = {
       enabled = false,
     },
+    patterns = {
+      markdown = { disable = false },
+    },
   },
 }

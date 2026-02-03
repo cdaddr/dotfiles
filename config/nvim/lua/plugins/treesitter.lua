@@ -152,80 +152,22 @@ return {
     "nvim-treesitter/nvim-treesitter-textobjects",
     branch = "main",
     lazy = false,
-    keys = {
-      {
-        "<leader>xs",
-        function()
-          require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
-        end,
-        desc = "Swap with next node",
-        mode = { "x", "o" },
-      },
-      {
-        "<leader>xS",
-        function()
-          require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
-        end,
-        desc = "Swap with next node",
-        mode = { "x", "o" },
-      },
-      {
-        "af",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-        end,
-        desc = "Select outer function",
-        mode = { "x", "o" },
-      },
-      {
-        "if",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-        end,
-        desc = "Select inner function",
-        mode = { "x", "o" },
-      },
-      {
-        "ac",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
-        end,
-        desc = "Select outer class",
-        mode = { "x", "o" },
-      },
-      {
-        "ic",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
-        end,
-        desc = "Select inner class",
-        mode = { "x", "o" },
-      },
-      {
-        "aa",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@attribute.outer", "textobjects")
-        end,
-        desc = "Select outer attribute",
-        mode = { "x", "o" },
-      },
-      {
-        "ia",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@attribute.inner", "textobjects")
-        end,
-        desc = "Select inner attribute",
-        mode = { "x", "o" },
-      },
-      {
-        "as",
-        function()
-          require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals")
-        end,
-        desc = "Select local scope",
-        mode = { "x", "o" },
-      },
-    },
+    -- stylua: ignore
+    keys = function(_)
+      local select = require("nvim-treesitter-textobjects.select")
+      local swap = require("nvim-treesitter-textobjects.swap")
+      return {
+          { "<leader>xs", function() swap.swap_next("@parameter.inner") end, desc = "Swap with next node", mode = { "x", "o" }, },
+          { "<leader>xS", function() swap.swap_previous("@parameter.inner") end, desc = "Swap with next node", mode = { "x", "o" }, },
+          { "af", function() select.select_textobject("@function.outer", "textobjects") end, desc = "Select outer function", mode = { "x", "o" }, },
+          { "if", function() select.select_textobject("@function.inner", "textobjects") end, desc = "Select inner function", mode = { "x", "o" }, },
+          { "ac", function() select.select_textobject("@class.outer", "textobjects") end, desc = "Select outer class", mode = { "x", "o" }, },
+          { "ic", function() select.select_textobject("@class.inner", "textobjects") end, desc = "Select inner class", mode = { "x", "o" }, },
+          { "aa", function() select.select_textobject("@attribute.outer", "textobjects") end, desc = "Select outer attribute", mode = { "x", "o" }, },
+          { "ia", function() select.select_textobject("@attribute.inner", "textobjects") end, desc = "Select inner attribute", mode = { "x", "o" }, },
+          { "as", function() select.select_textobject("@local.scope", "locals") end, desc = "Select local scope", mode = { "x", "o" }, },
+        }
+    end,
     ---@module "nvim-treesitter-textobjects"
     opts = { multiwindow = true, lookahead = true },
   },

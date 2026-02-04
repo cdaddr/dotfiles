@@ -94,3 +94,43 @@ vim.go.background = "dark"
 vim.opt.termguicolors = true
 vim.opt.relativenumber = false
 vim.opt.exrc = true
+
+-- Custom tabline: show basename, "CodeDiff" for codediff tabs
+function _G.Tabline()
+  local s = ""
+  for i = 1, vim.fn.tabpagenr("$") do
+    local winnr = vim.fn.tabpagewinnr(i)
+    local bufnr = vim.fn.tabpagebuflist(i)[winnr]
+    local bufname = vim.fn.bufname(bufnr)
+    local winid = vim.fn.win_getid(winnr, i)
+
+    -- Highlight for current vs other tabs
+    if i == vim.fn.tabpagenr() then
+      s = s .. "%#TabLineSel#"
+    else
+      s = s .. "%#TabLine#"
+    end
+
+    -- Tab number (clickable)
+    s = s .. "%" .. i .. "T"
+
+    -- Determine label
+    local label
+    if vim.w[winid] and vim.w[winid].codediff_restore then
+      label = "CodeDiff"
+    elseif bufname == "" then
+      label = "[No Name]"
+    else
+      label = vim.fn.fnamemodify(bufname, ":t")
+    end
+
+    s = s .. " " .. label .. " "
+  end
+
+  -- Fill the rest and reset click handler
+  s = s .. "%#TabLineFill#%T"
+  return s
+end
+
+vim.o.tabline = "%!v:lua.Tabline()"
+vim.o.showtabline = 1

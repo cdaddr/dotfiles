@@ -117,7 +117,7 @@ function _G.Tabline()
     -- Determine label
     local label
     if vim.w[winid] and vim.w[winid].codediff_restore then
-      label = "CodeDiff"
+      label = " CodeDiff: " .. vim.fn.fnamemodify(bufname, ":t")
     elseif bufname == "" then
       label = "[No Name]"
     else

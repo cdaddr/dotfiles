@@ -154,18 +154,10 @@ return {
     lazy = false,
     -- stylua: ignore
     keys = function(_)
-      local select = require("nvim-treesitter-textobjects.select")
       local swap = require("nvim-treesitter-textobjects.swap")
       return {
-          { "<leader>xs", function() swap.swap_next("@parameter.inner") end, desc = "Swap with next node", mode = { "x", "o" }, },
-          { "<leader>xS", function() swap.swap_previous("@parameter.inner") end, desc = "Swap with next node", mode = { "x", "o" }, },
-          { "af", function() select.select_textobject("@function.outer", "textobjects") end, desc = "Select outer function", mode = { "x", "o" }, },
-          { "if", function() select.select_textobject("@function.inner", "textobjects") end, desc = "Select inner function", mode = { "x", "o" }, },
-          { "ac", function() select.select_textobject("@class.outer", "textobjects") end, desc = "Select outer class", mode = { "x", "o" }, },
-          { "ic", function() select.select_textobject("@class.inner", "textobjects") end, desc = "Select inner class", mode = { "x", "o" }, },
-          { "aa", function() select.select_textobject("@attribute.outer", "textobjects") end, desc = "Select outer attribute", mode = { "x", "o" }, },
-          { "ia", function() select.select_textobject("@attribute.inner", "textobjects") end, desc = "Select inner attribute", mode = { "x", "o" }, },
-          { "as", function() select.select_textobject("@local.scope", "locals") end, desc = "Select local scope", mode = { "x", "o" }, },
+          { "<leader>xs", function() swap.swap_next("@parameter.inner") end, desc = "Swap with next param" },
+          { "<leader>xS", function() swap.swap_previous("@parameter.inner") end, desc = "Swap with prev param" },
         }
     end,
     ---@module "nvim-treesitter-textobjects"

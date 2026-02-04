@@ -1,16 +1,17 @@
+-- stylua: ignore start
 return {
   'folke/flash.nvim',
   lazy = false,
   keys = {
     { "S", mode = { "n", }, function() require("flash").jump() end, desc = "Flash" },
-    { "<c-space>", function()
-      require'flash'.treesitter({
-        actions = {
-          ["<c-space>"] = "next",
-          ["<bs>"] = "prev",
-        }
-      })
-      end, mode = {"n", "x", "o"}, desc = "Treesitter incremental select"},
+    -- { "<c-space>", function()
+    --   require'flash'.treesitter({
+    --     actions = {
+    --       ["<c-space>"] = "next",
+    --       ["<bs>"] = "prev",
+    --     }
+    --   })
+    --   end, mode = {"n", "x", "o"}, desc = "Treesitter incremental select"},
     { "<leader>S", mode = { "n", }, function() require("flash").jump({continue = true}) end, desc = "Flash" },
   },
   config = function(_, opts)

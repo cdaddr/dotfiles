@@ -10,7 +10,47 @@ return {
       },
     })
 
+    require("mini.bufremove").setup({})
+    vim.keymap.set("n", "<leader>d", _G.MiniBufremove.unshow, { desc = "Close buffer (mini.bufremove)" })
+    vim.keymap.set("n", "<leader>D", _G.MiniBufremove.delete, { desc = "Delete buffer (mini.bufremove)" })
+
     require("mini.splitjoin").setup({})
+
+    local ai = require("mini.ai")
+    local ts = ai.gen_spec.treesitter
+    local MiniExtra = require("mini.extra")
+    ai.setup({
+      custom_textobjects = {
+        -- treesitter-based
+        f = ts({ a = "@function.outer", i = "@function.inner" }),
+        F = ts({ a = "@call.outer", i = "@call.inner" }),
+        c = ts({ a = "@class.outer", i = "@class.inner" }),
+        l = ts({ a = "@loop.outer", i = "@loop.inner" }),
+        o = ts({ a = "@conditional.outer", i = "@conditional.inner" }),
+        m = ts({ a = "@comment.outer", i = "@comment.inner" }),
+        -- restore built-ins (custom_textobjects overrides defaults)
+        a = ai.gen_spec.argument({ brackets = { "%b()", "%b[]", "%b{}" } }),
+        b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
+        q = { { "%b''", '%b""', "%b``" }, "^.().*().$" },
+        -- extra
+        B = MiniExtra.gen_ai_spec.buffer(),
+        I = MiniExtra.gen_ai_spec.indent(),
+      },
+    })
+
+    -- require("mini.diff").setup({ })
+
+    local map_lsp_selection = function(lhs, desc)
+      local s = vim.startswith(desc, "Increase") and 1 or -1
+      local rhs = function()
+        vim.lsp.buf.selection_range(s * vim.v.count1)
+      end
+      vim.keymap.set("x", lhs, rhs, { desc = desc })
+    end
+    map_lsp_selection("<c-space>", "Increase selection")
+    map_lsp_selection("<c-s-space>", "Decrease selection")
+
+    require("mini.cursorword").setup({ delay = 50 })
 
     -- local make_pick = function(key, fn, desc)
     --   vim.keymap.set('n', key, fn, {desc = desc})

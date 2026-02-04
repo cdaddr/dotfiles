@@ -7,6 +7,6 @@ return {
     },
   },
   keys = {
-    { "<d-d>", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff current buffer" },
+    -- { "<d-d>", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff current buffer" },
   },
 }

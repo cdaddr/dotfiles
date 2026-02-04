@@ -62,7 +62,7 @@ return {
             PmenuExtra = { bg = "none" },
             PmenuThumb = { bg = palette.springViolet1 },
             PmenuSbar = { bg = palette.sumiInk4 },
-            Visual = { bg = palette.waveBlue2 },
+            -- Visual = { bg = palette.waveBlue2 },
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
             CursorLineNr = { bg = gutter_bg },

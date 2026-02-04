@@ -10,7 +10,7 @@ local disable_filetypes = {
 return {
   "miversen33/sunglasses.nvim",
   opts = {
-    filter_percent = 0.3,
+    filter_percent = 0.1,
     excluded_filetypes = disable_filetypes,
     excluded_highlights = {
       "StatusLine",

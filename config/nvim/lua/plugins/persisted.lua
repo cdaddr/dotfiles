@@ -16,6 +16,10 @@ return {
     vim.api.nvim_create_autocmd("User", {
       pattern = "PersistedSavePre",
       callback = function()
+        -- Close all tab pages except the first one
+        vim.cmd("1tabnext")
+        vim.cmd("tabonly")
+
         saved_buftypes = {}
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
           if vim.bo[buf].buftype ~= "" and vim.bo[buf].buftype ~= "nofile" then

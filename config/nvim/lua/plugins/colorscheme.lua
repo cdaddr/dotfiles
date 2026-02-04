@@ -71,11 +71,13 @@ return {
             GitSignsAdd = { bg = gutter_bg },
             GitSignsUntracked = { bg = gutter_bg },
             GitSignsDelete = { bg = gutter_bg },
-            WinSeparator = { bg = palette.sumiInk4, fg = palette.oniViolet },
+            WinSeparator = { bg = palette.sumiInk1, fg = palette.oniViolet },
             StatusLine = { bg = gutter_bg },
             StatusLineNC = { bg = gutter_bg },
             Folded = { bg = palette.sumiInk1 },
             FoldColumn = { bg = gutter_bg },
+            EndOfBuffer = { bg = palette.sumiInk1 },
+            TabLineSel = { bg = palette.oniViolet, fg = palette.sumiInk0 },
 
             -- Save an hlgroup with dark background and dimmed foreground
             -- so that you can use it where your still want darker windows.

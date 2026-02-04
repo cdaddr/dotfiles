@@ -1,7 +1,7 @@
 return {
   "luukvbaal/statuscol.nvim",
   init = function()
-    vim.o.fillchars = "eob: ,fold: ,foldopen:▽,foldsep:|,foldinner: ,foldclose:▷"
+    vim.o.fillchars = "eob: ,fold: ,foldopen:▽,foldsep:|,foldinner: ,foldclose:▷,vert: ,"
   end,
 
   config = function()

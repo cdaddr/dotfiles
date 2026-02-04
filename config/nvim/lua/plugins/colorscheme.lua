@@ -97,6 +97,10 @@ return {
             RenderMarkdownH4Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
             RenderMarkdownH5Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
             RenderMarkdownH6Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
+
+            CodeDiffFiller = { fg = palette.oniViolet },
+            -- MiniCursorword = { underline = true, sp = palette.oniViolet },
+            -- MiniCursorwordCurrent = { underline = true, sp = palette.oniViolet },
           }
         end,
       })

@@ -1,10 +1,12 @@
 return {
   "esmuellert/codediff.nvim",
   dependencies = { "MunifTanjim/nui.nvim" },
-  cmd = "CodeDiff",
   opts = {
     explorer = {
       view_mode = "tree",
     },
+  },
+  keys = {
+    { "<d-d>", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff current buffer" },
   },
 }

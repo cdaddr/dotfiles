@@ -11,6 +11,7 @@ return {
       "winsize",
     }
     -- Mark special buffers as nofile so they're excluded from session
+    -- https://github.com/neovim/neovim/issues/12242
     local saved_buftypes = {}
     vim.api.nvim_create_autocmd("User", {
       pattern = "PersistedSavePre",
@@ -19,6 +20,7 @@ return {
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
           if vim.bo[buf].buftype ~= "" and vim.bo[buf].buftype ~= "nofile" then
             saved_buftypes[buf] = vim.bo[buf].buftype
+            vim.bo[buf].buflisted = false
             vim.bo[buf].buftype = "nofile"
           end
         end

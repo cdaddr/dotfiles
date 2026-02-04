@@ -54,19 +54,20 @@ def draw_tab(
     )
 
     if is_last:
-        draw_right_status(draw_data, screen, active_tab)
+        layout_name = get_boss().active_tab.current_layout.name
+        draw_right_status(draw_data, screen, active_tab, layout_name)
     return screen.cursor.x
 
 
 def draw_right_status(
-    draw_data: DrawData, screen: Screen, active_tab: TabAccessor
+    draw_data: DrawData, screen: Screen, active_tab: TabAccessor, layout_name: str
 ) -> None:
     """
     Draw the cells on the rhs.
     """
     # The tabs may have left some formats enabled. Disable them now.
     draw_attributed_string(Formatter.reset, screen)
-    cells = create_cells(active_tab)
+    cells = create_cells(active_tab, layout_name)
     # Drop cells that wont fit
     while True:
         if not cells:
@@ -98,7 +99,7 @@ def draw_right_status(
         screen.draw(f" {title}")
 
 
-def create_cells(active_tab: TabAccessor) -> list[tuple[str, str]]:
+def create_cells(active_tab: TabAccessor, layout_name: str) -> list[tuple[str, str, int]]:
     """
     Create cells to display on the rhs.
     """
@@ -117,7 +118,8 @@ def create_cells(active_tab: TabAccessor) -> list[tuple[str, str]]:
                 cwd = last_component
 
     return [
-        (username, "", 0x957fb8),
+        (layout_name, "", 0x957fb8),
+        (username, "", 0x957fb8),
         (hostname, "󰒋", 0x957fb8),
-        # (cwd, "", 0x7e9cd8),
+        # (cwd, "", 0x7e9cd8),
     ]

@@ -11,25 +11,25 @@ return {
   end,
   opts = function()
     -- toggle options
-    Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-    Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
-    Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
-    Snacks.toggle.diagnostics():map("<leader>ud")
-    Snacks.toggle.line_number():map("<leader>ul")
+    Snacks.toggle.option("spell", { name = "Spelling" }):map([[\s]])
+    Snacks.toggle.option("wrap", { name = "Wrap" }):map([[\w]])
+    Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map([[\L]])
+    Snacks.toggle.diagnostics():map([[\d]])
+    Snacks.toggle.line_number():map([[\l]])
     Snacks.toggle
       .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" })
-      :map("<leader>uc")
+      :map([[\c]])
     Snacks.toggle
       .option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" })
-      :map("<leader>uA")
-    Snacks.toggle.treesitter():map("<leader>uT")
-    Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
-    Snacks.toggle.dim():map("<leader>uD")
-    Snacks.toggle.animate():map("<leader>ua")
-    Snacks.toggle.indent():map("<leader>ug")
-    Snacks.toggle.scroll():map("<leader>uS")
-    Snacks.toggle.profiler():map("<leader>upp")
-    Snacks.toggle.profiler_highlights():map("<leader>uph")
+      :map([[\A]])
+    Snacks.toggle.treesitter():map([[\T]])
+    Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map([[\b]])
+    Snacks.toggle.dim():map([[\D]])
+    Snacks.toggle.animate():map([[\a]])
+    Snacks.toggle.indent():map([[\g]])
+    Snacks.toggle.scroll():map([[\S]])
+    Snacks.toggle.profiler():map([[\pp]])
+    Snacks.toggle.profiler_highlights():map([[\ph]])
 
     if vim.lsp.inlay_hint then
       Snacks.toggle.inlay_hints():map("<leader>uh")
@@ -229,9 +229,11 @@ return {
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash", },
     -- { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)", },
     { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File", },
-    { "<leader>gn", function() require("mini.notify").show_history() end, desc = "Notification History", },
     { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" }, },
     { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit", },
+    -- notifications
+    { "<leader>nn", function() require("mini.notify").show_history() end, desc = "Notification History", },
+    { "<leader>nm", "<cmd>messages<cr>", desc = "Message history", },
     -- search
     { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines", },
     { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers", },

@@ -1,5 +1,6 @@
 local pickers = require("config.pickers")
 
+---@module "Snacks"
 ---@type LazySpec[]
 return {
   "folke/snacks.nvim",
@@ -120,9 +121,10 @@ return {
 
     local open_in_oil = function(picker)
       local item = picker:current()
-      if item and item.file then
+      if item and item._path then
         picker:close()
-        local dir = vim.fn.fnamemodify(item.file, ":h")
+        local dir = vim.fn.fnamemodify(item._path, ":h")
+        require("nvim-tree.api").tree.open({ path = dir })
         require("oil").open(dir)
       end
     end
@@ -200,14 +202,14 @@ return {
   -- stylua: ignore start
   keys = {
     -- CMD shortcuts
-    { "<D-o>", function() Snacks.picker.git_files() end, desc = "Find Files (Git)", },
-    { "<D-f>", function() Snacks.picker.grep() end, desc = "Grep", },
-    { "<D-p>", function() Snacks.picker.smart() end, desc = "Find Files (Smart)", },
-    { "<D-e>", function() Snacks.picker.recent() end, desc = "Find Files (Recent)", },
-    { "<leader><space>", function() Snacks.picker.recent() end, desc = "Recent", },
+    -- { "<D-o>", function() Snacks.picker.git_files() end, desc = "Find Files (Git)", },
+    -- { "<D-f>", function() Snacks.picker.grep() end, desc = "Grep", },
+    -- { "<D-p>", function() Snacks.picker.smart() end, desc = "Find Files (Smart)", },
+    -- { "<D-e>", function() Snacks.picker.recent() end, desc = "Find Files (Recent)", },
+    { "<leader>r", function() Snacks.picker.recent() end, desc = "Recent", },
     { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)", },
     { "<leader>/", function() Snacks.picker.grep({}) end, desc = "Grep (cwd)", },
-    { "<leader>f?", function() Snacks.picker.grep({ cwd = vim.fn.expand("%:p:h") }) end, desc = "Grep (buffer dir)", },
+    { "<leader>?", function() Snacks.picker.grep({ cwd = vim.fn.expand("%:p:h") }) end, desc = "Grep (buffer dir)", },
     { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History", },
     -- find
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers", },

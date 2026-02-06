@@ -70,94 +70,107 @@ local function is_unnamed()
   return vim.fn.expand("%:t") == ""
 end
 
--- Get the LSP root directory for the current buffer
-local function get_lsp_root()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  if #clients > 0 then
-    return clients[1].config.root_dir
-  end
-  return nil
-end
-
--- Get relative path
-local function get_relative_path()
-  local root = get_lsp_root()
-  if not root then
-    return vim.fn.expand("%:.") -- fallback to cwd-relative
-  end
-
-  local file = vim.fn.expand("%:p")
-  return vim.fn.fnamemodify(file, ":." .. root)
-end
-
 local function is_readonly()
   return not vim.bo.modifiable or vim.bo.readonly
+end
+
+local is_special = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local fn = vim.api.nvim_buf_get_name(bufnr)
+  if fn:match("^fugitive://") then
+    return true
+  end
+end
+
+local is_normal = function()
+  return not is_special()
+end
+
+local file_icon = function(colorfn, color)
+  return {
+    function()
+      if is_special() then
+        return
+      end
+      if is_readonly() then
+        return ""
+      end
+      return ""
+    end,
+    color = function()
+      if is_readonly() then
+        return colorfn("WarningMsg")
+      end
+      return colorfn(color)
+    end,
+    padding = { left = 1, right = 0 },
+    cond = is_normal,
+  }
+end
+
+-- applies style, keeping section b / y bg
+local mid = function(color)
+  local bg_hl = util.copy_hl("DiffChange")
+  local hl = color and util.copy_hl(color) or {}
+  return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
+end
+
+-- applies style, keeping section c / x bg
+local inner = function(color)
+  local bg_hl = util.copy_hl("SignColumn")
+  local hl = color and util.copy_hl(color) or {}
+  return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
+end
+
+local special_name = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local fn = vim.api.nvim_buf_get_name(bufnr)
+  local diff = vim.wo.diff
+  return fn:match("^[^:]+") .. (diff and " diff" or "")
 end
 
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   config = function()
-    local setup_lualine = function()
-      -- load theme, with fallback
-      local status, theme = pcall(require, "lualine.themes." .. _G.theme.lualine)
-      if not status then
-        theme = require("lualine.themes.catppuccin")
-      end
-      -- sets the bg of the "middle" between section
-      theme.normal.c.bg = util.copy_hl("LineNr").bg
-      theme.inactive.c.bg = util.copy_hl("LineNr").bg
-      theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
+    -- load theme, with fallback
+    local status, theme = pcall(require, "lualine.themes." .. _G.theme.lualine)
+    if not status then
+      theme = require("lualine.themes.catppuccin")
+    end
+    -- sets the bg of the "middle" between section
+    theme.normal.c.bg = util.copy_hl("LineNr").bg
+    theme.inactive.c.bg = util.copy_hl("LineNr").bg
+    theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
 
-      -- applies style, keeping section b / y bg
-      local mid = function(color)
-        local bg_hl = util.copy_hl("DiffChange")
-        local hl = color and util.copy_hl(color) or {}
-        return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
-      end
 
-      -- applies style, keeping section c / x bg
-      local inner = function(color)
-        local bg_hl = util.copy_hl("SignColumn")
-        local hl = color and util.copy_hl(color) or {}
-        return vim.tbl_extend("force", hl, { bg = bg_hl.bg })
-      end
-
-      -- file icon (warning color) is lock if r/o, otherwise generic file icon (normal color)
-      local file_icon = function(colorfn, color)
-        return {
-          function()
-            if is_readonly() then
-              return ""
-            end
-            return ""
-          end,
-          color = function()
-            if is_readonly() then
-              return colorfn("WarningMsg")
-            end
-            return colorfn(color)
-          end,
-          padding = { left = 1, right = 0 },
-        }
-      end
-
+      -- stylua: ignore start
       local sections = {
+        lualine_a = {
+          { "mode", cond = is_normal },
+          { special_name, cond = is_special }
+        },
         lualine_b = {
-          -- lock / file icon
+        -- file icon (warning color) is lock if r/o, otherwise generic file icon (normal color)
           file_icon(mid, "Keyword"),
 
           -- filename (base)
           {
-            "filename",
-            file_status = false,
-            newfile_status = false,
-            symbols = {
-              unnamed = "New File",
-            },
-            color = function(section)
+            function()
+              local bufnr = vim.api.nvim_get_current_buf()
+              local bufname = vim.api.nvim_buf_get_name(bufnr)
+              local special_prefix = bufname:match('^(%w+)://')
+              if bufname == "" then
+                return "New File"
+              elseif special_prefix and special_prefix ~= "" then
+                return "SPECIAL"
+              end
+              return vim.fn.expand("%:t")
+            end,
+            color = function()
               local hl = mid("Keyword")
-              if is_new_file() or is_unnamed() then
+              local bufname = vim.fn.expand("%")
+              if is_new_file() or is_unnamed() or is_special() then
                 hl.gui = "italic"
               end
               return hl
@@ -174,6 +187,7 @@ return {
             end,
             color = mid("diffNewFile"),
             padding = { left = 0, right = 1 },
+            cond = is_normal
           },
           -- buffer diff numbers
           {
@@ -189,6 +203,7 @@ return {
               end
             end,
             color = mid(),
+            cond = is_normal
           },
         },
         lualine_c = {
@@ -199,7 +214,7 @@ return {
             end,
             icon = "",
             cond = function()
-              return vim.fn.expand("%") ~= ""
+              return is_normal() and vim.fn.expand("%") ~= ""
             end,
             color = inner("Comment"),
           },
@@ -210,6 +225,7 @@ return {
             icons_enabled = true,
             padding = { left = 1, right = 0 },
             color = inner("Comment"),
+            cond = is_normal
           },
           -- repo-wide git status (custom component to avoid lualine diff state issues)
           {
@@ -231,10 +247,10 @@ return {
             end,
             color = inner("Comment"),
             cond = function()
-              return git_repo_status.added > 0
+              return is_normal() and ( git_repo_status.added > 0
                 or git_repo_status.modified > 0
                 or git_repo_status.removed > 0
-                or git_repo_status.conflicts > 0
+                or git_repo_status.conflicts > 0)
             end,
           },
         },
@@ -248,6 +264,7 @@ return {
             on_click = function()
               vim.cmd("Oil")
             end,
+            cond = is_normal
           },
           {
             "lsp_status",
@@ -266,6 +283,7 @@ return {
             on_click = function()
               vim.cmd("checkhealth lsp")
             end,
+            cond = is_normal
           },
           -- code format-on-save enabled indicator, see conform.lua
           {
@@ -276,10 +294,12 @@ return {
             end,
             padding = 0,
             color = inner("Comment"),
+            cond = is_normal
           },
           {
             "diagnostics",
             sections = { "error", "warn" },
+            cond = is_normal
           },
           -- unicode hex of char under cursor
           {
@@ -328,8 +348,11 @@ return {
           },
         },
       }
+
       local inactive_sections = {
-        lualine_a = {},
+        lualine_a = {
+          { special_name, cond = is_special, color = inner('Comment') }
+        },
         lualine_b = {
           file_icon(inner, "Comment"),
           {
@@ -337,6 +360,7 @@ return {
               return vim.fn.fnamemodify(vim.fn.expand("%:~:.:p:h"), ":.")
             end,
             color = inner("Comment"),
+            cond = is_normal
           },
         },
         lualine_c = {},
@@ -344,8 +368,9 @@ return {
         lualine_y = {},
         lualine_z = {},
       }
+
       require("lualine").setup({
-        extensions = { "oil", "quickfix", "mason", "lazy", "fugitive" },
+        extensions = { "oil", "quickfix", "mason", "lazy" },
         options = {
           theme = theme,
           icons_enabled = true,
@@ -355,17 +380,5 @@ return {
         sections = sections,
         inactive_sections = inactive_sections,
       })
-    end
-
-    -- Initial setup
-    setup_lualine()
-
-    -- Clear lualine's built-in ColorScheme autocmd that resets config
-    vim.api.nvim_clear_autocmds({ group = "lualine" })
-
-    -- Re-apply our config after colorscheme loads
-    vim.api.nvim_create_autocmd("ColorScheme", {
-      callback = setup_lualine,
-    })
   end,
 }

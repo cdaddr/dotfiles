@@ -26,14 +26,10 @@ return {
       ["<C-h>"] = false,
     },
   },
+    -- stylua: ignore
   keys = {
-    {
-      "<Leader>o",
-      function()
-        require("oil").open_float()
-      end,
-      desc = "Open Oil",
-    },
+    { "<Leader>o", function() require("oil").open_float() end, desc = "Open Oil (float)", },
+    { "<Leader>O", function() require("oil").open() end, desc = "Open Oil", },
   },
   lazy = false,
 }

@@ -23,6 +23,7 @@ return {
       ["q"] = { "actions.close", mode = "n" },
       ["<s-cr>"] = { "actions.select", opts = { vertical = true, close = true }, mode = "n" },
       ["<s-d-cr>"] = { "actions.select", opts = { horizontal = true, close = true }, mode = "n" },
+      ["<C-h>"] = false,
     },
   },
   keys = {

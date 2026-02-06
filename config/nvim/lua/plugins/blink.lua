@@ -22,7 +22,9 @@ return {
       ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
       ["<C-space>"] = { "show", "hide", "fallback" },
-      ["<Esc>"] = { "hide", "fallback" },
+      -- because of auto-show and auto-select, it will eat <esc> trying to get out of normal mode
+      -- ...so leave this off
+      -- ["<Esc>"] = { "hide", "fallback" },
       ["<M-s>"] = {
         function(cmp)
           cmp.show({ providers = { "snippets" } })
@@ -40,16 +42,6 @@ return {
         end,
       },
 
-      -- ["<C-b>"] = {
-      --  function(cmp)
-      --    cmp.show({ providers = { "buffer" } })
-      --  end,
-      -- },
-      -- ["<C-f>"] = {
-      --  function(cmp)
-      --    cmp.show({ providers = { "path" } })
-      --  end,
-      -- },
       ["<C-e>"] = { "hide" },
       ["<C-y>"] = { "select_and_accept" },
       ["<Down>"] = { "select_next", "fallback" },

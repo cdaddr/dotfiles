@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   ---@type wk.Opts
   opts = {
-    delay = 200,
+    -- delay = 200,
     spec = {
       { "<leader>f", group = "File" },
       { "<leader>b", group = "Buffers" },
@@ -12,8 +12,8 @@ return {
       { "<leader>l", group = "LSP" },
       { "<leader>s", group = "Search" },
       { "<leader>t", group = "Terminal" },
-      { "<leader>u", group = "Toggle" },
       { "<leader>x", group = "Execute" },
+      { "\\", group = "Toggle" },
     },
     icons = {
       mappings = false,
@@ -23,16 +23,10 @@ return {
     },
 
     win = {
-      border = "double",
+      no_overlap = false,
+      border = "rounded",
+      -- padding = { 0, 0 },
     },
-  },
-  keys = {
-    {
-      "<leader>?",
-      function()
-        require("which-key").show({ global = false })
-      end,
-      desc = "Buffer Local Keymaps (which-key)",
-    },
+    show_help = false,
   },
 }

@@ -40,7 +40,7 @@ return {
       vim.notify((vim.b.disable_format_on_save and "Disabled" or "Enabled") .. " format-on-save")
     end
     vim.api.nvim_create_user_command("FormatDisable", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
-    vim.keymap.set("n", "<leader>uf", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
+    vim.keymap.set("n", "\\f", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
     vim.keymap.set("n", "<leader>xf", function()
       require("conform").format()
     end, { desc = "Format file" })

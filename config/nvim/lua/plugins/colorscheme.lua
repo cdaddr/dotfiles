@@ -56,12 +56,13 @@ return {
           local normal_bg = palette.sumiInk3
           return {
             NormalFloat = { bg = "none" },
-            FloatBorder = { bg = "none" },
+            FloatBorder = { bg = "none", fg = palette.sumiInk4 },
             FloatTitle = { bg = "none" },
-            Pmenu = { bg = "none" },
+            Pmenu = { bg = "none", fg = palette.oldWhite },
             PmenuExtra = { bg = "none" },
-            PmenuThumb = { bg = palette.springViolet1 },
+            PmenuThumb = { fg = palette.sumiInk3 },
             PmenuSbar = { bg = palette.sumiInk4 },
+            PmenuSel = { link = "Visual" },
             -- Visual = { bg = palette.waveBlue2 },
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
@@ -89,9 +90,13 @@ return {
             LazyNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             MasonNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             SnacksPickerCursorLine = { bg = normal_bg },
-            BlinkCmpMenuBorder = { bg = "none" },
             TreesitterContextLineNumber = { bg = gutter_bg },
             TreesitterContextLineNumberBottom = { bg = gutter_bg },
+
+            BlinkCmpMenuBorder = { bg = "none" },
+            BlinkCmpMenuSelection = { link = "Visual" },
+            BlinkCmpLabel = { link = "Pmenu" },
+            BlinkCmpKindText = { fg = palette.oldWhite },
 
             RenderMarkdownH1Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
             RenderMarkdownH2Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },

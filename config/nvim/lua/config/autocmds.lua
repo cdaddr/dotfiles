@@ -66,7 +66,7 @@ au("BufRead", {
         local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
         if
           not (ft:match("commit") and ft:match("rebase"))
-          and last_known_line > 1
+          and last_known_line >= 1
           and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
         then
           vim.api.nvim_feedkeys([[g`"]], "nx", false)

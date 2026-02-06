@@ -1,3 +1,14 @@
+highlight = function(ctx)
+  if ctx.source_name ~= "Path" then
+    return ctx.kind_hl
+  end
+
+  local is_unknown_type = vim.tbl_contains({ "link", "socket", "fifo", "char", "block", "unknown" }, ctx.item.data.type)
+  local mini_icon, mini_hl =
+    require("mini.icons").get(is_unknown_type and "os" or ctx.item.data.type, is_unknown_type and "" or ctx.label)
+  return mini_icon ~= nil and mini_hl or ctx.kind_hl
+end
+
 return {
   "saghen/blink.cmp",
   dependencies = { "rafamadriz/friendly-snippets" },
@@ -8,14 +19,27 @@ return {
   opts = {
     keymap = {
       preset = "none",
-      ["<Tab>"] = { "accept", "snippet_forward", "fallback" },
-      ["<S-Tab>"] = { "show", "accept" },
-      ["<C-space>"] = { "show", "accept" },
-      ["<C-s>"] = {
+      ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
+      ["<S-Tab>"] = { "snippet_backward", "fallback" },
+      ["<C-space>"] = { "show", "hide", "fallback" },
+      ["<Esc>"] = { "hide", "fallback" },
+      ["<M-s>"] = {
         function(cmp)
           cmp.show({ providers = { "snippets" } })
         end,
       },
+      ["<M-l>"] = {
+        function(cmp)
+          cmp.show({ providers = { "lsp" } })
+        end,
+      },
+
+      ["<M-p>"] = {
+        function(cmp)
+          cmp.show({ providers = { "path" } })
+        end,
+      },
+
       -- ["<C-b>"] = {
       --  function(cmp)
       --    cmp.show({ providers = { "buffer" } })
@@ -28,20 +52,17 @@ return {
       -- },
       ["<C-e>"] = { "hide" },
       ["<C-y>"] = { "select_and_accept" },
-      -- ['<CR>'] = { 'accept', 'fallback' },
-      -- ['<ESC>'] = { 'hide', 'fallback' },
-
       ["<Down>"] = { "select_next", "fallback" },
-      ["<C-n>"] = { "select_next", "fallback_to_mappings" },
-      ["<C-j>"] = { "select_next", "fallback_to_mappings" },
-      ["<C-d>"] = { "select_next", "fallback_to_mappings" },
+      ["<C-n>"] = { "select_next", "fallback" },
+      ["<C-j>"] = { "select_next", "fallback" },
+      ["<C-d>"] = { "select_next", "fallback" },
       ["<Up>"] = { "select_prev", "fallback" },
-      ["<C-p>"] = { "select_prev", "fallback_to_mappings" },
-      ["<C-k>"] = { "select_prev", "fallback_to_mappings" },
-      ["<C-u>"] = { "select_prev", "fallback_to_mappings" },
+      ["<C-p>"] = { "select_prev", "fallback" },
+      ["<C-k>"] = { "select_prev", "fallback" },
+      ["<C-u>"] = { "select_prev", "fallback" },
 
-      ["<C-K>"] = { "show_signature", "hide_signature", "fallback" },
-      ["<f1>"] = { "show_documentation", "fallback" },
+      ["<f1>"] = { "show_signature", "hide_signature" },
+      ["<f2>"] = { "show_documentation", "hide_documentation" },
 
       ["<S-up>"] = { "scroll_documentation_up", "fallback" },
       ["<PageUp>"] = { "scroll_documentation_up", "fallback" },
@@ -60,15 +81,34 @@ return {
         auto_show = true,
       },
       list = {
-        selection = { preselect = true, auto_insert = true },
+        selection = { preselect = true, auto_insert = false },
       },
       menu = {
         auto_show = true,
+        auto_show_delay_ms = 500,
+        draw = {
+          columns = {
+            { "label", "label_description", gap = 1 },
+            { "kind_icon", "kind", gap = 1 },
+          },
+          components = {
+            kind_icon = {
+              text = function(ctx)
+                local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+                return kind_icon
+              end,
+              highlight = highlight,
+            },
+            kind = {
+              highlight = highlight,
+            },
+          },
+        },
       },
     },
 
     sources = {
-      default = { "lazydev", "snippets", "lsp", "path", "buffer" },
+      default = { "lazydev", "snippets", "path", "lsp", "buffer" },
       providers = {
         lazydev = {
           name = "LazyDev",
@@ -76,7 +116,15 @@ return {
           score_offset = 100,
         },
         lsp = {
-          fallbacks = {},
+          fallbacks = {}, -- always show buffer comps
+        },
+        -- default is buffer's wd, I want cwd
+        path = {
+          opts = {
+            get_cwd = function(_)
+              return vim.fn.getcwd()
+            end,
+          },
         },
       },
     },

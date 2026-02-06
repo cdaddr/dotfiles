@@ -1,0 +1,11 @@
+{
+  "vim.notify(vim.inspect())": {
+    "prefix": "vni",
+    "body": "vim.notify(vim.inspect($1))",
+    "description": "vim.notify(vim.inspect())"
+  },
+  "vim.keymap.set": {
+    "prefix": "!key",
+    "body": "vim.keymap.set('{${1:n}}', '${2:<leader>}', { desc = '${3:Description}'})"
+  }
+}

@@ -1,5 +1,9 @@
 local M = {}
 
+local function clamp(val, min, max)
+  return math.max(min, math.min(max, val))
+end
+
 function M.int_to_hex(int)
   if not int then
     return nil
@@ -38,8 +42,9 @@ function M.rgb_to_int(r, g, b)
   return bit.bor(bit.lshift(r, 16), bit.lshift(g, 8), b)
 end
 
--- Returns hex string "#RRGGBB"
-local function desaturate_rgb(r, g, b, factor)
+-- desaturates rgb color by factor (0 = full gray, 1 = original)
+-- returns hex string "#RRGGBB"
+function M.desaturate_rgb(r, g, b, factor)
   factor = factor or 1
   local rf, gf, bf = r / 255, g / 255, b / 255
 
@@ -89,6 +94,16 @@ local function desaturate_rgb(r, g, b, factor)
   return string.format("#%02X%02X%02X", rf2, gf2, bf2)
 end
 
+-- desaturates hex color by factor (0 = full gray, 1 = original)
+-- hex_color: "#RRGGBB" or "RRGGBB"
+function M.desaturate(hex_color, factor)
+  if not hex_color then
+    return nil
+  end
+  local r, g, b = hex_to_rgb(hex_color)
+  return M.desaturate_rgb(r, g, b, factor)
+end
+
 -- Blend two integer colors together
 -- amount: 0 = all fg, 1 = all bg
 function M.blend(fg, bg, amount)
@@ -107,6 +122,23 @@ end
 function M.blend_hex(fg, bg, amount)
   local blended = M.blend(fg, bg, amount)
   return blended and string.format("%06x", blended) or nil
+end
+
+-- blend two hex colors: "#RRGGBB" strings
+-- amount: 0 = all color1, 1 = all color2
+function M.blend_colors(color1, color2, amount)
+  if not color1 then
+    return color2
+  end
+  if not color2 then
+    return color1
+  end
+  local r1, g1, b1 = hex_to_rgb(color1)
+  local r2, g2, b2 = hex_to_rgb(color2)
+  local r = math.floor(r1 * (1 - amount) + r2 * amount)
+  local g = math.floor(g1 * (1 - amount) + g2 * amount)
+  local b = math.floor(b1 * (1 - amount) + b2 * amount)
+  return string.format("#%02X%02X%02X", r, g, b)
 end
 
 function M.copy_hl(name)

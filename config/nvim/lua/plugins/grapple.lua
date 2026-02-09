@@ -14,12 +14,14 @@ return {
   event = { "BufReadPost", "BufNewFile" },
   cmd = "Grapple",
   keys = {
-    { "<leader>bt", "<cmd>Grapple tag<cr>", desc = "Grapple tag" },
-    { "<leader>bu", "<cmd>Grapple untag<cr>", desc = "Grapple untag" },
-    { "<leader>bl", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple open tags window" },
-    { "<leader>bn", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple cycle next tag" },
-    { "<leader><tab>", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple cycle next tag" },
-    { "<leader>bp", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple cycle previous tag" },
-    { "<s-tab>", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple cycle previous tag" },
+    { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Grapple toggle" },
+    { "<leader>M", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple list tags" },
+    { "<leader>", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple open tags window" },
+
+    { "<leader>]", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple next" },
+    { "<tab>", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple next" },
+
+    { "<leader>[", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple previous" },
+    { "<s-tab>", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple previous" },
   },
 }

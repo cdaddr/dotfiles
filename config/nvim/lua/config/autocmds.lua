@@ -1,15 +1,17 @@
-local aug = vim.api.nvim_create_augroup
-local au = vim.api.nvim_create_autocmd
 local util = require("util")
-local vimrc = aug("vimrc", {})
+
+local vimrc_augroup = vim.api.nvim_create_augroup("vimrc", {})
+local au = function(event, opts)
+  opts = vim.tbl_extend("keep", opts, { group = vimrc_augroup })
+  vim.api.nvim_create_autocmd(event, opts)
+end
 
 au("WinLeave", {
   pattern = "*",
-  group = vimrc,
   callback = function()
     vim.opt.cursorline = false
   end,
-  desc = "Window crosshair: Remove cursorline and colorcolumn when buffer loses focus",
+  desc = "Remove cursorline when buffer loses focus",
 })
 
 au({ "WinEnter", "BufEnter", "BufNewFile" }, {
@@ -17,13 +19,7 @@ au({ "WinEnter", "BufEnter", "BufNewFile" }, {
   callback = function()
     vim.opt.cursorline = true
   end,
-  desc = "Window crosshair: Restore cursorline and colorcolumn when buffer gains focus",
-})
-
-au({ "FileType" }, {
-  group = vimrc,
-  pattern = "ruby",
-  command = "setlocal indentkeys-=.",
+  desc = "Enable cursorline when buffer gains focus",
 })
 
 au("TextYankPost", {
@@ -32,23 +28,9 @@ au("TextYankPost", {
   end,
 })
 
-au("FileType", {
-  pattern = { "json", "markdown" },
-  callback = function()
-    vim.opt_local.conceallevel = 0
-  end,
-})
-
-au("Filetype", {
-  pattern = "qf",
-  callback = function()
-    vim.keymap.set("n", "<esc>", "<cmd>cclose<cr>", { buffer = true })
-  end,
-})
-
 au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
 
--- close command-line window with <Esc>
+-- close command-line window q: with <Esc>
 au("CmdwinEnter", {
   callback = function()
     vim.keymap.set("n", "<Esc>", "<cmd>q<cr>", { buffer = true, silent = true })
@@ -56,6 +38,7 @@ au("CmdwinEnter", {
 })
 
 -- restore cursor position
+-- BufRead can fire before modelines/filetype are set, which is why the double autocmd
 au("BufRead", {
   callback = function(opts)
     au("BufWinEnter", {
@@ -98,28 +81,7 @@ end
 au("ColorScheme", { callback = set_dim_diagnostics })
 set_dim_diagnostics()
 
--- muted fold column for statuscol
-local function set_muted_fold_column()
-  local linenr_hl = vim.api.nvim_get_hl(0, { name = "LineNr" })
-  local normal_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
-
-  local fg = linenr_hl.fg
-  local bg = normal_hl.bg or 0x16161D
-
-  if fg then
-    vim.api.nvim_set_hl(0, "StatusColFold", {
-      fg = util.blend(fg, bg, 0.5),
-      bg = linenr_hl.bg,
-    })
-  else
-    vim.api.nvim_set_hl(0, "StatusColFold", { link = "FoldColumn" })
-  end
-end
-
-au("ColorScheme", { callback = set_muted_fold_column })
-set_muted_fold_column()
-
--- folding: treesitter > lsp > syntax
+-- folding fallbacks: treesitter > lsp > syntax
 local function setup_folding(bufnr)
   local win = vim.fn.bufwinid(bufnr)
   if win == -1 then
@@ -151,7 +113,6 @@ local function setup_folding(bufnr)
 end
 
 au("FileType", {
-  group = vimrc,
   callback = function(args)
     setup_folding(args.buf)
   end,
@@ -159,7 +120,6 @@ au("FileType", {
 })
 
 au("LspAttach", {
-  group = vimrc,
   callback = function(args)
     -- re-evaluate folding when LSP attaches (in case treesitter wasn't available)
     setup_folding(args.buf)

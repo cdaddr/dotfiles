@@ -33,6 +33,9 @@ map("n", "<leader>P", '"_Dp', { desc = "Paste to end of line" })
 map("v", ">", ">gv")
 map("v", "<", "<gv")
 
+map("n", "/", "ms/", { desc = "Mark pre-search location when searching" })
+map("v", "/", "<esc>/\\%V", { desc = "Search in visual selection" })
+
 local cabbrev = vim.cmd.cabbrev
 
 cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")

@@ -11,6 +11,7 @@ return {
     }
   end,
   keys = {
-    { "<d-d>", "<cmd>DiffviewFileHistory %<cr>", desc = "Diff current buffer" },
+    { "<d-d>", "<cmd>DiffviewOpen HEAD -- %<cr>", desc = "Diff current buffer" },
+    { "<d-D>", "<cmd>DiffviewFileHistory %<cr>", desc = "Diff history current buffer" },
   },
 }

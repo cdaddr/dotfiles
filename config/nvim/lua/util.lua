@@ -1,5 +1,7 @@
 local M = {}
 
+M.MAX_FILENAME = 20
+
 local function clamp(val, min, max)
   return math.max(min, math.min(max, val))
 end
@@ -173,6 +175,94 @@ function M.pick(src, keys)
     end
   end
   return out
+end
+
+-- collapses middle path segments: ~/foo/bar/baz/qux.lua -> ~/foo/…x2/qux.lua
+function M.short_filename(path)
+  if not path or path == "" then
+    return ""
+  end
+
+  local home = vim.fn.expand("$HOME")
+  if path:sub(1, #home) == home then
+    path = "~" .. path:sub(#home + 1)
+  end
+
+  if #path <= M.MAX_FILENAME then
+    return path
+  end
+
+  local segments = {}
+  for seg in path:gmatch("[^/]+") do
+    table.insert(segments, seg)
+  end
+
+  if #segments <= 2 then
+    return path
+  end
+
+  local first_idx = 1
+  local prefix = ""
+
+  if path:sub(1, 1) == "~" then
+    prefix = "~/"
+    first_idx = 2
+  elseif path:sub(1, 1) == "/" then
+    prefix = "/"
+  end
+
+  local hidden_count = #segments - first_idx - 1
+  if hidden_count > 0 then
+    local first_seg = segments[first_idx]
+    local last_seg = segments[#segments]
+    local hidden_seg
+    if hidden_count == 1 then
+      hidden_seg = "…"
+    else
+      hidden_seg = string.format("…×%d", hidden_count)
+    end
+    return prefix .. first_seg .. "/" .. hidden_seg .. "/" .. last_seg
+  end
+
+  return path
+end
+
+-- returns: display_name, is_italic
+function M.get_display_filename(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+  if bufname == "" then
+    return "NEW FILE", true
+  end
+
+  local plugin_match = bufname:match("^plugin://([^/]+)")
+  if plugin_match then
+    local basename = vim.fn.fnamemodify(bufname, ":t")
+    return plugin_match .. ":" .. basename, true
+  end
+
+  local protocol = bufname:match("^([%w]+)://")
+  if protocol then
+    local basename = vim.fn.fnamemodify(bufname, ":t")
+    return protocol .. ":" .. basename, true
+  end
+
+  local cwd = vim.fn.getcwd()
+  local buf_dir = vim.fn.fnamemodify(bufname, ":p:h")
+  local basename = vim.fn.fnamemodify(bufname, ":t")
+
+  if buf_dir == cwd then
+    return basename, false
+  end
+
+  if buf_dir:sub(1, #cwd) == cwd and buf_dir:sub(#cwd + 1, #cwd + 1) == "/" then
+    local rel_path = buf_dir:sub(#cwd + 1)
+    return M.short_filename("." .. rel_path) .. "/" .. basename, false
+  end
+
+  local full_path = vim.fn.fnamemodify(bufname, ":~")
+  return M.short_filename(full_path), false
 end
 
 return M

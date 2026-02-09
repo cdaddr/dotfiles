@@ -1,4 +1,5 @@
 local helpers = require("config.lualine.helpers")
+local util = require("util")
 
 local M = {}
 
@@ -8,7 +9,7 @@ function M.component(palette, active)
   return {
     function()
       local cwd = vim.fn.getcwd()
-      local short_cwd = helpers.short_filename(cwd)
+      local short_cwd = util.short_filename(cwd)
       return "cwd: " .. short_cwd
     end,
     icon = "\u{eaf7}",

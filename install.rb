@@ -38,6 +38,7 @@ PATHS = %w[
   .config/LS_COLORS.sh
   .hushlogin
   .zshrc
+  .claude/CLAUDE.md
 ]
 
 conflicts = PATHS.filter_map do |path|

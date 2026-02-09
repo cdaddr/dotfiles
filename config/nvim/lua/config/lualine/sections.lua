@@ -3,6 +3,7 @@ local util = require("util")
 
 local mode = require("config.lualine.mode")
 local file_icon = require("config.lualine.file_icon")
+local grapple = require("config.lualine.grapple")
 local filename = require("config.lualine.filename")
 local modified = require("config.lualine.modified")
 local git_status = require("config.lualine.git_status")
@@ -72,6 +73,7 @@ function M.sections()
       git_status.buffer_diff(p, true),
     },
     lualine_c = {
+      grapple.component(p, true),
       git_status.branch(p, true),
       git_status.repo_status(p, true),
     },

@@ -1,8 +1,19 @@
+function g(fn_name, arg)
+  return function()
+    if arg then
+      require("grapple")[fn_name](arg)
+    else
+      require("grapple")[fn_name]()
+    end
+    require("lualine").refresh()
+  end
+end
 return {
   "cbochs/grapple.nvim",
   dependencies = {
     { "nvim-tree/nvim-web-devicons", lazy = true },
   },
+  ---@type grapple.settings
   opts = {
     scope = "git", -- also try out "git_branch"
     statusline = {
@@ -10,18 +21,19 @@ return {
       active = "[%s]",
       inactive = " %s ",
     },
+    icons = false,
   },
   event = { "BufReadPost", "BufNewFile" },
   cmd = "Grapple",
   keys = {
-    { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Grapple toggle" },
-    { "<leader>M", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple list tags" },
-    { "<leader>", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple open tags window" },
+    { "<leader>m", g("toggle"), desc = "Grapple toggle for this buffer" },
+    { "<leader><leader>", g("toggle"), desc = "Grapple toggle for this buffer" },
+    { "<leader>M", g("toggle_tags"), desc = "Grapple list tags" },
 
-    { "<leader>]", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple next" },
-    { "<tab>", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple next" },
+    { "<leader>]", g("cycle_tags", "next"), desc = "Grapple next" },
+    { "<tab>", g("cycle_tags", "next"), desc = "Grapple next" },
 
-    { "<leader>[", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple previous" },
-    { "<s-tab>", "<cmd>Grapple cycle_tags prev<cr>", desc = "Grapple previous" },
+    { "<leader>[", g("cycle_tags", "prev"), desc = "Grapple previous" },
+    { "<s-tab>", g("cycle_tags", "prev"), desc = "Grapple previous" },
   },
 }

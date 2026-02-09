@@ -23,6 +23,9 @@ return {
         icons_enabled = true,
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
+        ignore_focus = {
+          "grapple",
+        },
       },
       sections = active,
       inactive_sections = inactive,

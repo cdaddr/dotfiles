@@ -21,9 +21,6 @@ alias npm-installed='npm list -g --depth=0'
 alias brew-installed='brew bundle dump'
 alias rsync="rsync --exclude='.DS_Store'"
 
-alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias c='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias cg='lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias vim=nvim
 
 alias zrc='vim ~/.zshrc'

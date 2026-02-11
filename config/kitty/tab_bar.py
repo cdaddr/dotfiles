@@ -75,8 +75,8 @@ def draw_right_status(
         padding = (
             screen.columns
             - screen.cursor.x
-            - sum(len(c[0]) + len(c[1]) + 5 for c in cells)
-            - max(len(cells) - 1, 0)
+            - sum(len(c[0]) + len(c[1]) + 1 for c in cells)
+            - 2 * max(len(cells) - 1, 0)
         )
         if padding >= 0:
             break
@@ -118,8 +118,8 @@ def create_cells(active_tab: TabAccessor, layout_name: str) -> list[tuple[str, s
                 cwd = last_component
 
     return [
-        (layout_name, "", 0x957fb8),
-        (username, "", 0x957fb8),
+        (layout_name, "󰕮", 0x957fb8),
+        (username, "󰀄", 0x957fb8),
         (hostname, "󰒋", 0x957fb8),
         # (cwd, "", 0x7e9cd8),
     ]

@@ -1,6 +1,6 @@
 local M = {}
 
-M.MAX_FILENAME = 20
+M.MAX_FILENAME = 48
 
 local function clamp(val, min, max)
   return math.max(min, math.min(max, val))
@@ -177,7 +177,7 @@ function M.pick(src, keys)
   return out
 end
 
--- collapses middle path segments: ~/foo/bar/baz/qux.lua -> ~/foo/…x2/qux.lua
+-- abbreviates middle segments: ~/foo/a/b/c/bar/file.lua -> ~/foo/a/b/c/bar/file.lua
 function M.short_filename(path)
   if not path or path == "" then
     return ""
@@ -197,7 +197,7 @@ function M.short_filename(path)
     table.insert(segments, seg)
   end
 
-  if #segments <= 2 then
+  if #segments <= 3 then
     return path
   end
 
@@ -211,20 +211,15 @@ function M.short_filename(path)
     prefix = "/"
   end
 
-  local hidden_count = #segments - first_idx - 1
-  if hidden_count > 0 then
-    local first_seg = segments[first_idx]
-    local last_seg = segments[#segments]
-    local hidden_seg
-    if hidden_count == 1 then
-      hidden_seg = "…"
-    else
-      hidden_seg = string.format("…×%d", hidden_count)
-    end
-    return prefix .. first_seg .. "/" .. hidden_seg .. "/" .. last_seg
+  -- keep first segment, abbreviate middle to first letter, keep last two
+  local parts = { segments[first_idx] }
+  for i = first_idx + 1, #segments - 2 do
+    table.insert(parts, segments[i]:sub(1, 1))
   end
+  table.insert(parts, segments[#segments - 1])
+  table.insert(parts, segments[#segments])
 
-  return path
+  return prefix .. table.concat(parts, "/")
 end
 
 -- returns: display_name, is_italic

@@ -67,7 +67,7 @@ return {
         show_in_snippet = false,
       },
       ghost_text = {
-        enabled = true,
+        enabled = false, -- disabled to allow ai completions
       },
       documentation = {
         auto_show = true,
@@ -76,8 +76,8 @@ return {
         selection = { preselect = true, auto_insert = false },
       },
       menu = {
-        auto_show = true,
-        auto_show_delay_ms = 500,
+        auto_show = false, -- disabled to allow ai completions
+        auto_show_delay_ms = 100,
         draw = {
           columns = {
             { "label", "label_description", gap = 1 },

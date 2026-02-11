@@ -21,6 +21,7 @@ return {
     keymaps = {
       -- ["<esc>"] = { "actions.close", mode = "n" },
       ["q"] = { "actions.close", mode = "n" },
+      ["<bs>"] = { "actions.parent", mode = "n" },
       ["<s-cr>"] = { "actions.select", opts = { vertical = true, close = true }, mode = "n" },
       ["<s-d-cr>"] = { "actions.select", opts = { horizontal = true, close = true }, mode = "n" },
       ["<C-h>"] = false,

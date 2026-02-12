@@ -23,11 +23,11 @@ M.unicode = function()
     finder = function()
       local items = {}
 
-      local unicode_data_path = vim.fn.stdpath("config") .. "/lua/plugins/UnicodeData.txt"
+      local unicode_data_path = vim.fn.stdpath("config") .. "/lua/plugins/_UnicodeData.txt"
       local file = io.open(unicode_data_path, "r")
 
       if not file then
-        vim.notify("UnicodeData.txt not found", vim.log.levels.ERROR)
+        vim.notify("_UnicodeData.txt not found", vim.log.levels.ERROR)
         return items
       end
 

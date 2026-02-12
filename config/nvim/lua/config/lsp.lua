@@ -56,45 +56,39 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     vim.bo[bufnr].formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})"
 
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = true })
-    vim.keymap.set("n", "<f1>", function()
-      require("pretty_hover").hover()
-    end, { buffer = true })
-    vim.keymap.set("n", "K", function()
-      require("pretty_hover").hover()
-    end, { buffer = true })
-    vim.keymap.set("n", "<s-f1>", vim.diagnostic.open_float, { noremap = true, buffer = true })
+    -- stylua: ignore start
+    -- these match intellij, roughly
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = true, desc = "Jump to definition" })
+    vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, { buffer = true, desc = "Jump to type definition" })
+    vim.keymap.set("n", "K", function() require("pretty_hover").hover() end, { buffer = true, desc = "Show tooltip" })
 
-    vim.keymap.set("n", "<leader>lK", function()
-      require("pretty_hover").hover()
-    end, { buffer = true, desc = "Pretty hover" })
-    vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { buffer = true, desc = "Code_action" })
+    vim.keymap.set("n", "<f1>", function() require("pretty_hover").hover() end, { buffer = true, desc = "Show tooltip" })
+
+    -- in kitty: shift+f1 => <f13>, ctrl+f1 => <f25>, ctrl+shift+f1 => <f37>
+    vim.keymap.set("n", "<f13>", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Show diagnostic float" })
+    vim.keymap.set("n", "<f25>", function() vim.diagnostic.setqflist({ open = true }) end, { buffer = true, desc = "Send diagnostics to quickfix" })
+
+    vim.keymap.set("n", "<m-cr>", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
+
+    -- these are discoverable for when I forget
+    vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
     vim.keymap.set("n", "<leader>ls", vim.lsp.buf.document_symbol, { buffer = true, desc = "Document_symbol" })
     vim.keymap.set("n", "<leader>lS", vim.lsp.buf.workspace_symbol, { buffer = true, desc = "Workspace symbol" })
-    vim.keymap.set("n", "<leader>ld", vim.lsp.buf.declaration, { buffer = true, desc = "Declaration" })
-    vim.keymap.set("n", "<leader>lD", vim.lsp.buf.definition, { buffer = true, desc = "Definition" })
-    vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { buffer = true, desc = "Type definition" })
+    vim.keymap.set("n", "<leader>ld", vim.lsp.buf.declaration, { buffer = true, desc = "Jump to declaration" })
+    vim.keymap.set("n", "<leader>lD", vim.lsp.buf.definition, { buffer = true, desc = "Jump to definition" })
+    vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { buffer = true, desc = "Jump to type definition" })
     vim.keymap.set("n", "<leader>lr", vim.lsp.buf.references, { buffer = true, desc = "References" })
-    vim.keymap.set(
-      "n",
-      "<leader>le",
-      vim.diagnostic.open_float,
-      { noremap = true, buffer = true, desc = "Diagnostic float" }
-    )
-    vim.keymap.set(
-      "n",
-      "<leader>K",
-      vim.diagnostic.open_float,
-      { noremap = true, buffer = true, desc = "Diagnostic float" }
-    )
-    for _, key in ipairs({ "<leader>lE", "<F2>" }) do
-      vim.keymap.set("n", key, function()
-        vim.diagnostic.setqflist({ open = false })
-        require("quicker").open({ focus = true })
-      end, { noremap = true, buffer = true, desc = "Diagnostic to quickfix" })
-    end
+    -- vim.keymap.set("n", "<leader>K", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Diagnostic float" })
+    -- for _, key in ipairs({ "<leader>lE", "<F2>" }) do
+    --   vim.keymap.set("n", key, function()
+    --     vim.diagnostic.setqflist({ open = false })
+    --     require("quicker").open({ focus = true })
+    --   end, { noremap = true, buffer = true, desc = "Diagnostic to quickfix" })
+    -- end
 
-    vim.keymap.set("n", "<leader>llf", vim.lsp.buf.format, { noremap = true, buffer = true, desc = "Format buffer" })
-    vim.keymap.set("n", "<leader>llr", vim.lsp.buf.rename, { noremap = true, buffer = true, desc = "Rename file" })
+    vim.keymap.set("n", "<leader>lF", vim.lsp.buf.format, { noremap = true, buffer = true, desc = "Format buffer (lsp)" })
+    vim.keymap.set("n", "<leader>lR", vim.lsp.buf.rename, { noremap = true, buffer = true, desc = "Rename file (lsp)" })
+
+    -- stylua: ignore end
   end,
 })

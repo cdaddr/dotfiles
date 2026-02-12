@@ -15,8 +15,8 @@ return {
   },
   -- stylua: ignore
   keys = {
-    { "<D-f>", function() require'neocodeium'.accept() end, mode = "i", desc = "Accept neocodeium" },
-    { "<D-F>", function() require'neocodeium'.accept_line() end, mode = "i", desc = "Accept neocodeium line" },
+    { "<D-l>", function() require'neocodeium'.accept() end, mode = "i", desc = "Accept neocodeium" },
+    { "<D-L>", function() require'neocodeium'.accept_line() end, mode = "i", desc = "Accept neocodeium line" },
     { "<D-g>", function() require'neocodeium'.cycle() end, mode = "i", desc = "Next neocodeium suggestion" },
     { "<D-G>", function() require'neocodeium'.cycle(-1) end, mode = "i", desc = "Prev neocodeium suggestion" },
   },

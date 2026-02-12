@@ -36,10 +36,9 @@ map("v", "<", "<gv")
 map("n", "/", "ms/", { desc = "Mark pre-search location when searching" })
 map("v", "/", "<esc>/\\%V", { desc = "Search in visual selection" })
 
-local cabbrev = vim.cmd.cabbrev
-
-cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
-cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
-cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
-cabbrev("<expr>", "Qa", "(getcmdtype() == ':') ? 'qa' : 'Qa'")
-cabbrev("vrc", ":e $MYVIMRC")
+vim.cmd.cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
+vim.cmd.cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
+vim.cmd.cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
+vim.cmd.cabbrev("<expr>", "Qa", "(getcmdtype() == ':') ? 'qa' : 'Qa'")
+vim.cmd.cabbrev("vrc", ":e $MYVIMRC")
+vim.cmd.cnoreabbrev("c", "close")

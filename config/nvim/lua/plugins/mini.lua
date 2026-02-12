@@ -8,6 +8,8 @@ return {
     icons.setup({})
     -- icons.tweak_lsp_kind()
 
+    require("mini.cmdline").setup({})
+
     require("mini.align").setup({
       mappings = {
         start_with_preview = "ga",

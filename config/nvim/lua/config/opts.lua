@@ -31,6 +31,7 @@ vim.o.list = true
 vim.o.listchars = "tab: ,trail:·,nbsp:␣"
 vim.o.signcolumn = "yes"
 vim.o.winborder = "rounded"
+vim.o.pumborder = "rounded"
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append({ "unnamedplus" })
 

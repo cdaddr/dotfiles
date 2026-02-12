@@ -41,4 +41,17 @@ vim.cmd.cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
 vim.cmd.cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")
 vim.cmd.cabbrev("<expr>", "Qa", "(getcmdtype() == ':') ? 'qa' : 'Qa'")
 vim.cmd.cabbrev("vrc", ":e $MYVIMRC")
-vim.cmd.cnoreabbrev("c", "close")
+
+-- close buffer; also close window if it's a special buffer or unnamed
+vim.api.nvim_create_user_command("C", function()
+  local is_special = vim.bo.buftype ~= ""
+  local is_new = vim.api.nvim_buf_get_name(0) == ""
+
+  if is_special or is_new then
+    vim.cmd.close()
+  else
+    require("mini.bufremove").delete()
+  end
+end, {})
+
+vim.cmd.cnoreabbrev("c", "C")

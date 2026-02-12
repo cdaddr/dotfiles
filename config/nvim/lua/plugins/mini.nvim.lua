@@ -8,7 +8,11 @@ return {
     icons.setup({})
     -- icons.tweak_lsp_kind()
 
-    require("mini.cmdline").setup({})
+    require("mini.cmdline").setup({
+      autocomplete = {
+        delay = 400,
+      },
+    })
 
     require("mini.align").setup({
       mappings = {

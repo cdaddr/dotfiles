@@ -2,7 +2,7 @@ local M = {}
 
 function M.component(palette, active)
   local component = {
-    "%-2P 󰕱 %-3p 󰕭 %-2c",
+    "%-2P 󰕱 %-3l 󰕭 %-2c",
     fmt = function(item)
       return " " .. item
     end,

@@ -13,11 +13,21 @@ return {
     theme.inactive.c.bg = util.copy_hl("LineNr").bg
     theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
 
-    local sections_mod = require("config.lualine.sections")
+    local sections_mod = require("plugins._lualine.sections")
     local active, inactive = sections_mod.sections()
 
+    local ext = require("plugins._lualine.extensions")
+
     require("lualine").setup({
-      extensions = { "oil", "quickfix", "mason", "lazy" },
+      extensions = {
+        "mason",
+        "lazy",
+        ext.quickfix,
+        ext.oil,
+        ext.diffview,
+        ext.nvim_tree,
+        ext.toggleterm,
+      },
       options = {
         theme = theme,
         icons_enabled = true,

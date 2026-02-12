@@ -1,5 +1,5 @@
 local util = require("util")
-local helpers = require("config.lualine.helpers")
+local helpers = require("plugins._lualine.helpers")
 
 local M = {}
 

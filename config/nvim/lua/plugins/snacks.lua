@@ -124,7 +124,7 @@ return {
       if item and item._path then
         picker:close()
         local dir = vim.fn.fnamemodify(item._path, ":h")
-        require("nvim-tree.api").tree.open({ path = dir })
+        -- require("nvim-tree.api").tree.open({ path = dir })
         require("oil").open(dir)
       end
     end

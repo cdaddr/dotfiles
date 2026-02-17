@@ -10,7 +10,10 @@ return {
 
     require("mini.cmdline").setup({
       autocomplete = {
-        delay = 400,
+        enable = true,
+        predicate = function(input)
+          return (input and #input.line >= 2)
+        end,
       },
     })
 

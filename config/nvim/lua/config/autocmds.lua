@@ -22,6 +22,18 @@ au({ "WinEnter", "BufEnter", "BufNewFile" }, {
   desc = "Enable cursorline when buffer gains focus",
 })
 
+-- use cursorlineopt=number in diff mode to avoid underline issue
+-- https://github.com/neovim/neovim/issues/9800
+au("OptionSet", {
+  pattern = "diff",
+  callback = function()
+    if vim.wo.diff then
+      vim.opt.cursorlineopt = "number"
+    end
+  end,
+  desc = "Use cursorlineopt=number in diff mode",
+})
+
 au("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()

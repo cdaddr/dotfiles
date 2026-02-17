@@ -141,11 +141,13 @@ return {
     },
     opts = {
       multiwindow = true,
-      max_lines = 2,
-      line_numbers = true,
-      time_scope = "inner",
+      max_lines = 5,
+      min_window_height = 10,
+      line_numbers = false, -- does nothing :(
+      trim_scope = "inner",
       mode = "cursor",
-      separator = "─",
+      separator = false, -- using underline in color scheme instead
+      -- separator = "─",
     },
   },
   {

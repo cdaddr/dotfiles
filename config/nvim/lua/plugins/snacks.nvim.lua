@@ -150,6 +150,7 @@ return {
     end
 
     local win_opts = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = { "n", "i" }, desc = "Open in Oil" } } } }
+    local exclude = { ".lock", "*lock.json", "*lock.yaml", "*lock.yml", "*lock.toml" }
 
     ---@type snacks.Config
     return {
@@ -164,12 +165,12 @@ return {
         },
         actions = { close_if_no_input = close_if_no_input, open_in_oil = open_in_oil, exit_insert = exit_insert },
         sources = {
-          files = { win = win_opts },
-          git_files = { win = win_opts },
-          recent = { win = win_opts },
+          files = { win = win_opts, exclude = exclude },
+          git_files = { win = win_opts, exclude = exclude },
+          recent = { win = win_opts, exclude = exclude },
           buffers = { win = win_opts },
-          smart = { win = win_opts },
-          grep = { format = grep_format, win = win_opts },
+          smart = { win = win_opts, exclude = exclude },
+          grep = { format = grep_format, win = win_opts, exclude = exclude },
           grep_buffers = { format = grep_format, win = win_opts },
           grep_word = { format = grep_format, win = win_opts },
         },

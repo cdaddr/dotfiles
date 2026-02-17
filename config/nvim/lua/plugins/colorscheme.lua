@@ -63,7 +63,7 @@ return {
             PmenuThumb = { fg = palette.sumiInk3 },
             PmenuSbar = { bg = palette.sumiInk4 },
             PmenuSel = { link = "Visual" },
-            -- Visual = { bg = palette.waveBlue2 },
+
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
             CursorLineNr = { bg = gutter_bg },
@@ -80,18 +80,15 @@ return {
             EndOfBuffer = { bg = palette.sumiInk1 },
             TabLineSel = { bg = palette.oniViolet, fg = palette.sumiInk0 },
 
-            -- Save an hlgroup with dark background and dimmed foreground
-            -- so that you can use it where your still want darker windows.
-            -- E.g.: autocmd TermOpen * setlocal winhighlight=Normal:NormalDark
             NormalDark = { fg = palette.oldWhite, bg = palette.sumiInk0 },
 
-            -- Popular plugins that open floats will link to NormalFloat by default;
-            -- set their background accordingly if you wish to keep them dark and borderless
             LazyNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             MasonNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             SnacksPickerCursorLine = { bg = normal_bg },
-            TreesitterContextLineNumber = { bg = gutter_bg },
-            TreesitterContextLineNumberBottom = { bg = gutter_bg },
+            TreesitterContextLineNumber = { fg = palette.sumiInk4, bg = palette.sumiInk0 },
+            TreesitterContextLineNumberBottom = { bg = gutter_bg, sp = palette.sumiInk4, underline = true },
+            TreesitterContextBottom = { bg = gutter_bg, sp = palette.sumiInk4, underline = true },
+            TreesitterContextSeparator = { bg = gutter_bg, fg = palette.oniViolet },
 
             BlinkCmpMenuBorder = { bg = "none" },
             BlinkCmpMenuSelection = { link = "Visual" },

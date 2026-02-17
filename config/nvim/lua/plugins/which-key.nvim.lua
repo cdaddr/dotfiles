@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   ---@type wk.Opts
   opts = {
-    -- delay = 200,
+    delay = 1000,
     spec = {
       { "<leader>f", group = "File" },
       { "<leader>b", group = "Buffers" },
@@ -23,9 +23,10 @@ return {
     },
 
     win = {
-      no_overlap = false,
+      no_overlap = true,
       border = "rounded",
-      -- padding = { 0, 0 },
+      padding = { 0, 0 },
+      wo = { winblend = 10 },
     },
     show_help = false,
   },

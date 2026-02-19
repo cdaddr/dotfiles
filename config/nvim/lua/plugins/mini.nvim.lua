@@ -15,6 +15,9 @@ return {
           return (input and #input.line >= 2)
         end,
       },
+      autopeek = {
+        enable = false,
+      },
     })
 
     require("mini.align").setup({

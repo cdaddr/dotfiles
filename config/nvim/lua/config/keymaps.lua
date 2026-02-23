@@ -43,6 +43,10 @@ map("n", "z7", function() vim.opt.foldlevel = 7 end, { desc = "Set foldlevel=7" 
 map("n", "z8", function() vim.opt.foldlevel = 8 end, { desc = "Set foldlevel=8" })
 map("n", "z9", function() vim.opt.foldlevel = 9 end, { desc = "Set foldlevel=9" })
 
+-- toggle qf
+map("n", [[\q]], ":copen<cr>", { desc = "Toggle quickfix list" })
+map("n", [[\Q]], ":cclose<cr>", { desc = "Close quickfix list" })
+
 map("x", ">", ">gv")
 map("x", "<", "<gv")
 map("x", "/", "<esc>/\\%V", { desc = "Search in visual selection" })

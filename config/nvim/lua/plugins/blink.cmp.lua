@@ -9,6 +9,8 @@ highlight = function(ctx)
   return mini_icon ~= nil and mini_hl or ctx.kind_hl
 end
 
+local default_providers = { "lazydev", "snippets", "path", "lsp", "buffer" }
+
 return {
   "saghen/blink.cmp",
   dependencies = { "rafamadriz/friendly-snippets" },
@@ -22,9 +24,14 @@ return {
       ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
       ["<C-space>"] = { "show", "hide", "fallback" },
-      -- because of auto-show and auto-select, it will eat <esc> trying to get out of normal mode
+      -- blink will eat <esc> trying to get out of normal mode
       -- ...so leave this off
       -- ["<Esc>"] = { "hide", "fallback" },
+      ["<M-a>"] = {
+        function(cmp)
+          cmp.show({ providers = default_providers })
+        end,
+      },
       ["<M-s>"] = {
         function(cmp)
           cmp.show({ providers = { "snippets" } })
@@ -73,10 +80,10 @@ return {
         auto_show = true,
       },
       list = {
-        selection = { preselect = true, auto_insert = false },
+        selection = { preselect = true, auto_insert = true },
       },
       menu = {
-        auto_show = false, -- disabled to allow ai completions
+        auto_show = true,
         auto_show_delay_ms = 100,
         draw = {
           columns = {
@@ -100,7 +107,7 @@ return {
     },
 
     sources = {
-      default = { "lazydev", "snippets", "path", "lsp", "buffer" },
+      default = default_providers,
       providers = {
         lazydev = {
           name = "LazyDev",

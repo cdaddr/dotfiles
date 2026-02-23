@@ -42,10 +42,22 @@ au("TextYankPost", {
 
 au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
 
--- close command-line window q: with <Esc>
-au("CmdwinEnter", {
+-- close floating windows (LSP hover, etc.) with <Esc>
+au("WinEnter", {
   callback = function()
-    vim.keymap.set("n", "<Esc>", "<cmd>q<cr>", { buffer = true, silent = true })
+    local win_config = vim.api.nvim_win_get_config(0)
+    if win_config.relative ~= "" then
+      vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = true, silent = true })
+    end
+  end,
+})
+
+au("FileType", {
+  pattern = "grug-far",
+  callback = function()
+    vim.keymap.set("n", "q", function()
+      require("grug-far").get_instance(0):close()
+    end, { buffer = true, silent = true })
   end,
 })
 
@@ -133,37 +145,14 @@ au("FileType", {
 
 au("LspAttach", {
   callback = function(args)
-    -- re-evaluate folding when LSP attaches (in case treesitter wasn't available)
     setup_folding(args.buf)
   end,
-  desc = "Re-evaluate folding on LSP attach",
+  desc = "Re-setup folding on lsp attach",
 })
 
--- stop q from starting a macro during hit-enter (:h hit-enter)
-vim.cmd([[
-  fu s:hit_enter_prompt_no_recording() abort
-    if has('nvim')
-      nno q <c-\><c-n>
-      return timer_start(0, {-> execute('nunmap q', 'silent!')})
-    endif
-    if mode() isnot# 'r' | return | endif
-    nno <expr> q execute('nunmap q', 'silent!')[-1]
-    if exists('##SafeState')
-      au SafeState * ++once sil! nunmap q
-    else
-      let q = {}
-      let q.timer = timer_start(10, {-> mode() isnot# 'r' && q.nunmap()}, {'repeat': -1})
-      fu q.nunmap() abort
-        call timer_stop(self.timer)
-        sil! nunmap q
-      endfu
-    endif
-  endfu
-  augroup hit_enter_prompt | au!
-    if has('nvim')
-      au CmdlineLeave : call s:hit_enter_prompt_no_recording()
-    else
-      au CmdlineLeave : call timer_start(0, {-> s:hit_enter_prompt_no_recording()})
-    endif
-  augroup END
-]])
+-- close q: with <Esc>
+au("CmdwinEnter", {
+  callback = function()
+    vim.keymap.set("n", "<Esc>", "<cmd>q<cr>", { buffer = true, silent = true })
+  end,
+})

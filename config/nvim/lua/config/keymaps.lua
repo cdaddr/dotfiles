@@ -1,3 +1,4 @@
+-- stylua: ignore start
 local map = function(mode, key, fn, opts)
   opts = vim.tbl_extend("force", { silent = true }, opts or {})
   vim.keymap.set(mode, key, fn, opts)
@@ -30,11 +31,21 @@ map("n", "<C-w><C-V>", "<cmd>topleft vnew<cr>", { desc = "open new split vertica
 
 map("n", "<leader>P", '"_Dp', { desc = "Paste to end of line" })
 
-map("v", ">", ">gv")
-map("v", "<", "<gv")
-
 map("n", "/", "ms/", { desc = "Mark pre-search location when searching" })
-map("v", "/", "<esc>/\\%V", { desc = "Search in visual selection" })
+
+map("n", "z1", function() vim.opt.foldlevel = 1 end, { desc = "Set foldlevel=1" })
+map("n", "z2", function() vim.opt.foldlevel = 2 end, { desc = "Set foldlevel=2" })
+map("n", "z3", function() vim.opt.foldlevel = 3 end, { desc = "Set foldlevel=3" })
+map("n", "z4", function() vim.opt.foldlevel = 4 end, { desc = "Set foldlevel=4" })
+map("n", "z5", function() vim.opt.foldlevel = 5 end, { desc = "Set foldlevel=5" })
+map("n", "z6", function() vim.opt.foldlevel = 6 end, { desc = "Set foldlevel=6" })
+map("n", "z7", function() vim.opt.foldlevel = 7 end, { desc = "Set foldlevel=7" })
+map("n", "z8", function() vim.opt.foldlevel = 8 end, { desc = "Set foldlevel=8" })
+map("n", "z9", function() vim.opt.foldlevel = 9 end, { desc = "Set foldlevel=9" })
+
+map("x", ">", ">gv")
+map("x", "<", "<gv")
+map("x", "/", "<esc>/\\%V", { desc = "Search in visual selection" })
 
 vim.cmd.cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
 vim.cmd.cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
@@ -48,10 +59,13 @@ vim.api.nvim_create_user_command("C", function()
   local is_new = vim.api.nvim_buf_get_name(0) == ""
 
   if is_special or is_new then
-    vim.cmd.close()
+    local ok = pcall(vim.cmd.close)
+    if not ok then
+    end
   else
     require("mini.bufremove").delete()
   end
-end, {})
+  vim.fn.histdel("cmd", "^C$")
+end, { desc = "Close buffer (mini.bufremove)" })
 
 vim.cmd.cnoreabbrev("c", "C")

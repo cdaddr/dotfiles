@@ -63,15 +63,12 @@ return {
             PmenuThumb = { fg = palette.sumiInk3 },
             PmenuSbar = { bg = palette.sumiInk4 },
             PmenuSel = { link = "Visual" },
+            Delimiter = { fg = palette.sumiInk4 },
 
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
             CursorLineNr = { bg = gutter_bg },
             SignColumn = { bg = gutter_bg },
-            GitSignsChange = { bg = gutter_bg },
-            GitSignsAdd = { bg = gutter_bg },
-            GitSignsUntracked = { bg = gutter_bg },
-            GitSignsDelete = { bg = gutter_bg },
             WinSeparator = { bg = palette.sumiInk1, fg = palette.oniViolet },
             StatusLine = { bg = gutter_bg },
             StatusLineNC = { bg = gutter_bg },
@@ -81,6 +78,15 @@ return {
             TabLineSel = { bg = palette.oniViolet, fg = palette.sumiInk0 },
 
             NormalDark = { fg = palette.oldWhite, bg = palette.sumiInk0 },
+
+            BqfPreviewRange = { bg = palette.waveBlue1 },
+            -- BqfPreviewBorder = { bg = palette.sumiInk1 },
+            -- BqfPreviewTitle = { bg = palette.sumiInk1, fg = palette.oldWhite },
+
+            GitSignsChange = { bg = gutter_bg },
+            GitSignsAdd = { bg = gutter_bg },
+            GitSignsUntracked = { bg = gutter_bg },
+            GitSignsDelete = { bg = gutter_bg },
 
             LazyNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             MasonNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
@@ -103,8 +109,8 @@ return {
             RenderMarkdownH6Bg = { bg = palette.waveBlue1, fg = palette.oldWhite },
 
             CodeDiffFiller = { fg = palette.oniViolet },
-            -- MiniCursorword = { underline = true, sp = palette.oniViolet },
-            -- MiniCursorwordCurrent = { underline = true, sp = palette.oniViolet },
+            MiniCursorword = { underdotted = true },
+            MiniCursorwordCurrent = { underdotted = true },
           }
         end,
       })

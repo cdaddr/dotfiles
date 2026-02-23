@@ -21,8 +21,6 @@ require("config.autocmds")
 
 vim.cmd.colorscheme(theme.nvim)
 
-vim.diagnostic.config({ virtual_text = true, virtual_lines = false, underline = true, signs = false })
-
 -- experimental
 -- require("vim._extui").enable({
 --   enable = true, -- Whether to enable or disable the UI.

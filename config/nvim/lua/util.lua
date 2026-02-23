@@ -106,6 +106,60 @@ function M.desaturate(hex_color, factor)
   return M.desaturate_rgb(r, g, b, factor)
 end
 
+-- dims hex color by scaling HSL lightness (factor: 0=black, 1=original)
+-- preserves hue and saturation; avoids muddy blending with background
+function M.dim(hex_color, factor)
+  if not hex_color then
+    return nil
+  end
+  local r, g, b = hex_to_rgb(hex_color)
+  local rf, gf, bf = r / 255, g / 255, b / 255
+
+  local maxc = math.max(rf, gf, bf)
+  local minc = math.min(rf, gf, bf)
+  local l = (maxc + minc) / 2
+  local h, s = 0, 0
+  local d = maxc - minc
+
+  if d ~= 0 then
+    if maxc == rf then
+      h = ((gf - bf) / d) % 6
+    elseif maxc == gf then
+      h = ((bf - rf) / d) + 2
+    else
+      h = ((rf - gf) / d) + 4
+    end
+    h = h * 60
+    s = d / (1 - math.abs(2 * l - 1))
+  end
+
+  l = clamp(l * factor, 0, 1)
+
+  local c = (1 - math.abs(2 * l - 1)) * s
+  local hh = h / 60
+  local x = c * (1 - math.abs((hh % 2) - 1))
+  local rp, gp, bp = 0, 0, 0
+  if 0 <= hh and hh < 1 then
+    rp, gp, bp = c, x, 0
+  elseif 1 <= hh and hh < 2 then
+    rp, gp, bp = x, c, 0
+  elseif 2 <= hh and hh < 3 then
+    rp, gp, bp = 0, c, x
+  elseif 3 <= hh and hh < 4 then
+    rp, gp, bp = 0, x, c
+  elseif 4 <= hh and hh < 5 then
+    rp, gp, bp = x, 0, c
+  else
+    rp, gp, bp = c, 0, x
+  end
+  local m = l - c / 2
+
+  local r2 = clamp(math.floor((rp + m) * 255 + 0.5), 0, 255)
+  local g2 = clamp(math.floor((gp + m) * 255 + 0.5), 0, 255)
+  local b2 = clamp(math.floor((bp + m) * 255 + 0.5), 0, 255)
+  return string.format("#%02X%02X%02X", r2, g2, b2)
+end
+
 -- Blend two integer colors together
 -- amount: 0 = all fg, 1 = all bg
 function M.blend(fg, bg, amount)

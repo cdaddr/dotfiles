@@ -89,17 +89,29 @@ local function set_dim_diagnostics()
   local warn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
   local info_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
   local hint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
-  local bg_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
 
-  local bg = bg_hl.bg or 0x16161D
-  vim.cmd("hi DiagnosticUnderlineError gui=undercurl guisp=#" .. util.blend_hex(error_hl.fg, bg, 0.5))
-  vim.cmd("hi DiagnosticUnderlineWarn gui=undercurl guisp=#" .. util.blend_hex(warn_hl.fg, bg, 0.5))
-  vim.cmd("hi DiagnosticUnderlineInfo gui=undercurl guisp=#" .. util.blend_hex(info_hl.fg, bg, 0.5))
-  vim.cmd("hi DiagnosticUnderlineHint gui=undercurl guisp=#" .. util.blend_hex(hint_hl.fg, bg, 0.5))
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = util.blend(error_hl.fg, bg, 0.5) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = util.blend(warn_hl.fg, bg, 0.5) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = util.blend(info_hl.fg, bg, 0.5) })
-  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = util.blend(hint_hl.fg, bg, 0.5) })
+  local function dim(int_color, factor)
+    local hex = util.dim(util.int_to_hex(int_color), factor)
+    return tonumber(hex:sub(2), 16)
+  end
+
+  local err = dim(error_hl.fg, 0.75)
+  local warn = dim(warn_hl.fg, 0.50)
+  local info = dim(info_hl.fg, 0.50)
+  local hint = dim(hint_hl.fg, 0.50)
+
+  vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { undercurl = true, sp = err })
+  vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { undercurl = true, sp = warn })
+  vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { undercurl = true, sp = info })
+  vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { undercurl = true, sp = hint })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = err })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = warn })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = info })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = hint })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesError", { fg = err })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesWarn", { fg = warn })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesInfo", { fg = info })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesHint", { fg = hint })
 end
 
 au("ColorScheme", { callback = set_dim_diagnostics })
@@ -150,9 +162,34 @@ au("LspAttach", {
   desc = "Re-setup folding on lsp attach",
 })
 
--- close q: with <Esc>
+-- if a search is currently highlighted, then :nohls, else :close
+local nohlsOrClose = function()
+  if vim.v.hlsearch == 1 then
+    vim.cmd.nohlsearch()
+  else
+    vim.cmd.close()
+  end
+end
+
+au("FileType", {
+  pattern = "qf",
+  callback = function(_)
+    vim.keymap.set("n", "q", nohlsOrClose, { desc = "Close quickfix list", buffer = true })
+  end,
+  desc = "Close quickfix list",
+})
+
+au("FileType", {
+  pattern = "help",
+  callback = function(_)
+    vim.keymap.set("n", "q", nohlsOrClose, { desc = "Close help", buffer = true })
+    vim.keymap.set("n", "<esc>", nohlsOrClose, { desc = "Close help", buffer = true })
+  end,
+  desc = "Close help",
+})
+
 au("CmdwinEnter", {
   callback = function()
-    vim.keymap.set("n", "<Esc>", "<cmd>q<cr>", { buffer = true, silent = true })
+    vim.keymap.set("n", "<Esc>", nohlsOrClose, { buffer = true, silent = true })
   end,
 })

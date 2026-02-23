@@ -78,6 +78,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>lD", vim.lsp.buf.definition, { buffer = true, desc = "Jump to definition" })
     vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { buffer = true, desc = "Jump to type definition" })
     vim.keymap.set("n", "<leader>lr", vim.lsp.buf.references, { buffer = true, desc = "References" })
+    vim.keymap.set("n", "<f2>", function ()
+      vim.diagnostic.jump({ count = 1, severity = { min = vim.diagnostic.severity.WARN } })
+    end, { buffer = true, desc = "Next diagnostic" })
+    vim.keymap.set("n", "<f14>", function ()
+      vim.diagnostic.jump({ count = -1, severity = { min = vim.diagnostic.severity.WARN } })
+    end, { buffer = true, desc = "Previous diagnostic" })
+
     -- vim.keymap.set("n", "<leader>K", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Diagnostic float" })
     -- for _, key in ipairs({ "<leader>lE", "<F2>" }) do
     --   vim.keymap.set("n", key, function()

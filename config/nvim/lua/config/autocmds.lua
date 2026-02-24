@@ -182,8 +182,7 @@ au("FileType", {
 au("FileType", {
   pattern = "help",
   callback = function(_)
-    vim.keymap.set("n", "q", nohlsOrClose, { desc = "Close help", buffer = true })
-    vim.keymap.set("n", "<esc>", nohlsOrClose, { desc = "Close help", buffer = true })
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { desc = "Close help", buffer = true })
   end,
   desc = "Close help",
 })

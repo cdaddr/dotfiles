@@ -7,8 +7,10 @@ function M.component(palette, active)
 
   return {
     function()
-      if not vim.b.disable_format_on_save then
-        return "󰁨 "
+      if vim.b.disable_format_on_save then
+        return ""
+      else
+        return "󰁨  "
       end
     end,
     padding = 0,

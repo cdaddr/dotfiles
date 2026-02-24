@@ -36,12 +36,8 @@ vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append({ "unnamedplus" })
 
 vim.diagnostic.config({
-  virtual_text = false,
-  virtual_lines = {
-    format = function(diagnostic)
-      return string.format("%s (%s)", diagnostic.message, diagnostic.code)
-    end,
-  },
+  virtual_text = true,
+  virtual_lines = false,
   underline = true,
   signs = false,
   severity_sort = true,

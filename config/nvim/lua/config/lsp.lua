@@ -65,8 +65,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<f1>", function() require("pretty_hover").hover() end, { buffer = true, desc = "Show tooltip" })
 
     -- in kitty: shift+f1 => <f13>, ctrl+f1 => <f25>, ctrl+shift+f1 => <f37>
-    vim.keymap.set("n", "<f13>", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Show diagnostic float" })
-    vim.keymap.set("n", "<f25>", function() vim.diagnostic.setqflist({ open = true }) end, { buffer = true, desc = "Send diagnostics to quickfix" })
+    vim.keymap.set("n", "<f13>", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Show diagnostic float <s-f1>"})
+    vim.keymap.set("n", "<f25>", function() vim.diagnostic.setqflist({ open = true }) end, { buffer = true, desc = "Send diagnostics to quickfix <c-f1>" })
+    vim.keymap.set("n", "<f37>", function() vim.diagnostic.setloclist({ open = true }) end, { buffer = true, desc = "Send buffer diagnostics to loclist <cs-f1>" })
 
     vim.keymap.set("n", "<m-cr>", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
 
@@ -83,7 +84,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end, { buffer = true, desc = "Next diagnostic" })
     vim.keymap.set("n", "<f14>", function ()
       vim.diagnostic.jump({ count = -1, severity = { min = vim.diagnostic.severity.WARN } })
-    end, { buffer = true, desc = "Previous diagnostic" })
+    end, { buffer = true, desc = "Previous diagnostic <s-f2>" })
+
+    vim.keymap.set('n', [[\k]], function()
+      if vim.diagnostic.config().virtual_lines then
+        vim.diagnostic.config({ virtual_lines = false })
+      else
+        vim.diagnostic.config({
+          virtual_lines = {
+            format = function(diagnostic)
+              return string.format("%s (%s)", diagnostic.message, diagnostic.code)
+            end,
+          },
+        })
+      end
+    end, { desc = 'Toggle diagnostic virtual_lines' })
 
     -- vim.keymap.set("n", "<leader>K", vim.diagnostic.open_float, { noremap = true, buffer = true, desc = "Diagnostic float" })
     -- for _, key in ipairs({ "<leader>lE", "<F2>" }) do

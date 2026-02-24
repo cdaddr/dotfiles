@@ -33,6 +33,9 @@ map("n", "<leader>P", '"_Dp', { desc = "Paste to end of line" })
 
 map("n", "/", "ms/", { desc = "Mark pre-search location when searching" })
 
+-- restore <C-i> jump forward (overridden by <tab> grapple mapping)
+map("n", "<C-i>", "<C-i>", { noremap = true, desc = "Jump forward" })
+
 map("n", "z1", function() vim.opt.foldlevel = 1 end, { desc = "Set foldlevel=1" })
 map("n", "z2", function() vim.opt.foldlevel = 2 end, { desc = "Set foldlevel=2" })
 map("n", "z3", function() vim.opt.foldlevel = 3 end, { desc = "Set foldlevel=3" })
@@ -42,6 +45,8 @@ map("n", "z6", function() vim.opt.foldlevel = 6 end, { desc = "Set foldlevel=6" 
 map("n", "z7", function() vim.opt.foldlevel = 7 end, { desc = "Set foldlevel=7" })
 map("n", "z8", function() vim.opt.foldlevel = 8 end, { desc = "Set foldlevel=8" })
 map("n", "z9", function() vim.opt.foldlevel = 9 end, { desc = "Set foldlevel=9" })
+
+map("n", "<f5>", "<cmd>restart +:qall!<cr>", { desc = "Quit without saving and restart nvim" })
 
 -- toggle qf
 map("n", [[\q]], ":copen<cr>", { desc = "Toggle quickfix list" })

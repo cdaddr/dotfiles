@@ -100,11 +100,11 @@ return {
       delay = { text_change = 5 },
       highlighters = {
         fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+        bug = { pattern = "%f[%w]()BUG()%f[%W]", group = "MiniHipatternsFixme" },
+        warn = { pattern = "%f[%w]()WARN()%f[%W]", group = "MiniHipatternsHack" },
         hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
         todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
         note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
-        -- trailing_whitespace = { pattern = "%f[%s]%s*$", group = "MiniHipatternsWS" },
-        -- tabs = { pattern = "\t", group = "MiniHipatternsWS" },
       },
     })
 

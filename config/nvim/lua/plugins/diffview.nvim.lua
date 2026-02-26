@@ -1,6 +1,6 @@
 return {
   "sindrets/diffview.nvim",
-  lazy = false,
+  cmd = { "DiffviewOpen", "DiffviewFileHistory" },
   opts = function(_)
     local close = { { "n", "x" }, "q", "<cmd>DiffviewClose<cr>", { desc = "DiffviewClose" } }
     return {

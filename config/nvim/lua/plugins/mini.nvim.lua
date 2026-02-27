@@ -2,7 +2,9 @@ local util = require("util")
 return {
   "echasnovski/mini.nvim",
   config = function()
-    -- require('mini.jump').setup{}
+    local mini_jump = require("mini.jump")
+    mini_jump.setup({})
+    vim.api.nvim_set_hl(0, "MiniJump", { link = "IncSearch" })
 
     local icons = require("mini.icons")
     icons.setup({})

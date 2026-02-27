@@ -7,9 +7,6 @@ local theme = dofile(theme_file)
 _G.theme = theme
 _G.DOTFILES = vim.env.HOME .. "/.dotfiles"
 
--- Silence deprecation warnings
-vim.deprecate = function() end
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 

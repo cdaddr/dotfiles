@@ -68,6 +68,7 @@ return {
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
             CursorLineNr = { bg = gutter_bg },
+            Cursor = { fg = "Red", bg = "Blue" },
             SignColumn = { bg = gutter_bg },
             WinSeparator = { bg = palette.sumiInk1, fg = palette.oniViolet },
             StatusLine = { bg = gutter_bg },
@@ -111,6 +112,7 @@ return {
             CodeDiffFiller = { fg = palette.oniViolet },
             MiniCursorword = { underdotted = true },
             MiniCursorwordCurrent = { underdotted = true },
+            MiniJump = { link = "Search" },
           }
         end,
       })

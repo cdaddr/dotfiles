@@ -11,6 +11,7 @@ vim.o.undofile = true
 vim.o.showmatch = false
 vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
+-- vim.o.guicursor = "a:blinkon0,i-ci-ve:ver25,r-cr-o:hor20,t:block-TermCursor"
 vim.o.winheight = 3
 vim.o.winminheight = 3
 vim.o.scrolloff = 2

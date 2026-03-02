@@ -69,6 +69,12 @@ return {
     map_lsp_selection("<c-s-space>", "Decrease selection")
 
     require("mini.cursorword").setup({ delay = 50 })
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+      callback = function()
+        local word = vim.fn.expand("<cword>")
+        vim.b.minicursorword_disable = not word:match("^[%a_][%w_]+$")
+      end,
+    })
 
     -- local make_pick = function(key, fn, desc)
     --   vim.keymap.set('n', key, fn, {desc = desc})

@@ -22,9 +22,6 @@ for _, server in ipairs(servers) do
   vim.lsp.enable(server)
 end
 
-vim.lsp.config("sqls", { cmd = { "sqls", "-config", "sqls.yaml" } })
-vim.lsp.enable("sqls")
-
 local t = vim.lsp.config["html"].filetypes
 t[#t + 1] = "htmldjango"
 t[#t + 1] = "tailwindcss"

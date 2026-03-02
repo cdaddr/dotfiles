@@ -6,21 +6,21 @@ local au = function(event, opts)
   vim.api.nvim_create_autocmd(event, opts)
 end
 
-au("WinLeave", {
-  pattern = "*",
-  callback = function()
-    vim.opt.cursorline = false
-  end,
-  desc = "Remove cursorline when buffer loses focus",
-})
+-- au("WinLeave", {
+--   pattern = "*",
+--   callback = function()
+--     vim.opt.cursorline = false
+--   end,
+--   desc = "Remove cursorline when buffer loses focus",
+-- })
 
-au({ "WinEnter", "BufEnter", "BufNewFile" }, {
-  pattern = "*",
-  callback = function()
-    vim.opt.cursorline = true
-  end,
-  desc = "Enable cursorline when buffer gains focus",
-})
+-- au({ "WinEnter", "BufEnter", "BufNewFile" }, {
+--   pattern = "*",
+--   callback = function()
+--     vim.opt.cursorline = true
+--   end,
+--   desc = "Enable cursorline when buffer gains focus",
+-- })
 
 -- use cursorlineopt=number in diff mode to avoid underline issue
 -- https://github.com/neovim/neovim/issues/9800

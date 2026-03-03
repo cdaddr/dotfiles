@@ -1,6 +1,7 @@
 local util = require("util")
 return {
   "echasnovski/mini.nvim",
+  -- see colorscheme.lua for highlights
   config = function()
     local mini_jump = require("mini.jump")
     mini_jump.setup({})

@@ -2,6 +2,7 @@ return {
   "MeanderingProgrammer/render-markdown.nvim",
   ft = { "markdown", "lua" },
 
+  -- see colorscheme.lua for highlights
   opts = {
     render_modes = { "n", "c", "v", "V", "Vs", "", "i", "R", "Rv" },
     heading = {

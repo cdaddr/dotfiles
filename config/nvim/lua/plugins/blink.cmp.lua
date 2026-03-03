@@ -17,6 +17,7 @@ return {
 
   version = "1.*",
 
+  -- see colorscheme.lua for highlights
   ---@type blink.cmp.Config
   opts = {
     keymap = {

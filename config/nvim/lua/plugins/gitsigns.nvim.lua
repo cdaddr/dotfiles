@@ -1,5 +1,6 @@
 return {
   "lewis6991/gitsigns.nvim",
+  -- see colorscheme.lua for highlights
   config = function()
     local copy_old_hunk_to_register = function(register)
       local gs = require("gitsigns")

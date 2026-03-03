@@ -1,6 +1,7 @@
 return {
   "kevinhwang91/nvim-bqf",
   lazy = false,
+  -- see colorscheme.lua for highlights
   -- taken from bqf docs - better qf formatting
   init = function()
     local fn = vim.fn

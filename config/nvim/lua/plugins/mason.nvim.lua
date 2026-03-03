@@ -1,6 +1,7 @@
 return {
   {
     "mason-org/mason.nvim",
+    -- see colorscheme.lua for highlights
     opts = {
       -- ensure_installed = {
       --   "lua_ls",

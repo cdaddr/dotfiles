@@ -10,6 +10,7 @@ return {
     -- Override column number highlight for better visibility on selected lines
     vim.api.nvim_set_hl(0, "SnacksPickerCol", { link = "SnacksPickerIdx" })
   end,
+  -- see colorscheme.lua for highlights
   opts = function()
     -- toggle options
     Snacks.toggle.option("spell", { name = "Spelling" }):map([[\s]])

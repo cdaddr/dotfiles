@@ -23,9 +23,9 @@ return {
 
     local foldcol = function()
       local foldsigns = {
-        closed = "%#SignColumn#▷",
-        opened = "%#StatusColFold#▽",
-        seps = { "%#StatusColFold#┊", "%#StatusColFold#┆", "%#StatusColFold#│" },
+        closed = "%#SignColumn#▷%*",
+        opened = "%#StatusColFold#▽%*",
+        seps = { "%#StatusColFold#┊%*", "%#StatusColFold#┆%*", "%#StatusColFold#│%*" },
       }
       local lnum = vim.v.lnum
       local foldlevel = vim.fn.foldlevel(vim.v.lnum)

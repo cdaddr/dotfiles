@@ -1,10 +1,10 @@
--- nvim config
 -- https://github.com/cdaddr/dotfiles
 
--- Load theme from generated config
 local theme_file = vim.fn.expand("~/.dotfiles/config/current-theme.lua")
 local theme = dofile(theme_file)
 _G.theme = theme
+
+-- dotfiles git repo is in ~/.dotfiles and individual folders are symlinked to ~/.config/*
 _G.DOTFILES = vim.env.HOME .. "/.dotfiles"
 
 vim.g.mapleader = " "

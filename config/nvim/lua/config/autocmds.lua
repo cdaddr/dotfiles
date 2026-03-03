@@ -178,32 +178,3 @@ au("FileType", {
   end,
   desc = "Close quickfix list",
 })
-
-au("FileType", {
-  pattern = "help",
-  callback = function(_)
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { desc = "Close help", buffer = true })
-  end,
-  desc = "Close help",
-})
-
-au("CmdwinEnter", {
-  callback = function()
-    vim.keymap.set("n", "<Esc>", nohlsOrClose, { buffer = true, silent = true })
-  end,
-})
-
--- -- cursor color via OSC 12 (highlight groups don't reach the terminal cursor)
--- au({ "VimEnter", "VimResume", "ColorScheme" }, {
---   callback = function()
---     io.write("\27]12;#C8C093\7")
---     io.flush()
---   end,
--- })
---
--- au({ "VimLeave", "VimSuspend" }, {
---   callback = function()
---     io.write("\27]112\7") -- reset, letting zsh precmd restore its color
---     io.flush()
---   end,
--- })

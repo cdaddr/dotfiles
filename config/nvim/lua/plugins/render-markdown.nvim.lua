@@ -3,50 +3,68 @@ return {
   ft = { "markdown", "lua" },
 
   opts = {
-    render_modes = { "n", "c", "t", "i" },
+    render_modes = { "n", "c", "v", "V", "Vs", "", "i", "R", "Rv" },
     heading = {
       border = true,
       above = "▂",
       below = "▀🮂",
       border_virtual = true,
-      -- 『1』『2』『3』『4』『5』『6』『7』『8』『9』『0』
       icons = {
-        "⒈ ",
-        "⒉ ",
-        "⒊ ",
-        "⒋ ",
-        "⒌ ",
-        "⒍ ",
-        "⒎ ",
-        "⒏ ",
-        "⒐ ",
-        "⒑ ",
+        "󰉫 ",
+        "󰉬 ",
+        "󰉭 ",
+        "󰉮 ",
+        "󰉯 ",
+        "󰉰 ",
       },
     },
     code = {
-      conceal_delimiters = true,
-      border = "thick",
-      inline_pad = 1,
-      position = "right",
-      language_border = "",
-      highlight_language = "Comment",
-      highlight_border = "Constant",
-      disable_background = true,
+      border = "thin",
+      -- inline_pad = 1,
+      position = "left",
+      -- language_border = "",
+      -- highlight_language = "Comment",
+      -- highlight_border = "Constant",
+      disable_background = { "diff" },
+      width = "block",
     },
     anti_conceal = {
       ignore = {
-        code_border = true,
+        code_border = false,
       },
     },
     completions = {
       lsp = { enabled = true },
       blink = { enabled = true },
     },
+    quote = {
+      repeat_linebreak = true, -- this might not do anything?
+    },
     sign = {
       enabled = false,
     },
     patterns = {
-      markdown = { disable = false },
+      markdown = {
+        disable = true,
+        directives = {
+          { id = 17, name = "conceal_lines" },
+          { id = 18, name = "conceal_lines" },
+        },
+      },
+    },
+    win_options = {
+      showbreak = {
+        default = vim.o.showbreak,
+        rendered = "  ",
+      },
+      breakindent = {
+        default = vim.o.breakindent,
+        rendered = true,
+      },
+      breakindentopt = {
+        default = vim.o.breakindentopt,
+        rendered = "",
+      },
     },
   },
 }

@@ -2,7 +2,7 @@ local util = require("util")
 
 local vimrc_augroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 local au = function(event, opts)
-  opts = vim.tbl_extend("keep", opts, { group = vimrc_augroup })
+  opts = vim.tbl_extend("keep", opts, { group = vimrc_augroup, nested = true })
   vim.api.nvim_create_autocmd(event, opts)
 end
 

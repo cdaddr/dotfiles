@@ -22,6 +22,14 @@ for _, server in ipairs(servers) do
   vim.lsp.enable(server)
 end
 
+-- ruff panics on unnamed buffers (no file path); skip attachment when buffer has no name
+vim.lsp.config("ruff", {
+  root_dir = function(fname)
+    if not fname or fname == "" then return nil end
+    return vim.fs.root(fname, { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" })
+  end,
+})
+
 local t = vim.lsp.config["html"].filetypes
 t[#t + 1] = "htmldjango"
 t[#t + 1] = "tailwindcss"

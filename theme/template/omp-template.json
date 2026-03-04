@@ -44,7 +44,7 @@
             "time_format": "3:04 pm"
           },
           "style": "plain",
-          "template": "\uf43a {{ .CurrentDate | date .Format }}",
+          "template": "󱑍 {{ .CurrentDate | date .Format }}",
           "type": "time"
         }
       ],
@@ -67,7 +67,7 @@
         {
           "background": "transparent",
           "style": "plain",
-          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent>\uf101</>",
+          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent>\ueeed :</>",
           "type": "text",
           "force": true
         }

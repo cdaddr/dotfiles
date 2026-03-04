@@ -22,8 +22,8 @@ return {
 
         saved_buftypes = {}
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.bo[buf].buftype ~= "" and vim.bo[buf].buftype ~= "nofile" then
-            saved_buftypes[buf] = vim.bo[buf].buftype
+          if vim.bo[buf].buftype ~= "" then
+            saved_buftypes[buf] = { buftype = vim.bo[buf].buftype, buflisted = vim.bo[buf].buflisted }
             vim.bo[buf].buflisted = false
             vim.bo[buf].buftype = "nofile"
           end
@@ -33,9 +33,10 @@ return {
     vim.api.nvim_create_autocmd("User", {
       pattern = "PersistedSavePost",
       callback = function()
-        for buf, buftype in pairs(saved_buftypes) do
+        for buf, saved in pairs(saved_buftypes) do
           if vim.api.nvim_buf_is_valid(buf) then
-            vim.bo[buf].buftype = buftype
+            vim.bo[buf].buftype = saved.buftype
+            vim.bo[buf].buflisted = saved.buflisted
           end
         end
         saved_buftypes = {}

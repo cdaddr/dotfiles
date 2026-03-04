@@ -78,3 +78,10 @@ vim.api.nvim_create_user_command("C", function()
 end, { desc = "Close buffer (mini.bufremove)" })
 
 vim.cmd.cnoreabbrev("c", "C")
+
+vim.api.nvim_create_user_command("CopyCodepoint", function()
+  local char = vim.fn.strcharpart(vim.fn.getline('.'), vim.fn.charcol('.')-1, 1)
+  local codepoint = string.format("U+%04X", vim.fn.char2nr(char))
+  vim.fn.setreg('*', codepoint)
+  vim.notify(codepoint)
+end, { desc = "Copy codepoint under cursor" })

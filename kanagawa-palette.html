@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!-- AI generated -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kanagawa Palette</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #1F1F28;
+    color: #DCD7BA;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #DCD7BA;
+  }
+
+  .subtitle {
+    color: #727169;
+    margin-bottom: 32px;
+    font-size: 11px;
+  }
+
+  h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #727169;
+    margin: 28px 0 10px;
+    border-bottom: 1px solid #2A2A37;
+    padding-bottom: 6px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+
+  .card {
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #2A2A37;
+  }
+
+  .swatch {
+    height: 52px;
+  }
+
+  .info {
+    background: #16161D;
+    padding: 6px 8px;
+  }
+
+  .name, .hex {
+    display: block;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 1px 3px;
+    margin: -1px -3px;
+    transition: background 0.1s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .name {
+    color: #C8C093;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .hex {
+    color: #727169;
+    font-size: 11px;
+  }
+
+  .name:hover { background: #2A2A37; color: #DCD7BA; }
+  .hex:hover  { background: #2A2A37; color: #C8C093; }
+
+  .copied {
+    background: #2B3328 !important;
+    color: #76946A !important;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #2A2A37;
+    color: #76946A;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    border: 1px solid #363646;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<h1>Kanagawa Palette</h1>
+<p class="subtitle">Click any name or hex to copy &mdash; sourced from kanagawa.nvim/lua/kanagawa/colors.lua</p>
+
+<h2>Bg Shades</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#16161D"></div><div class="info"><span class="name">sumiInk0</span><span class="hex">#16161D</span></div></div>
+  <div class="card"><div class="swatch" style="background:#181820"></div><div class="info"><span class="name">sumiInk1</span><span class="hex">#181820</span></div></div>
+  <div class="card"><div class="swatch" style="background:#1a1a22"></div><div class="info"><span class="name">sumiInk2</span><span class="hex">#1a1a22</span></div></div>
+  <div class="card"><div class="swatch" style="background:#1F1F28"></div><div class="info"><span class="name">sumiInk3</span><span class="hex">#1F1F28</span></div></div>
+  <div class="card"><div class="swatch" style="background:#2A2A37"></div><div class="info"><span class="name">sumiInk4</span><span class="hex">#2A2A37</span></div></div>
+  <div class="card"><div class="swatch" style="background:#363646"></div><div class="info"><span class="name">sumiInk5</span><span class="hex">#363646</span></div></div>
+  <div class="card"><div class="swatch" style="background:#54546D"></div><div class="info"><span class="name">sumiInk6</span><span class="hex">#54546D</span></div></div>
+</div>
+
+<h2>Popup &amp; Floats</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#223249"></div><div class="info"><span class="name">waveBlue1</span><span class="hex">#223249</span></div></div>
+  <div class="card"><div class="swatch" style="background:#2D4F67"></div><div class="info"><span class="name">waveBlue2</span><span class="hex">#2D4F67</span></div></div>
+</div>
+
+<h2>Diff &amp; Git</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#2B3328"></div><div class="info"><span class="name">winterGreen</span><span class="hex">#2B3328</span></div></div>
+  <div class="card"><div class="swatch" style="background:#49443C"></div><div class="info"><span class="name">winterYellow</span><span class="hex">#49443C</span></div></div>
+  <div class="card"><div class="swatch" style="background:#43242B"></div><div class="info"><span class="name">winterRed</span><span class="hex">#43242B</span></div></div>
+  <div class="card"><div class="swatch" style="background:#252535"></div><div class="info"><span class="name">winterBlue</span><span class="hex">#252535</span></div></div>
+  <div class="card"><div class="swatch" style="background:#76946A"></div><div class="info"><span class="name">autumnGreen</span><span class="hex">#76946A</span></div></div>
+  <div class="card"><div class="swatch" style="background:#C34043"></div><div class="info"><span class="name">autumnRed</span><span class="hex">#C34043</span></div></div>
+  <div class="card"><div class="swatch" style="background:#DCA561"></div><div class="info"><span class="name">autumnYellow</span><span class="hex">#DCA561</span></div></div>
+</div>
+
+<h2>Diagnostics</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#E82424"></div><div class="info"><span class="name">samuraiRed</span><span class="hex">#E82424</span></div></div>
+  <div class="card"><div class="swatch" style="background:#FF9E3B"></div><div class="info"><span class="name">roninYellow</span><span class="hex">#FF9E3B</span></div></div>
+  <div class="card"><div class="swatch" style="background:#6A9589"></div><div class="info"><span class="name">waveAqua1</span><span class="hex">#6A9589</span></div></div>
+  <div class="card"><div class="swatch" style="background:#658594"></div><div class="info"><span class="name">dragonBlue</span><span class="hex">#658594</span></div></div>
+</div>
+
+<h2>Fg &amp; Comments</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#C8C093"></div><div class="info"><span class="name">oldWhite</span><span class="hex">#C8C093</span></div></div>
+  <div class="card"><div class="swatch" style="background:#DCD7BA"></div><div class="info"><span class="name">fujiWhite</span><span class="hex">#DCD7BA</span></div></div>
+  <div class="card"><div class="swatch" style="background:#727169"></div><div class="info"><span class="name">fujiGray</span><span class="hex">#727169</span></div></div>
+</div>
+
+<h2>Wave</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#957FB8"></div><div class="info"><span class="name">oniViolet</span><span class="hex">#957FB8</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b8b4d0"></div><div class="info"><span class="name">oniViolet2</span><span class="hex">#b8b4d0</span></div></div>
+  <div class="card"><div class="swatch" style="background:#7E9CD8"></div><div class="info"><span class="name">crystalBlue</span><span class="hex">#7E9CD8</span></div></div>
+  <div class="card"><div class="swatch" style="background:#938AA9"></div><div class="info"><span class="name">springViolet1</span><span class="hex">#938AA9</span></div></div>
+  <div class="card"><div class="swatch" style="background:#9CABCA"></div><div class="info"><span class="name">springViolet2</span><span class="hex">#9CABCA</span></div></div>
+  <div class="card"><div class="swatch" style="background:#7FB4CA"></div><div class="info"><span class="name">springBlue</span><span class="hex">#7FB4CA</span></div></div>
+  <div class="card"><div class="swatch" style="background:#A3D4D5"></div><div class="info"><span class="name">lightBlue</span><span class="hex">#A3D4D5</span></div></div>
+  <div class="card"><div class="swatch" style="background:#7AA89F"></div><div class="info"><span class="name">waveAqua2</span><span class="hex">#7AA89F</span></div></div>
+  <div class="card"><div class="swatch" style="background:#98BB6C"></div><div class="info"><span class="name">springGreen</span><span class="hex">#98BB6C</span></div></div>
+  <div class="card"><div class="swatch" style="background:#938056"></div><div class="info"><span class="name">boatYellow1</span><span class="hex">#938056</span></div></div>
+  <div class="card"><div class="swatch" style="background:#C0A36E"></div><div class="info"><span class="name">boatYellow2</span><span class="hex">#C0A36E</span></div></div>
+  <div class="card"><div class="swatch" style="background:#E6C384"></div><div class="info"><span class="name">carpYellow</span><span class="hex">#E6C384</span></div></div>
+  <div class="card"><div class="swatch" style="background:#D27E99"></div><div class="info"><span class="name">sakuraPink</span><span class="hex">#D27E99</span></div></div>
+  <div class="card"><div class="swatch" style="background:#E46876"></div><div class="info"><span class="name">waveRed</span><span class="hex">#E46876</span></div></div>
+  <div class="card"><div class="swatch" style="background:#FF5D62"></div><div class="info"><span class="name">peachRed</span><span class="hex">#FF5D62</span></div></div>
+  <div class="card"><div class="swatch" style="background:#FFA066"></div><div class="info"><span class="name">surimiOrange</span><span class="hex">#FFA066</span></div></div>
+  <div class="card"><div class="swatch" style="background:#717C7C"></div><div class="info"><span class="name">katanaGray</span><span class="hex">#717C7C</span></div></div>
+</div>
+
+<h2>Dragon</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#0d0c0c"></div><div class="info"><span class="name">dragonBlack0</span><span class="hex">#0d0c0c</span></div></div>
+  <div class="card"><div class="swatch" style="background:#12120f"></div><div class="info"><span class="name">dragonBlack1</span><span class="hex">#12120f</span></div></div>
+  <div class="card"><div class="swatch" style="background:#1D1C19"></div><div class="info"><span class="name">dragonBlack2</span><span class="hex">#1D1C19</span></div></div>
+  <div class="card"><div class="swatch" style="background:#181616"></div><div class="info"><span class="name">dragonBlack3</span><span class="hex">#181616</span></div></div>
+  <div class="card"><div class="swatch" style="background:#282727"></div><div class="info"><span class="name">dragonBlack4</span><span class="hex">#282727</span></div></div>
+  <div class="card"><div class="swatch" style="background:#393836"></div><div class="info"><span class="name">dragonBlack5</span><span class="hex">#393836</span></div></div>
+  <div class="card"><div class="swatch" style="background:#625e5a"></div><div class="info"><span class="name">dragonBlack6</span><span class="hex">#625e5a</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c5c9c5"></div><div class="info"><span class="name">dragonWhite</span><span class="hex">#c5c9c5</span></div></div>
+  <div class="card"><div class="swatch" style="background:#87a987"></div><div class="info"><span class="name">dragonGreen</span><span class="hex">#87a987</span></div></div>
+  <div class="card"><div class="swatch" style="background:#8a9a7b"></div><div class="info"><span class="name">dragonGreen2</span><span class="hex">#8a9a7b</span></div></div>
+  <div class="card"><div class="swatch" style="background:#a292a3"></div><div class="info"><span class="name">dragonPink</span><span class="hex">#a292a3</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b6927b"></div><div class="info"><span class="name">dragonOrange</span><span class="hex">#b6927b</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b98d7b"></div><div class="info"><span class="name">dragonOrange2</span><span class="hex">#b98d7b</span></div></div>
+  <div class="card"><div class="swatch" style="background:#a6a69c"></div><div class="info"><span class="name">dragonGray</span><span class="hex">#a6a69c</span></div></div>
+  <div class="card"><div class="swatch" style="background:#9e9b93"></div><div class="info"><span class="name">dragonGray2</span><span class="hex">#9e9b93</span></div></div>
+  <div class="card"><div class="swatch" style="background:#7a8382"></div><div class="info"><span class="name">dragonGray3</span><span class="hex">#7a8382</span></div></div>
+  <div class="card"><div class="swatch" style="background:#8ba4b0"></div><div class="info"><span class="name">dragonBlue2</span><span class="hex">#8ba4b0</span></div></div>
+  <div class="card"><div class="swatch" style="background:#8992a7"></div><div class="info"><span class="name">dragonViolet</span><span class="hex">#8992a7</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c4746e"></div><div class="info"><span class="name">dragonRed</span><span class="hex">#c4746e</span></div></div>
+  <div class="card"><div class="swatch" style="background:#8ea4a2"></div><div class="info"><span class="name">dragonAqua</span><span class="hex">#8ea4a2</span></div></div>
+  <div class="card"><div class="swatch" style="background:#737c73"></div><div class="info"><span class="name">dragonAsh</span><span class="hex">#737c73</span></div></div>
+  <div class="card"><div class="swatch" style="background:#949fb5"></div><div class="info"><span class="name">dragonTeal</span><span class="hex">#949fb5</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c4b28a"></div><div class="info"><span class="name">dragonYellow</span><span class="hex">#c4b28a</span></div></div>
+</div>
+
+<h2>Lotus</h2>
+<div class="grid">
+  <div class="card"><div class="swatch" style="background:#545464"></div><div class="info"><span class="name">lotusInk1</span><span class="hex">#545464</span></div></div>
+  <div class="card"><div class="swatch" style="background:#43436c"></div><div class="info"><span class="name">lotusInk2</span><span class="hex">#43436c</span></div></div>
+  <div class="card"><div class="swatch" style="background:#dcd7ba"></div><div class="info"><span class="name">lotusGray</span><span class="hex">#dcd7ba</span></div></div>
+  <div class="card"><div class="swatch" style="background:#716e61"></div><div class="info"><span class="name">lotusGray2</span><span class="hex">#716e61</span></div></div>
+  <div class="card"><div class="swatch" style="background:#8a8980"></div><div class="info"><span class="name">lotusGray3</span><span class="hex">#8a8980</span></div></div>
+  <div class="card"><div class="swatch" style="background:#d5cea3"></div><div class="info"><span class="name">lotusWhite0</span><span class="hex">#d5cea3</span></div></div>
+  <div class="card"><div class="swatch" style="background:#dcd5ac"></div><div class="info"><span class="name">lotusWhite1</span><span class="hex">#dcd5ac</span></div></div>
+  <div class="card"><div class="swatch" style="background:#e5ddb0"></div><div class="info"><span class="name">lotusWhite2</span><span class="hex">#e5ddb0</span></div></div>
+  <div class="card"><div class="swatch" style="background:#f2ecbc"></div><div class="info"><span class="name">lotusWhite3</span><span class="hex">#f2ecbc</span></div></div>
+  <div class="card"><div class="swatch" style="background:#e7dba0"></div><div class="info"><span class="name">lotusWhite4</span><span class="hex">#e7dba0</span></div></div>
+  <div class="card"><div class="swatch" style="background:#e4d794"></div><div class="info"><span class="name">lotusWhite5</span><span class="hex">#e4d794</span></div></div>
+  <div class="card"><div class="swatch" style="background:#a09cac"></div><div class="info"><span class="name">lotusViolet1</span><span class="hex">#a09cac</span></div></div>
+  <div class="card"><div class="swatch" style="background:#766b90"></div><div class="info"><span class="name">lotusViolet2</span><span class="hex">#766b90</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c9cbd1"></div><div class="info"><span class="name">lotusViolet3</span><span class="hex">#c9cbd1</span></div></div>
+  <div class="card"><div class="swatch" style="background:#624c83"></div><div class="info"><span class="name">lotusViolet4</span><span class="hex">#624c83</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c7d7e0"></div><div class="info"><span class="name">lotusBlue1</span><span class="hex">#c7d7e0</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b5cbd2"></div><div class="info"><span class="name">lotusBlue2</span><span class="hex">#b5cbd2</span></div></div>
+  <div class="card"><div class="swatch" style="background:#9fb5c9"></div><div class="info"><span class="name">lotusBlue3</span><span class="hex">#9fb5c9</span></div></div>
+  <div class="card"><div class="swatch" style="background:#4d699b"></div><div class="info"><span class="name">lotusBlue4</span><span class="hex">#4d699b</span></div></div>
+  <div class="card"><div class="swatch" style="background:#5d57a3"></div><div class="info"><span class="name">lotusBlue5</span><span class="hex">#5d57a3</span></div></div>
+  <div class="card"><div class="swatch" style="background:#6f894e"></div><div class="info"><span class="name">lotusGreen</span><span class="hex">#6f894e</span></div></div>
+  <div class="card"><div class="swatch" style="background:#6e915f"></div><div class="info"><span class="name">lotusGreen2</span><span class="hex">#6e915f</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b7d0ae"></div><div class="info"><span class="name">lotusGreen3</span><span class="hex">#b7d0ae</span></div></div>
+  <div class="card"><div class="swatch" style="background:#b35b79"></div><div class="info"><span class="name">lotusPink</span><span class="hex">#b35b79</span></div></div>
+  <div class="card"><div class="swatch" style="background:#cc6d00"></div><div class="info"><span class="name">lotusOrange</span><span class="hex">#cc6d00</span></div></div>
+  <div class="card"><div class="swatch" style="background:#e98a00"></div><div class="info"><span class="name">lotusOrange2</span><span class="hex">#e98a00</span></div></div>
+  <div class="card"><div class="swatch" style="background:#77713f"></div><div class="info"><span class="name">lotusYellow</span><span class="hex">#77713f</span></div></div>
+  <div class="card"><div class="swatch" style="background:#836f4a"></div><div class="info"><span class="name">lotusYellow2</span><span class="hex">#836f4a</span></div></div>
+  <div class="card"><div class="swatch" style="background:#de9800"></div><div class="info"><span class="name">lotusYellow3</span><span class="hex">#de9800</span></div></div>
+  <div class="card"><div class="swatch" style="background:#f9d791"></div><div class="info"><span class="name">lotusYellow4</span><span class="hex">#f9d791</span></div></div>
+  <div class="card"><div class="swatch" style="background:#c84053"></div><div class="info"><span class="name">lotusRed</span><span class="hex">#c84053</span></div></div>
+  <div class="card"><div class="swatch" style="background:#d7474b"></div><div class="info"><span class="name">lotusRed2</span><span class="hex">#d7474b</span></div></div>
+  <div class="card"><div class="swatch" style="background:#e82424"></div><div class="info"><span class="name">lotusRed3</span><span class="hex">#e82424</span></div></div>
+  <div class="card"><div class="swatch" style="background:#d9a594"></div><div class="info"><span class="name">lotusRed4</span><span class="hex">#d9a594</span></div></div>
+  <div class="card"><div class="swatch" style="background:#597b75"></div><div class="info"><span class="name">lotusAqua</span><span class="hex">#597b75</span></div></div>
+  <div class="card"><div class="swatch" style="background:#5e857a"></div><div class="info"><span class="name">lotusAqua2</span><span class="hex">#5e857a</span></div></div>
+  <div class="card"><div class="swatch" style="background:#4e8ca2"></div><div class="info"><span class="name">lotusTeal1</span><span class="hex">#4e8ca2</span></div></div>
+  <div class="card"><div class="swatch" style="background:#6693bf"></div><div class="info"><span class="name">lotusTeal2</span><span class="hex">#6693bf</span></div></div>
+  <div class="card"><div class="swatch" style="background:#5a7785"></div><div class="info"><span class="name">lotusTeal3</span><span class="hex">#5a7785</span></div></div>
+  <div class="card"><div class="swatch" style="background:#d7e3d8"></div><div class="info"><span class="name">lotusCyan</span><span class="hex">#d7e3d8</span></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const toast = document.getElementById('toast');
+  let toastTimer;
+
+  function copy(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      clearTimeout(toastTimer);
+      toast.textContent = 'Copied: ' + text;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+    });
+  }
+
+  document.querySelectorAll('.name').forEach(el => {
+    el.addEventListener('click', () => {
+      copy(el.textContent);
+      el.classList.add('copied');
+      setTimeout(() => el.classList.remove('copied'), 800);
+    });
+  });
+
+  document.querySelectorAll('.hex').forEach(el => {
+    el.addEventListener('click', () => {
+      copy(el.textContent);
+      el.classList.add('copied');
+      setTimeout(() => el.classList.remove('copied'), 800);
+    });
+  });
+</script>
+</body>
+</html>

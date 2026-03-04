@@ -21,6 +21,7 @@ return {
       autopeek = {
         enable = false,
       },
+      autocorrect = { enable = false },
     })
 
     require("mini.align").setup({

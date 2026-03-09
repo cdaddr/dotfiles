@@ -1,9 +1,7 @@
 -- https://github.com/cdaddr/dotfiles
 
--- FIXME: this needs ~/.dotfiels to exist; gen this file into nvim's config dir
-local theme_file = vim.fn.expand("~/.dotfiles/config/current-theme.lua")
-local theme = dofile(theme_file)
-_G.theme = theme
+local theme_file = vim.fn.stdpath("config") .. "/theme.lua"
+local theme = vim.fn.filereadable(theme_file) == 1 and dofile(theme_file) or { nvim = "default", lualine = "auto" }
 
 -- dotfiles git repo is in ~/.dotfiles and individual folders are symlinked to ~/.config/*
 _G.DOTFILES = vim.env.HOME .. "/.dotfiles"

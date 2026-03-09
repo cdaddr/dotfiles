@@ -4,9 +4,10 @@ return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   config = function()
-    local status, theme = pcall(require, "lualine.themes." .. _G.theme.lualine)
+    local nvim_theme = dofile(vim.fn.stdpath("config") .. "/theme.lua")
+    local status, theme = pcall(require, "lualine.themes." .. nvim_theme.lualine)
     if not status then
-      theme = require("lualine.themes.catppuccin")
+      theme = require("lualine.themes.auto")
     end
 
     theme.normal.c.bg = util.copy_hl("LineNr").bg

@@ -283,4 +283,56 @@ M.grapple = function()
   })
 end
 
+M.neoclip = function()
+  local ok, storage = pcall(require, "neoclip.storage")
+  if not ok then
+    vim.notify("neoclip not loaded", vim.log.levels.WARN)
+    return
+  end
+
+  local yanks = storage.get().yanks
+  if not yanks or #yanks == 0 then
+    vim.notify("Yank history is empty", vim.log.levels.INFO)
+    return
+  end
+
+  local handlers = require("neoclip.handlers")
+  local items = {}
+  for i, entry in ipairs(yanks) do
+    local preview_text = table.concat(entry.contents, "\n")
+    local first_line = (entry.contents[1] or ""):match("^%s*(.-)%s*$")
+    local display = first_line .. (#entry.contents > 1 and " …" or "")
+
+    -- neoclip already converts to setreg format: l=linewise, c=charwise, b=blockwise
+    local type_label = entry.regtype == "l" and "L" or entry.regtype == "c" and "C" or "B"
+
+    table.insert(items, {
+      idx = i,
+      text = preview_text,
+      display = display,
+      type_label = type_label,
+      entry = entry,
+      preview = { text = preview_text, ft = entry.filetype or "" },
+    })
+  end
+
+  return Snacks.picker({
+    title = "Yank History",
+    items = items,
+    preview = "preview",
+    format = function(item, _)
+      return {
+        { item.type_label .. " ", "Comment" },
+        { item.display, "Normal" },
+      }
+    end,
+    confirm = function(picker, item)
+      picker:close()
+      vim.schedule(function()
+        handlers.paste(item.entry, "p")
+      end)
+    end,
+  })
+end
+
 return M

@@ -4,11 +4,14 @@ return {
   config = function()
     vim.opt.sessionoptions = {
       "buffers",
+      "help",
       "curdir",
       "folds",
       "tabpages",
       "winpos",
       "winsize",
+      "options",
+      "skiprtp",
     }
     -- Mark special buffers as nofile so they're excluded from session
     -- https://github.com/neovim/neovim/issues/12242

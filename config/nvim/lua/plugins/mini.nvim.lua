@@ -22,7 +22,40 @@ return {
         enable = false,
       },
       autocorrect = { enable = false },
+      open = { enable = true },
     })
+
+    local animate = require("mini.animate")
+    animate.setup({
+      cursor = { enable = false },
+      scroll = {
+        enable = true,
+        timing = animate.gen_timing.linear({ duration = 20, unit = "total" }),
+        subscroll = animate.gen_subscroll.equal({ max_output_steps = 10 }),
+      },
+      resize = {
+        enable = true,
+        timing = animate.gen_timing.linear({ duration = 40, unit = "total" }),
+        subresize = animate.gen_subresize.equal({ max_output_steps = 200 }),
+      },
+      open = { enable = false },
+      close = { enable = false },
+    })
+
+    -- disable mini.animate during mouse scroll to prevent jitter/bounce;
+    -- use direct scroll commands instead of feedkeys to avoid key misinterpretation
+    local function mouse_scroll(cmd)
+      return function()
+        vim.g.minianimate_disable = true
+        vim.cmd("normal! " .. cmd)
+        vim.schedule(function()
+          vim.g.minianimate_disable = false
+        end)
+      end
+    end
+    -- \x05 = <C-e> (scroll down), \x19 = <C-y> (scroll up); 3 lines matches nvim default
+    vim.keymap.set({ "n", "x" }, "<ScrollWheelDown>", mouse_scroll("3\x05"), { silent = true })
+    vim.keymap.set({ "n", "x" }, "<ScrollWheelUp>", mouse_scroll("3\x19"), { silent = true })
 
     require("mini.align").setup({
       mappings = {
@@ -85,14 +118,26 @@ return {
     -- pick.setup()
     -- make_pick('<leader>p', pick.builtin.files, "Pick files")
 
-    local win_config = function()
-      local pad = vim.o.cmdheight + 1
-      return { anchor = "SE", col = vim.o.columns, row = vim.o.lines - pad }
-    end
     require("mini.notify").setup({
       lsp_progress = { enable = false },
       window = {
-        config = win_config,
+        config = function(bufnr)
+          local max_width_share = 0.5
+
+          local min_width = 30
+          local width = min_width
+
+          local line_widths = vim.tbl_map(vim.fn.strdisplaywidth, vim.api.nvim_buf_get_lines(bufnr, 0, -1, true))
+          for _, l_w in ipairs(line_widths) do
+            width = math.max(width, l_w)
+          end
+
+          local max_width = math.max(math.floor(max_width_share * vim.o.columns), 1)
+          width = math.min(width, max_width)
+
+          local col = math.floor((vim.o.columns - width) / 2)
+          return { anchor = "SW", col = col, row = 0, width = width }
+        end,
       },
     })
 

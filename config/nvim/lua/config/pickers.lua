@@ -316,6 +316,16 @@ M.neoclip = function()
     })
   end
 
+  -- paste item.entry with regtype overridden
+  local function paste_as(picker, item, regtype)
+    picker:close()
+    vim.schedule(function()
+      local entry = vim.tbl_extend("force", {}, item.entry)
+      entry.regtype = regtype
+      handlers.paste(entry, "p")
+    end)
+  end
+
   return Snacks.picker({
     title = "Yank History",
     items = items,
@@ -327,11 +337,20 @@ M.neoclip = function()
       }
     end,
     confirm = function(picker, item)
-      picker:close()
-      vim.schedule(function()
-        handlers.paste(item.entry, "p")
-      end)
+      paste_as(picker, item, "c")
     end,
+    actions = {
+      paste_linewise = function(picker, item)
+        paste_as(picker, item, "l")
+      end,
+    },
+    win = {
+      input = {
+        keys = {
+          ["<S-CR>"] = { "paste_linewise", mode = { "i", "n" } },
+        },
+      },
+    },
   })
 end
 

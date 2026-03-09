@@ -1,5 +1,5 @@
 return {
-  "tronikelis/ts-autotag.nvim",
+  url = "git@github.com:cdaddr/ts-autotag.nvim.git",
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   opts = {
     filetypes = {

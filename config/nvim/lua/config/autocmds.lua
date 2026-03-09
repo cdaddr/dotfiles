@@ -35,6 +35,13 @@ au("OptionSet", {
   desc = "Use cursorlineopt=number in diff mode",
 })
 
+au("SwapExists", {
+  callback = function()
+    vim.v.swapchoice = "e"
+  end,
+  desc = "Always edit when swap file exists",
+})
+
 au("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
@@ -44,14 +51,14 @@ au("TextYankPost", {
 au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
 
 -- close floating windows (LSP hover, etc.) with <Esc>
-au("WinEnter", {
-  callback = function()
-    local win_config = vim.api.nvim_win_get_config(0)
-    if win_config.relative ~= "" then
-      vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = true, silent = true })
-    end
-  end,
-})
+-- au("WinEnter", {
+--   callback = function()
+--     local win_config = vim.api.nvim_win_get_config(0)
+--     if win_config.relative ~= "" then
+--       vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = true, silent = true })
+--     end
+--   end,
+-- })
 
 au("FileType", {
   pattern = "grug-far",
@@ -62,26 +69,17 @@ au("FileType", {
   end,
 })
 
--- restore cursor position
--- BufRead can fire before modelines/filetype are set, which is why the double autocmd
-au("BufRead", {
-  callback = function(opts)
-    au("BufWinEnter", {
-      once = true,
-      buffer = opts.buf,
-      callback = function()
-        local ft = vim.bo[opts.buf].filetype
-        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-        if
-          not (ft:match("commit") and ft:match("rebase"))
-          and last_known_line >= 1
-          and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-        then
-          vim.api.nvim_feedkeys([[g`"]], "nx", false)
-        end
-      end,
-    })
-  end,
+au("BufEnter", {
+  callback = vim.schedule_wrap(function(data)
+    if data.buf ~= vim.api.nvim_get_current_buf() then
+      return
+    end
+    local root = require("mini.misc").find_root(data.buf, { ".git", ".jj", "init.lua" })
+    if root then
+      vim.cmd.lchdir({ args = { root }, mods = { silent = true } })
+    end
+  end),
+  desc = "Set buffer cwd to project root if possible",
 })
 
 -- dim diagnostic virtual text
@@ -124,10 +122,14 @@ local function setup_folding(bufnr)
   if win == -1 then
     return
   end
+  if vim.bo[bufnr].buftype ~= "" then
+    return
+  end
 
   -- try treesitter first
-  local has_parser = pcall(vim.treesitter.get_parser, bufnr)
-  if has_parser then
+  local lang = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype)
+  local has_folds = lang and vim.treesitter.query.get(lang, "folds") ~= nil
+  if has_folds then
     vim.wo[win].foldmethod = "expr"
     vim.wo[win].foldexpr = "v:lua.vim.treesitter.foldexpr()"
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<cr>", "za", { desc = "Toggle open/close fold under cursor" })
@@ -135,7 +137,7 @@ local function setup_folding(bufnr)
     return
   end
 
-  -- try LSP folding
+  -- try LSP
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
   for _, client in ipairs(clients) do
     if client.server_capabilities.foldingRangeProvider then

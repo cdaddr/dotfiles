@@ -33,8 +33,11 @@ vim.o.listchars = "tab: ,trail:·,nbsp:␣"
 vim.o.signcolumn = "yes"
 vim.o.winborder = "rounded"
 vim.o.pumborder = "rounded"
+vim.opt.shortmess:append("A")
 vim.opt.nrformats:append({ "alpha" })
 vim.opt.clipboard:append({ "unnamedplus" })
+
+vim.o.shada = "!,'1024,<1024,s1024,h,r/tmp/,r/private/"
 
 vim.diagnostic.config({
   virtual_text = true,

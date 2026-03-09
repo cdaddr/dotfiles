@@ -124,4 +124,163 @@ M.npm = function()
   })
 end
 
+-- merged view of grapple tags + open buffers with toggle action
+M.grapple = function()
+  local grapple = require("grapple")
+
+  local function get_items(_, ctx)
+    local ok, tags = pcall(grapple.tags)
+    if not ok then
+      tags = {}
+    end
+    tags = tags or {}
+
+    local items = {}
+    local seen = {}
+
+    -- tagged files first, in tag order
+    for n, tag in ipairs(tags) do
+      seen[tag.path] = true
+      local buf = vim.fn.bufnr(tag.path)
+      table.insert(items, {
+        file = tag.path,
+        text = vim.fn.fnamemodify(tag.path, ":~:."),
+        tagged = true,
+        buf = buf ~= -1 and buf or nil,
+        n = n,
+      })
+    end
+
+    -- open untagged buffers (matches snacks buffers source logic)
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.bo[buf].buflisted and vim.bo[buf].buftype ~= "nofile" then
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name ~= "" and not seen[name] then
+          seen[name] = true
+          table.insert(items, {
+            file = name,
+            text = vim.fn.fnamemodify(name, ":~:."),
+            tagged = false,
+            buf = buf,
+            n = nil,
+          })
+        end
+      end
+    end
+
+    return ctx.filter:filter(items)
+  end
+
+  return Snacks.picker({
+    title = "Grapple tags",
+    finder = get_items,
+    format = function(item, picker)
+      local ret = {}
+      local mark = item.tagged and "●" or "○"
+      local hl = item.tagged and "DiagnosticOk" or "Comment"
+      table.insert(ret, { mark .. " ", hl })
+      if item.n then
+        table.insert(ret, { string.format("%2d ", item.n), hl })
+      else
+        table.insert(ret, { "   ", hl })
+      end
+      vim.list_extend(ret, require("snacks.picker.format").file(item, picker))
+      return ret
+    end,
+    confirm = function(picker, item)
+      picker:close()
+      if item.buf and vim.api.nvim_buf_is_valid(item.buf) then
+        vim.api.nvim_set_current_buf(item.buf)
+      else
+        vim.cmd("edit " .. vim.fn.fnameescape(item.file))
+      end
+    end,
+    focus = "list",
+    actions = {
+      toggle_tag = function(picker)
+        local item = picker:current()
+        if not item then return end
+        local items = picker.list.items
+        local pos, tag_count = nil, 0
+        for i, it in ipairs(items) do
+          if it.file == item.file then pos = i end
+          if it.tagged then tag_count = tag_count + 1 end
+        end
+        if not pos then return end
+        if item.tagged then
+          grapple.untag({ path = item.file })
+          table.remove(items, pos)
+          for i = pos, tag_count - 1 do
+            if items[i] and items[i].tagged then items[i].n = items[i].n - 1 end
+          end
+          item.tagged, item.n = false, nil
+          table.insert(items, tag_count, item)
+          picker.list.dirty = true
+          picker.list:render()
+          picker.list:move(pos, true)
+        else
+          grapple.tag({ path = item.file })
+          table.remove(items, pos)
+          item.tagged, item.n = true, tag_count + 1
+          table.insert(items, tag_count + 1, item)
+          picker.list.dirty = true
+          picker.list:render()
+          picker.list:move(tag_count + 1, true)
+        end
+        require("lualine").refresh()
+      end,
+      tag_inc = function(picker)
+        local item = picker:current()
+        if not item or not item.tagged then return end
+        local ok, tags = pcall(grapple.tags)
+        if not ok or not tags or item.n >= #tags then return end
+        local file, new_n = item.file, item.n + 1
+        grapple.untag({ path = file })
+        grapple.tag({ path = file, index = new_n })
+        require("lualine").refresh()
+        local items = picker.list.items
+        local pos = nil
+        for i, it in ipairs(items) do
+          if it.file == file then pos = i; break end
+        end
+        if not pos or not items[pos + 1] then return end
+        items[pos], items[pos + 1] = items[pos + 1], items[pos]
+        items[pos].n, items[pos + 1].n = item.n, new_n
+        picker.list.dirty = true
+        picker.list:render()
+        picker.list:move(pos + 1, true)
+      end,
+      tag_dec = function(picker)
+        local item = picker:current()
+        if not item or not item.tagged then return end
+        if item.n <= 1 then return end
+        local file, new_n = item.file, item.n - 1
+        grapple.untag({ path = file })
+        grapple.tag({ path = file, index = new_n })
+        require("lualine").refresh()
+        local items = picker.list.items
+        local pos = nil
+        for i, it in ipairs(items) do
+          if it.file == file then pos = i; break end
+        end
+        if not pos or pos <= 1 then return end
+        items[pos], items[pos - 1] = items[pos - 1], items[pos]
+        items[pos].n, items[pos - 1].n = item.n, new_n
+        picker.list.dirty = true
+        picker.list:render()
+        picker.list:move(pos - 1, true)
+      end,
+    },
+    win = {
+      list = {
+        keys = {
+          ["<tab>"] = { "toggle_tag", mode = "n", desc = "Toggle grapple tag" },
+          ["<c-a>"] = { "tag_inc", mode = "n", desc = "Move tag down" },
+          ["<c-x>"] = { "tag_dec", mode = "n", desc = "Move tag up" },
+        },
+      },
+    },
+  })
+end
+
 return M

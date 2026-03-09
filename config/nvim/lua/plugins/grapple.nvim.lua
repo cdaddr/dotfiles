@@ -28,7 +28,7 @@ return {
   keys = {
     { "<leader>m", g("toggle"), desc = "Grapple toggle for this buffer" },
     { "<leader><leader>", g("toggle"), desc = "Grapple toggle for this buffer" },
-    { "<leader>M", g("toggle_tags"), desc = "Grapple list tags" },
+    { "<leader>M", function() require("config.pickers").grapple() end, desc = "Grapple buffers & tags" },
 
     { "<leader>]", g("cycle_tags", "next"), desc = "Grapple next" },
     { "<tab>", g("cycle_tags", "next"), desc = "Grapple next" },

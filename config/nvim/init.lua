@@ -16,6 +16,7 @@ require("config.lazy")
 require("config.lsp")
 require("config.keymaps")
 require("config.autocmds")
+require("config.sessions")
 
 vim.cmd.colorscheme(theme.nvim)
 

@@ -6,23 +6,6 @@ local au = function(event, opts)
   vim.api.nvim_create_autocmd(event, opts)
 end
 
--- -- add/remove cursorline per buffer; disabled because cursorline is annoying me
--- au("WinLeave", {
---   pattern = "*",
---   callback = function()
---     vim.opt.cursorline = false
---   end,
---   desc = "Remove cursorline when buffer loses focus",
--- })
-
--- au({ "WinEnter", "BufEnter", "BufNewFile" }, {
---   pattern = "*",
---   callback = function()
---     vim.opt.cursorline = true
---   end,
---   desc = "Enable cursorline when buffer gains focus",
--- })
-
 -- use cursorlineopt=number in diff mode to avoid underline issue
 -- https://github.com/neovim/neovim/issues/9800
 au("OptionSet", {
@@ -35,6 +18,7 @@ au("OptionSet", {
   desc = "Use cursorlineopt=number in diff mode",
 })
 
+-- silently edit the file even if a swap exists (avoids the prompt)
 au("SwapExists", {
   callback = function()
     vim.v.swapchoice = "e"
@@ -42,24 +26,17 @@ au("SwapExists", {
   desc = "Always edit when swap file exists",
 })
 
+-- flash yanked region
 au("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
   end,
 })
 
+-- start in insert mode when opening a terminal
 au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
 
--- close floating windows (LSP hover, etc.) with <Esc>
--- au("WinEnter", {
---   callback = function()
---     local win_config = vim.api.nvim_win_get_config(0)
---     if win_config.relative ~= "" then
---       vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = true, silent = true })
---     end
---   end,
--- })
-
+-- close grug-far with q
 au("FileType", {
   pattern = "grug-far",
   callback = function()
@@ -69,9 +46,19 @@ au("FileType", {
   end,
 })
 
+-- set window-local cwd to the buffer's project root on enter
 au("BufEnter", {
   callback = vim.schedule_wrap(function(data)
+    -- schedule_wrap defers until after other BufEnter handlers run
     if data.buf ~= vim.api.nvim_get_current_buf() then
+      return
+    end
+    if vim.bo[data.buf].buftype ~= "" then
+      return
+    end
+    -- unnamed buffer: reset window-local cwd back to global (process) cwd
+    if vim.api.nvim_buf_get_name(data.buf) == "" then
+      vim.cmd.lchdir({ args = { vim.fn.getcwd(-1) }, mods = { silent = true } })
       return
     end
     local root = require("mini.misc").find_root(data.buf, { ".git", ".jj", "init.lua" })
@@ -174,6 +161,7 @@ local nohlsOrClose = function()
   end
 end
 
+-- close quickfix with q (or clear search highlight if active)
 au("FileType", {
   pattern = "qf",
   callback = function(_)
@@ -181,3 +169,20 @@ au("FileType", {
   end,
   desc = "Close quickfix list",
 })
+
+-- -- add/remove cursorline per buffer; disabled because cursorline is annoying me
+-- au("WinLeave", {
+--   pattern = "*",
+--   callback = function()
+--     vim.opt.cursorline = false
+--   end,
+--   desc = "Remove cursorline when buffer loses focus",
+-- })
+
+-- au({ "WinEnter", "BufEnter", "BufNewFile" }, {
+--   pattern = "*",
+--   callback = function()
+--     vim.opt.cursorline = true
+--   end,
+--   desc = "Enable cursorline when buffer gains focus",
+-- })

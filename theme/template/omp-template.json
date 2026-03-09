@@ -53,21 +53,9 @@
     {
       "segments": [
         {
-          "foreground": "p:accent",
-          "options": {
-            "home_icon": "󰜥",
-            "folder_icon": "…",
-            "style": "folder",
-            "max_depth": 1
-          },
-          "style": "plain",
-          "template": "{{ .Path }} ",
-          "type": "path"
-        },
-        {
           "background": "transparent",
           "style": "plain",
-          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent>\ueeed :</>",
+          "template": "{{ if ne .Code 0 }}<p:error>({{ .Code }}) </>{{ end }}<p:accent>󰧂 </>",
           "type": "text",
           "force": true
         }

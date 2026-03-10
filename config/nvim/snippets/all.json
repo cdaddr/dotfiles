@@ -24,9 +24,5 @@
       "  \"body\": \"${3:body}\"",
       "}$4"
     ]
-  },
-  "Email": {
-    "prefix": "!eml",
-    "body": "brian@carper.ca"
   }
 }

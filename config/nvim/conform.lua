@@ -21,7 +21,6 @@ return {
       javascript = { "prettierd", "prettier", lsp_format = "fallback", stop_after_first = true },
       typescript = { "prettierd", "prettier", lsp_format = "fallback", stop_after_first = true },
       svelte = { "prettierd", "prettier", stop_after_first = true },
-      ["*"] = { "codespell" },
       ["_"] = { "trim_whitespace" },
     },
     default_format_opts = {

@@ -52,7 +52,7 @@ return {
       python = { "isort", "black" },
       rust = { "rustfmt" },
       sql = { "pg_format" },
-      json = { "prettierd", "prettier" },
+      json = { "prettierd", "prettier", stop_after_first = true },
       javascript = { "prettierd", "prettier", stop_after_first = true },
       typescript = { "prettierd", "prettier", stop_after_first = true },
       svelte = { "prettierd", "prettier", stop_after_first = true },
@@ -67,7 +67,7 @@ return {
 
       local formatters = conform.list_formatters(bufnr)
       if #formatters > 0 then
-        return { timeout_ms = 500 }
+        return { timeout_ms = 1500 }
       end
 
       local clients = vim.lsp.get_clients({ bufnr = bufnr })

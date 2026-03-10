@@ -85,6 +85,3 @@ vim.api.nvim_create_user_command("CopyCodepoint", function()
   vim.fn.setreg('*', codepoint)
   vim.notify(codepoint)
 end, { desc = "Copy codepoint under cursor" })
-
--- insert personal info from env vars
-map("ia", "!eml", function() return vim.env.EMAIL or "!eml" end, { expr = true })

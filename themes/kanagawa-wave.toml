@@ -1,0 +1,79 @@
+# kanagawa wave
+
+[colors]
+# standard color palette
+black        = "16161D"  # sumiInk0
+grey_darkest = "1F1F28"  # sumiInk1
+grey_darker  = "2A2A37"  # sumiInk2
+grey_dark    = "363646"  # sumiInk3
+grey_dim     = "54546D"  # sumiInk4
+grey         = "727169"  # fujiGray
+white        = "C8C093"  # oldWhite
+bright_white = "DCD7BA"  # fujiWhite
+red          = "C34043"  # autumnRed
+orange       = "ffa066"  # surimiOrange
+yellow       = "C0A36E"  # boatYellow1
+green        = "76946A"  # autumnGreen
+cyan         = "6a9589"  # waveAqua1
+blue         = "7E9CD8"  # crystalBlue
+blue_dim     = "2d4f67"  # waveBlue2
+purple       = "957FB8"  # oniViolet
+pink         = "D27E99"  # sakuraPink
+
+# bright variants
+bright_red    = "E82424"  # samuraiRed
+bright_orange = "ff5d62"  # peachRed
+bright_yellow = "e6c384"  # carpYellow
+bright_green  = "98bb6c"  # springGreen
+bright_cyan   = "7aa89f"  # waveAqua2
+bright_blue   = "7fb4ca"  # springBlue
+bright_purple = "938aa9"  # springViolet1
+
+# semantic aliases
+fg        = "$bright_white"
+bg        = "$grey_darkest"
+bg_dim    = "$grey_darker"
+bg_bright = "$grey_dark"
+primary   = "$blue"
+path      = "$pink"
+accent    = "$purple"
+error     = "$bright_red"
+comment   = "$grey"
+text      = "$fg"
+
+[kitty]
+font_size             = "20"
+cursor                = "$white"
+selection_fg          = "$white"
+selection_bg          = "$blue_dim"
+url_color             = "$purple"
+active_tab_fg         = "$bg"
+active_tab_bg         = "$accent"
+inactive_tab_fg       = "$accent"
+inactive_tab_bg       = "$bg"
+active_border_color   = "$grey_dim"
+inactive_border_color = "$bg"
+tab_inactive_index_fg = "$bg_bright"
+tab_inactive_index_bg = "$grey_dim"
+tab_inactive_title_bg = "$bg_bright"
+tab_inactive_title_fg = "$comment"
+tab_active_index_bg   = "$primary"
+tab_active_index_fg   = "$black"
+tab_active_title_bg   = "$accent"
+
+[nvim]
+theme   = "kanagawa-wave"
+lualine = "kanagawa"
+
+[wezterm]
+theme = "Kanagawa (Gogh)"
+
+[vivid]
+theme = "tokyonight-storm"
+
+[bat]
+theme = "OneHalfDark"
+
+[less]
+search_bg = "\\e[48;5;183m"
+search_fg = "\\e[38;5;0m"

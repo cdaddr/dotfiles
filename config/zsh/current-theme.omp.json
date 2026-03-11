@@ -5,23 +5,8 @@
     "path": "#D27E99",
     "accent": "#957FB8",
     "muted": "#54546D",
-    "error": "#E82424",
-    "fg": "#DCD7BA",
-    "fg_inverse": "#16161D",
-    "bg": "#1F1F28",
-    "bg_dark": "#16161D",
-    "bg_light": "#363646",
-    "bg_lighter": "#2A2A37",
-    "comment": "#727169",
-    "green": "#76946A",
-    "peach": "#C8C093",
-    "mauve": "#957FB8",
-    "red": "#E82424",
-    "text": "#DCD7BA",
-    "yellow": "#C0A36E",
-    "maroon": "#C34043"
+    "error": "#E82424"
   },
-  "streaming": 50,
   "blocks": [
     {
       "alignment": "left",
@@ -42,20 +27,20 @@
           "foreground": "p:path",
           "style": "plain",
           "type": "text",
-          "template": " {{ .Env.PWD }} "
+          "template": "\ueaf7 {{ .Env.PWD }} "
         },
         {
           "foreground": "p:accent",
           "options": {
-            "branch_icon": "󰘬 ",
-            "cherry_pick_icon": " ",
+            "branch_icon": "\udb81\ude2c ",
+            "cherry_pick_icon": "\ue29b ",
             "disable_with_jj": true,
             "fetch_status": true,
             "fetch_push_status": true,
             "fetch_upstream_icon": false,
             "branch_identical_icon": ""
           },
-          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ .Rebase }} ",
+          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }} ",
           "style": "plain",
           "type": "git"
         },

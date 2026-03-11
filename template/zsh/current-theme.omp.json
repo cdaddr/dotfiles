@@ -1,7 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "palette": {},
-  "streaming": 50,
+  "palette": {
+    "primary": "#{{colors.primary}}",
+    "path": "#{{colors.path}}",
+    "accent": "#{{colors.accent}}",
+    "muted": "#{{colors.grey_dim}}",
+    "error": "#{{colors.error}}"
+  },
   "blocks": [
     {
       "alignment": "left",

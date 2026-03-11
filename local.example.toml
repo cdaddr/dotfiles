@@ -1,0 +1,15 @@
+[kitty]
+font_size = "13"
+
+[nvim]
+theme   = "catppuccin-latte"
+lualine = "catppuccin-latte"
+
+[vivid]
+theme = "catppuccin-latte"
+
+[bat]
+theme = "Catppuccin Latte"
+
+[wezterm]
+theme = "Catppuccin Latte"

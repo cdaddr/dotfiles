@@ -1,5 +1,12 @@
 local util = require("util")
 
+vim.g.python3_host_prog = vim.env.HOME .. "/.local/share/venv/neovim-python/bin/python"
+
+local rv_ruby = vim.fn.trim(vim.fn.system("rv ruby find 2>/dev/null"))
+if rv_ruby ~= "" then
+  vim.g.ruby_host_prog = vim.fn.fnamemodify(rv_ruby, ":h") .. "/neovim-ruby-host"
+end
+
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.softtabstop = 2

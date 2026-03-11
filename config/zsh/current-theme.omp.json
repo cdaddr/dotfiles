@@ -21,6 +21,7 @@
     "yellow": "#C0A36E",
     "maroon": "#C34043"
   },
+  "streaming": 50,
   "blocks": [
     {
       "alignment": "left",

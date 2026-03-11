@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "palette": {},
+  "streaming": 50,
   "blocks": [
     {
       "alignment": "left",

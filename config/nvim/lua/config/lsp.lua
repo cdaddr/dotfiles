@@ -1,4 +1,4 @@
--- note to self: nvim-lspconfig server names, lsp commands (executables), and Mason package names can differ.
+-- note to self: nvim-lspconfig server names and lsp commands (executables) can differ.
 local servers = {
   "bashls",
   "shfmt",
@@ -22,10 +22,24 @@ for _, server in ipairs(servers) do
   vim.lsp.enable(server)
 end
 
+vim.lsp.config("rubocop", {
+  cmd = { "rv", "tool", "run", "rubocop", "--lsp" },
+})
+
+vim.lsp.config("ruby_lsp", {
+  cmd = { "rv", "tool", "run", "ruby-lsp" },
+  init_options = {
+    formatter = "standard",
+    linters = { "standard" },
+  },
+})
+
 -- ruff panics on unnamed buffers (no file path); skip attachment when buffer has no name
 vim.lsp.config("ruff", {
   root_dir = function(fname)
-    if not fname or fname == "" then return nil end
+    if not fname or fname == "" then
+      return nil
+    end
     return vim.fs.root(fname, { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" })
   end,
 })

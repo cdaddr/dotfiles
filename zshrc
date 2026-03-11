@@ -107,7 +107,8 @@ if [[ -f  "$XDG_CONFIG_HOME/aliases.sh" ]]; then
     source "$XDG_CONFIG_HOME/aliases.sh"
 fi
 
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export VOLTA_HOME="$XDG_DATA_HOME/volta"
+export PATH=$HOME/bin:$HOME/.local/bin:$VOLTA_HOME/bin:/usr/local/bin:$PATH
 
 ############################################################################
 ## From here down is all junk added by tools.  May need periodic cleanup.

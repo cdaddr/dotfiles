@@ -21,7 +21,6 @@ return {
 
     require("lualine").setup({
       extensions = {
-        "mason",
         "lazy",
         ext.quickfix,
         ext.oil,

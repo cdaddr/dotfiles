@@ -90,7 +90,6 @@ return {
             GitSignsDelete = { bg = gutter_bg },
 
             LazyNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
-            MasonNormal = { bg = palette.sumiInk0, fg = palette.oldWhite },
             SnacksPickerCursorLine = { bg = normal_bg },
             TreesitterContextLineNumber = { fg = palette.sumiInk4, bg = palette.sumiInk0 },
             TreesitterContextLineNumberBottom = { bg = gutter_bg, sp = palette.sumiInk4, underline = true },

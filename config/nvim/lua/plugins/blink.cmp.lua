@@ -1,15 +1,8 @@
 highlight = function(ctx)
-  if ctx.source_name ~= "Path" then
-    return ctx.kind_hl
-  end
-
-  local is_unknown_type = vim.tbl_contains({ "link", "socket", "fifo", "char", "block", "unknown" }, ctx.item.data.type)
-  local mini_icon, mini_hl =
-    require("mini.icons").get(is_unknown_type and "os" or ctx.item.data.type, is_unknown_type and "" or ctx.label)
-  return mini_icon ~= nil and mini_hl or ctx.kind_hl
+  return "Comment"
 end
 
-local default_providers = { "lazydev", "snippets", "path", "lsp", "buffer" }
+local default_providers = { "lsp", "lazydev", "snippets", "path", "buffer" }
 
 return {
   "saghen/blink.cmp",
@@ -115,7 +108,7 @@ return {
         plsql = { "dadbod", "snippets", "buffer" },
       },
       providers = {
-        dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+        dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink", score_offset = 1000 },
         lazydev = {
           name = "LazyDev",
           module = "lazydev.integrations.blink",

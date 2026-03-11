@@ -45,6 +45,7 @@ return {
     end
     require("statuscol").setup({
       setopt = true,
+      ft_ignore = { "dbui" },
       segments = {
         {
           text = { "%s" },

@@ -33,8 +33,12 @@ au("TextYankPost", {
   end,
 })
 
--- start in insert mode when opening a terminal
+-- start in insert mode when opening or re-entering a terminal
 au("TermOpen", { pattern = "*", command = [[ startinsert ]] })
+au("WinEnter", {
+  pattern = "term://*",
+  callback = function() vim.cmd("startinsert") end,
+})
 
 -- close grug-far with q
 au("FileType", {

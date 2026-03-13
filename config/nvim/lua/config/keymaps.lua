@@ -13,6 +13,11 @@ map("n", "<C-k>", "<C-w>k", { desc = "select window up <C-w>k" })
 map("n", "<C-h>", "<C-w>h", { desc = "select window left <C-w>h" })
 map("n", "<C-l>", "<C-w>l", { desc = "select window right <C-w>l" })
 
+map("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "select window down (terminal)" })
+map("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = "select window up (terminal)" })
+map("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "select window left (terminal)" })
+map("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "select window right (terminal)" })
+
 map("n", "<cr>", "za", { desc = "Toggle open/close fold under cursor", buffer = true })
 
 map("n", "t", "<cmd>bnext<cr>", { desc = ":bnext" })

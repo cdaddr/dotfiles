@@ -60,8 +60,27 @@ with section("homebrew"):
 
 # symlinks
 
+def remove_stale_config_symlinks():
+    config_dir = HOME / ".config"
+    if not config_dir.exists():
+        return
+    for entry in config_dir.iterdir():
+        if not entry.is_symlink():
+            continue
+        target = Path(os.readlink(entry))
+        if not target.is_absolute():
+            target = entry.parent / target
+        try:
+            target.relative_to(DOTFILES)
+        except ValueError:
+            continue
+        if not target.exists():
+            entry.unlink()
+            ok(f"removed stale symlink: {entry}")
+
 with section("symlinks"):
     (HOME / ".config").mkdir(exist_ok=True)
+    remove_stale_config_symlinks()
     for name in os.listdir(DOTFILES / "config"):
         symlink(DOTFILES / "config" / name, HOME / ".config" / name)
 

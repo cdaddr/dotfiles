@@ -7,7 +7,6 @@ vim.opt.sessionoptions = {
   "tabpages",
   "winpos",
   "winsize",
-  "options",
   "skiprtp",
 }
 

@@ -3,3 +3,9 @@
 [ui]
 default-command = "status"
 
+[revset-aliases]
+"recent" = "ancestors(@, 20)"
+"stack" = "immutable_heads()..@"
+
+[aliases]
+logs = ["log", "-r", "stack"]

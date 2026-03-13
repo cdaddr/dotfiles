@@ -5,4 +5,5 @@ local.toml
 config/git/local
 config/jj/local.toml
 config/jj/repos/
+config/kitty/local.conf
 .jj

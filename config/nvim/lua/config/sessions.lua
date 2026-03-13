@@ -1,5 +1,13 @@
-local vimrc_augroup = vim.api.nvim_create_augroup("vimrc", { clear = false })
+-- sessions are saved based on cwd when nvim is opened
+-- but only when nvim has no cli args
+--
+-- if nvim had cli args, then we'll use shada instead of session, below
+-- and make sure not to overwrite the existing session file if there is one
 
+local vimrc_augroup = vim.api.nvim_create_augroup("vimrc", { clear = false })
+local should_use_session = vim.fn.argc() == 0
+
+-- don't include `options`; it messes with lchdir autocmd elsewhere
 vim.opt.sessionoptions = {
   "buffers",
   "help",
@@ -11,15 +19,20 @@ vim.opt.sessionoptions = {
 }
 
 local function session_path()
-  -- use global cwd (-1) so lchdir from the project-root autocmd doesn't affect session naming
+  -- use global cwd (-1) so lchdir autocmd doesn't affect session naming
   local name = vim.fn.getcwd(-1):gsub("%%", "%%%%"):gsub("/", "%%")
   return vim.fn.stdpath("state") .. "/sessions/" .. name .. ".vim"
 end
 
 local function save()
+  if not should_use_session then
+    return
+  end
+  -- I only want to save the first tab; others will be stuff like diffview
   vim.cmd("1tabnext | tabonly")
 
   -- mark non-file buffers as nofile before mksession so they're excluded
+  -- then restore buftype/buflisted after saving session
   -- https://github.com/neovim/neovim/issues/12242
   local saved_buf_configs = {}
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -30,8 +43,8 @@ local function save()
     end
   end
 
-  vim.fn.mkdir(vim.fn.stdpath("state") .. "/sessions", "p")
-  vim.cmd("mksession! " .. vim.fn.fnameescape(session_path()))
+  pcall(vim.fn.mkdir, vim.fn.stdpath("state") .. "/sessions", "p")
+  pcall(vim.cmd, "mksession! " .. vim.fn.fnameescape(session_path()))
 
   for buf, s in pairs(saved_buf_configs) do
     if vim.api.nvim_buf_is_valid(buf) then
@@ -42,7 +55,7 @@ local function save()
 end
 
 local function load()
-  if vim.fn.argc() ~= 0 then
+  if not should_use_session then
     return
   end
   local path = session_path()
@@ -53,3 +66,18 @@ end
 
 vim.api.nvim_create_autocmd("VimEnter", { once = true, nested = true, group = vimrc_augroup, callback = load })
 vim.api.nvim_create_autocmd("VimLeavePre", { nested = true, group = vimrc_augroup, callback = save })
+
+-- restore cursor position from shada when opening a file via nvim cli args
+-- (we ignore session file if one exists)
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = vimrc_augroup,
+  callback = function()
+    if should_use_session then
+      return
+    end
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    if mark[1] > 0 then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+})

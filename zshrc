@@ -123,6 +123,7 @@ export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GOPATH="$XDG_DATA_HOME/go"
 export HOMEBREW_NO_ENV_HINTS=1
 export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
+export JJ_CONFIG="$XDG_CONFIG_HOME/jj"
 export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
 eval "$(zoxide init zsh)"

@@ -2,3 +2,7 @@
 .DS_Store
 .claude
 local.toml
+config/git/local
+config/jj/local.toml
+config/jj/repos/
+.jj

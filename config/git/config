@@ -23,9 +23,6 @@
   ui = auto
 [credential]
   helper = cache --timeout=3600
-[user]
-  name = Brian Carper
-  email = brian@carper.ca
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
@@ -104,5 +101,8 @@
   strategy = incremental
 [feature]
   manyFiles = true
+
+[include]
+  path = ~/.config/git/local
 
 # vim: ft=gitconfig

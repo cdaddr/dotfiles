@@ -60,7 +60,9 @@ function M.branch(palette, active)
     icons_enabled = true,
     padding = { left = 1, right = 0 },
     color = color,
-    cond = helpers.is_normal,
+    cond = function()
+      return helpers.is_normal() and not helpers.is_jj_repo()
+    end,
   }
 end
 
@@ -108,6 +110,7 @@ function M.repo_status(palette, active)
     color = color,
     cond = function()
       return helpers.is_normal()
+        and not helpers.is_jj_repo()
         and (
           git_repo_status.added > 0
           or git_repo_status.modified > 0

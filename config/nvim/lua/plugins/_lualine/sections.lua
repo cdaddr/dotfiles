@@ -7,6 +7,7 @@ local grapple = require("plugins._lualine.grapple")
 local filename = require("plugins._lualine.filename")
 local modified = require("plugins._lualine.modified")
 local git_status = require("plugins._lualine.git_status")
+local jj_status = require("plugins._lualine.jj_status")
 local lsp_status = require("plugins._lualine.lsp_status")
 local format_indicator = require("plugins._lualine.format_indicator")
 local unicode = require("plugins._lualine.unicode")
@@ -76,6 +77,8 @@ function M.sections()
       grapple.component(p, true),
       git_status.branch(p, true),
       git_status.repo_status(p, true),
+      jj_status.branch(p, true),
+      jj_status.repo_status(p, true),
     },
     lualine_x = {
       unicode.component(p, true),

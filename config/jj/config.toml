@@ -8,5 +8,10 @@ merge-editor = ["nvim", "-c", "DiffviewOpen"]
 "recent" = "ancestors(@, 20)"
 "stack" = "immutable_heads()..@"
 
+[colors]
+"diff added" = {fg = "bright green", bold = true}
+"diff modified" = {fg = "bright cyan"}
+"diff renamed" = {fg = "bright yellow", bold = true}
+
 [aliases]
 logs = ["log", "-r", "stack"]

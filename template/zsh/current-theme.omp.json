@@ -20,14 +20,23 @@
         {
           "foreground": "p:primary",
           "style": "plain",
-          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }} ",
+          "template": "{{ if .SSHSession }} (ssh){{ end }} {{ .UserName }}@{{ .HostName }}  ",
           "type": "session"
         },
         {
           "foreground": "p:path",
           "style": "plain",
           "type": "text",
-          "template": "\ueaf7 {{ .Env.PWD }} "
+          "template": "\ueaf7 {{ .Env.PWD }}  "
+        },
+        {
+          "foreground": "p:accent",
+          "options": {
+            "fetch_status": true
+          },
+          "style": "plain",
+          "type": "jujutsu",
+          "template": "󰁥 {{ if .ClosestBookmarks }}{{ .ClosestBookmarks}}{{ end }} {{.ChangeID}} {{if .Working.Changed}}{{ .Working.String }}{{ end }}  "
         },
         {
           "foreground": "p:accent",
@@ -40,7 +49,7 @@
             "fetch_upstream_icon": false,
             "branch_identical_icon": ""
           },
-          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }} ",
+          "template": "{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}{{ .Rebase }}  ",
           "style": "plain",
           "type": "git"
         },

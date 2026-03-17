@@ -51,4 +51,21 @@ function M.is_readonly(bufnr)
   return not vim.bo[bufnr].modifiable or vim.bo[bufnr].readonly
 end
 
+-- cached per-cwd jj repo detection
+local jj_cache = {}
+function M.is_jj_repo()
+  local cwd = vim.fn.getcwd()
+  if jj_cache[cwd] == nil then
+    jj_cache[cwd] = vim.fn.finddir(".jj", cwd .. ";") ~= ""
+  end
+  return jj_cache[cwd]
+end
+
+-- invalidate cache on dir change
+vim.api.nvim_create_autocmd("DirChanged", {
+  callback = function()
+    jj_cache = {}
+  end,
+})
+
 return M

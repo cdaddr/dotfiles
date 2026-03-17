@@ -115,6 +115,8 @@ return {
             RenderMarkdownH4Bg = { bg = palette.waveBlue1 },
             RenderMarkdownH5Bg = { bg = palette.waveBlue1 },
             RenderMarkdownH6Bg = { bg = palette.waveBlue1 },
+            DiffAdd = { fg = palette.springGreen },
+            DiffChange = { fg = palette.springBlue },
 
             CodeDiffFiller = { fg = palette.oniViolet },
             MiniCursorword = { underdotted = true },

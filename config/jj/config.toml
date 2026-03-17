@@ -2,6 +2,7 @@
 
 [ui]
 default-command = "status"
+merge-editor = ["nvim", "-c", "DiffviewOpen"]
 
 [revset-aliases]
 "recent" = "ancestors(@, 20)"

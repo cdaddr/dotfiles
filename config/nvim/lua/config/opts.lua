@@ -65,6 +65,7 @@ vim.opt.foldenable = true
 vim.opt.foldlevel = 99
 
 -- vim.o.timeoutlen = 1000  -- don't: this messes with which-key and other plugins
+vim.o.timeoutlen = 500
 
 -- tabline:
 function _G.Tabline()

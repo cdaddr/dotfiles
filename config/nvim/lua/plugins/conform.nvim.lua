@@ -4,7 +4,7 @@ return {
   cmd = { "ConformInfo" },
   keys = {
     {
-      "<leader>f",
+      "<leader>xf",
       function()
         local conform = require("conform")
         local bufnr = vim.api.nvim_get_current_buf()

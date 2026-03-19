@@ -3,7 +3,8 @@ return {
   event = "VeryLazy",
   ---@type wk.Opts
   opts = {
-    delay = 1000,
+    preset = "helix",
+    delay = 100,
     spec = {
       { "<leader>f", group = "File" },
       { "<leader>b", group = "Buffers" },
@@ -26,8 +27,15 @@ return {
       no_overlap = true,
       border = "rounded",
       padding = { 0, 0 },
-      wo = { winblend = 10 },
+      wo = { winblend = 25 },
     },
     show_help = false,
+    disable = {
+      bt = { "nofile" },
+    },
+    keys = {
+      scroll_down = "<c-j>",
+      scroll_up = "<c-k>",
+    },
   },
 }

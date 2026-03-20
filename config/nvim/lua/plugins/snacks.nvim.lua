@@ -1,5 +1,13 @@
 local pickers = require("config.pickers")
 
+-- open a grep picker with cwd shown in title
+local function grep(title, source, opts)
+  opts = opts or {}
+  local dir = opts.cwd or vim.fn.getcwd()
+  opts.title = title .. " (" .. vim.fn.fnamemodify(dir, ":~") .. ")"
+  Snacks.picker[source](opts)
+end
+
 ---@module "Snacks"
 ---@type LazySpec[]
 return {
@@ -36,89 +44,74 @@ return {
     if vim.lsp.inlay_hint then
       Snacks.toggle.inlay_hints():map("<leader>uh")
     end
-    -- Define custom grep formatter once
+    -- custom grep formatter: left-aligned line content, right-aligned "basename  line  col"
     local grep_format = function(item, picker)
       local ret = {} ---@type snacks.picker.Highlight[]
 
       if item.line then
-        -- Trim leading whitespace and truncate to 40 chars
-        local trimmed_line = item.line:match("^%s*(.-)$") or item.line
-        local max_line_width = 40
-        local truncated = false
+        local trimmed = item.line:match("^%s*(.-)$") or item.line
 
-        if vim.api.nvim_strwidth(trimmed_line) > max_line_width then
-          local width = 0
-          local idx = 1
-          for i = 1, #trimmed_line do
-            local char = trimmed_line:sub(i, i)
-            local char_width = vim.api.nvim_strwidth(char)
-            if width + char_width > max_line_width - 1 then
-              idx = i
-              break
-            end
-            width = width + char_width
-            idx = i + 1
-          end
-          trimmed_line = trimmed_line:sub(1, idx - 1) .. "…"
-          truncated = true
-        end
-
-        -- Add the matching line content
-        if item.positions and not truncated then
+        if item.positions then
           local leading_ws = #(item.line:match("^%s*") or "")
-          local adjusted_positions = {}
+          local adjusted = {}
           for _, pos in ipairs(item.positions) do
-            local adjusted_pos = pos - leading_ws
-            if adjusted_pos >= 0 and adjusted_pos < #trimmed_line then
-              table.insert(adjusted_positions, adjusted_pos)
+            local p = pos - leading_ws
+            if p >= 0 then
+              table.insert(adjusted, p)
             end
           end
-          if #adjusted_positions > 0 then
-            local temp_item = vim.tbl_extend("force", {}, item)
-            temp_item.positions = adjusted_positions
-            local offset = Snacks.picker.highlight.offset(ret)
-            Snacks.picker.highlight.matches(ret, temp_item.positions, offset)
+          if #adjusted > 0 then
+            local temp = vim.tbl_extend("force", {}, item)
+            temp.positions = adjusted
+            Snacks.picker.highlight.matches(ret, temp.positions, Snacks.picker.highlight.offset(ret))
           end
         end
-        Snacks.picker.highlight.format(item, trimmed_line, ret)
+        Snacks.picker.highlight.format(item, trimmed, ret)
 
-        -- Add virtual text for right-aligned file info
         local path = Snacks.picker.util.path(item) or item.file
-        local truncpath =
-          Snacks.picker.util.truncpath(path, 100, { cwd = picker:cwd(), kind = picker.opts.formatters.file.truncate })
-
-        local dir, base = truncpath:match("^(.*)/(.+)$")
-
-        local virt_parts = {}
-        if base and dir and dir ~= "" then
-          table.insert(virt_parts, { dir, "SnacksPickerDir" })
-          table.insert(virt_parts, { " " })
-          table.insert(virt_parts, { base, "SnacksPickerFile" })
-        else
-          table.insert(virt_parts, { " " })
-          table.insert(virt_parts, { truncpath, "SnacksPickerFile" })
+        if path and not item.preview_title then
+          -- full path shown in preview border title via {preview} template
+          item.preview_title = path
         end
-        table.insert(virt_parts, { ":", "SnacksPickerDelim" })
+
+        local basename = path and vim.fn.fnamemodify(path, ":t") or ""
+        local virt = { { " " }, { basename, "SnacksPickerDimmed" } }
         if item.pos and item.pos[1] then
-          table.insert(virt_parts, { tostring(item.pos[1]), "SnacksPickerRow" })
+          table.insert(virt, { "  " })
+          table.insert(virt, { string.format("%4d", item.pos[1]), "SnacksPickerRow" })
+          table.insert(virt, { "  " })
           if item.pos[2] and item.pos[2] > 0 then
-            table.insert(virt_parts, { ":", "SnacksPickerDelim" })
-            table.insert(virt_parts, { tostring(item.pos[2]), "SnacksPickerCol" })
+            table.insert(virt, { string.format("%2d", item.pos[2]), "SnacksPickerCol" })
+          else
+            table.insert(virt, { "  " })
           end
         end
 
-        ret[#ret + 1] = {
-          col = 0,
-          virt_text = virt_parts,
-          virt_text_pos = "right_align",
-          hl_mode = "combine",
-        }
+        ret[#ret + 1] = { col = 0, virt_text = virt, virt_text_pos = "right_align", hl_mode = "replace" }
       else
         return require("snacks.picker.format").file(item, picker)
       end
 
       return ret
     end
+
+    -- floating vertical layout for grep: input → list → full-width preview
+    local grep_layout = {
+      layout = {
+        backdrop = false,
+        width = 0.8,
+        min_width = 80,
+        height = 0.8,
+        min_height = 30,
+        box = "vertical",
+        border = true,
+        title = " {title} {live} {flags}",
+        title_pos = "center",
+        { win = "input", height = 1, border = "bottom" },
+        { win = "list", border = "none" },
+        { win = "preview", title = "{preview}", height = 0.4, border = "top" },
+      },
+    }
 
     local open_in_oil = function(picker)
       local item = picker:current()
@@ -171,9 +164,9 @@ return {
           recent = { win = win_opts, exclude = exclude },
           buffers = { win = win_opts },
           smart = { win = win_opts, exclude = exclude },
-          grep = { format = grep_format, win = win_opts, exclude = exclude },
-          grep_buffers = { format = grep_format, win = win_opts },
-          grep_word = { format = grep_format, win = win_opts },
+          grep = { format = grep_format, win = win_opts, exclude = exclude, layout = grep_layout },
+          grep_buffers = { format = grep_format, win = win_opts, layout = grep_layout },
+          grep_word = { format = grep_format, win = win_opts, layout = grep_layout },
         },
         win = {
           input = {
@@ -210,8 +203,9 @@ return {
     -- { "<D-e>", function() Snacks.picker.recent() end, desc = "Find Files (Recent)", },
     { "<leader>r", function() Snacks.picker.recent() end, desc = "Recent", },
     { "<leader>p", function() Snacks.picker.smart() end, desc = "Find Files (Smart)", },
-    { "<leader>/", function() Snacks.picker.grep({}) end, desc = "Grep (cwd)", },
-    { "<leader>?", function() Snacks.picker.grep({ cwd = vim.fn.expand("%:p:h") }) end, desc = "Grep (buffer dir)", },
+    { "<leader>/", function() grep("Grep", "grep") end, desc = "Grep (cwd)", },
+    { "<leader>sg", function() grep("Grep", "grep") end, desc = "Grep (cwd)", },
+    { "<leader>?", function() grep("Local Grep", "grep", { cwd = vim.fn.expand("%:p:h") }) end, desc = "Grep (buffer dir)", },
     { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History", },
     -- find
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers", },
@@ -241,9 +235,6 @@ return {
     -- search
     { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines", },
     { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers", },
-    { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep", },
-    { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" },
-    },
     { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers", },
     { "<leader>s/", function() Snacks.picker.search_history() end, desc = "Search History", },
     { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds", },

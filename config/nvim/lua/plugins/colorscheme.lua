@@ -54,6 +54,7 @@ return {
           local gutter_bg = palette.sumiInk1
           local gutter_bg = palette.sumiInk1
           local normal_bg = palette.sumiInk3
+          local grey_text = palette.fujiGray
           return {
             NormalFloat = { bg = "none" },
             FloatBorder = { bg = "none" },
@@ -64,6 +65,9 @@ return {
             PmenuSbar = { bg = palette.sumiInk4 },
             PmenuSel = { link = "Visual" },
             Delimiter = { fg = palette.sumiInk4 },
+
+            DiffAdd = { fg = palette.springGreen },
+            DiffChange = { fg = palette.springBlue },
 
             CursorLine = { bg = palette.sumiInk4 },
             LineNr = { bg = gutter_bg },
@@ -115,8 +119,8 @@ return {
             RenderMarkdownH4Bg = { bg = palette.waveBlue1 },
             RenderMarkdownH5Bg = { bg = palette.waveBlue1 },
             RenderMarkdownH6Bg = { bg = palette.waveBlue1 },
-            DiffAdd = { fg = palette.springGreen },
-            DiffChange = { fg = palette.springBlue },
+
+            -- SnacksPickerFile = { fg = grey_text },
 
             CodeDiffFiller = { fg = palette.oniViolet },
             MiniCursorword = { underdotted = true },

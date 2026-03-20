@@ -1,12 +1,13 @@
 "$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
 
 [ui]
-default-command = "status"
+default-command = ["log", "-r", "local_stack"]
 merge-editor = ["nvim", "-c", "DiffviewOpen"]
 
 [revset-aliases]
 "recent" = "ancestors(@, 20)"
 "stack" = "immutable_heads()..@"
+"local_stack" = "ancestors(@, 8) | (ancestors(@, 8):: & ~immutable())"
 
 [colors]
 "diff added" = {fg = "bright green", bold = true}

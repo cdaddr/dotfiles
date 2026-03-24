@@ -77,12 +77,12 @@ return {
         selection = { preselect = true, auto_insert = true },
       },
       menu = {
-        auto_show = true,
+        auto_show = false,
         auto_show_delay_ms = 100,
         draw = {
           columns = {
-            { "label",     "label_description", gap = 1 },
-            { "kind_icon", "kind",              gap = 1 },
+            { "label", "label_description", gap = 1 },
+            { "kind_icon", "kind", gap = 1 },
           },
           components = {
             kind_icon = {

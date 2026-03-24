@@ -16,6 +16,7 @@ local servers = {
   -- "djlsp",
   "html",
   "tailwindcss",
+  "emmet_language_server",
 }
 
 for _, server in ipairs(servers) do
@@ -129,6 +130,32 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     vim.keymap.set("n", "<leader>lF", vim.lsp.buf.format, { noremap = true, buffer = true, desc = "Format buffer (lsp)" })
     vim.keymap.set("n", "<leader>lR", vim.lsp.buf.rename, { noremap = true, buffer = true, desc = "Rename file (lsp)" })
+    vim.keymap.set("n", "<leader>ln", function()
+      local old = vim.api.nvim_buf_get_name(0)
+      vim.ui.input({ prompt = "New name: ", default = old }, function(new)
+        if not new or new == "" or new == old then return end
+        local params = {
+          files = { { oldUri = vim.uri_from_fname(old), newUri = vim.uri_from_fname(new) } }
+        }
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        for _, client in ipairs(clients) do
+          local file_ops = vim.tbl_get(client.server_capabilities, "workspace", "fileOperations")
+          if file_ops and file_ops.willRename then
+            local resp = client:request_sync("workspace/willRenameFiles", params, 2000, 0)
+            if resp and resp.result then
+              vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
+            end
+          end
+        end
+        vim.lsp.util.rename(old, new)
+        for _, client in ipairs(clients) do
+          local file_ops = vim.tbl_get(client.server_capabilities, "workspace", "fileOperations")
+          if file_ops and file_ops.didRename then
+            client:notify("workspace/didRenameFiles", params)
+          end
+        end
+      end)
+    end, { buffer = true, desc = "Rename file with refs (lsp)" })
 
     -- stylua: ignore end
   end,

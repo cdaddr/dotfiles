@@ -61,6 +61,9 @@ map("x", ">", ">gv")
 map("x", "<", "<gv")
 map("x", "/", "<esc>/\\%V", { desc = "Search in visual selection" })
 
+-- copy filename to system clipboard
+map("n", "<leader>xy", ":let @+ = expand('%:p')<cr>", { desc = "Copy filename to clipboard" })
+
 vim.cmd.cabbrev("<expr>", "E", "(getcmdtype() == ':') ? 'e' : 'E'")
 vim.cmd.cabbrev("<expr>", "W", "(getcmdtype() == ':') ? 'w' : 'W'")
 vim.cmd.cabbrev("<expr>", "Q", "(getcmdtype() == ':') ? 'q' : 'Q'")

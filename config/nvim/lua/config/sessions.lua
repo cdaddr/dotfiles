@@ -81,3 +81,5 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
   end,
 })
+
+return { save = save }

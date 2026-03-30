@@ -14,6 +14,9 @@ merge-editor = ["nvim", "-c", "DiffviewOpen"]
 "diff modified" = {fg = "bright cyan"}
 "diff renamed" = {fg = "bright yellow", bold = true}
 
+[templates]
+draft_commit_description = "builtin_draft_commit_description_with_diff"
+
 [aliases]
 logs = ["log", "-r", "stack"]
 

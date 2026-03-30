@@ -39,6 +39,7 @@ vim.o.list = true
 vim.o.listchars = "tab: ,trail:·,nbsp:␣"
 vim.o.signcolumn = "yes"
 vim.o.winborder = "rounded"
+vim.opt.fillchars:append({ vert = "▕", vertleft = "▕", vertright = "▕", verthoriz = "─" })
 vim.o.pumborder = "rounded"
 vim.opt.shortmess:append("A")
 vim.opt.nrformats:append({ "alpha" })

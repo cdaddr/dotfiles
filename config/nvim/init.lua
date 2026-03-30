@@ -1,8 +1,5 @@
 -- https://github.com/cdaddr/dotfiles
 
-local theme_file = vim.fn.stdpath("config") .. "/theme.lua"
-local theme = vim.fn.filereadable(theme_file) == 1 and dofile(theme_file) or { nvim = "default", lualine = "auto" }
-
 -- dotfiles git repo is in ~/.dotfiles and individual folders are symlinked to ~/.config/*
 _G.DOTFILES = vim.env.HOME .. "/.dotfiles"
 
@@ -10,13 +7,9 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 require("config.opts")
-require("config.lazy")
-require("config.lsp")
 require("config.keymaps")
 require("config.autocmds")
 require("config.sessions")
-
-vim.cmd.colorscheme(theme.nvim)
 
 -- experimental
 -- require("vim._extui").enable({

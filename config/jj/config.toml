@@ -16,3 +16,6 @@ merge-editor = ["nvim", "-c", "DiffviewOpen"]
 
 [aliases]
 logs = ["log", "-r", "stack"]
+
+[snapshot]
+max-new-file-size = "3MiB"

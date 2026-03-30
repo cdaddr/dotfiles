@@ -51,7 +51,10 @@ map("n", "z7", function() vim.opt.foldlevel = 7 end, { desc = "Set foldlevel=7" 
 map("n", "z8", function() vim.opt.foldlevel = 8 end, { desc = "Set foldlevel=8" })
 map("n", "z9", function() vim.opt.foldlevel = 9 end, { desc = "Set foldlevel=9" })
 
-map("n", "<f5>", "<cmd>restart +:qall!<cr>", { desc = "Quit without saving and restart nvim" })
+map("n", "<f5>", function()
+  require("config.sessions").save()
+  vim.cmd("restart +:qall!")
+end, { desc = "Save session and restart nvim" })
 
 -- toggle qf
 map("n", [[\q]], ":copen<cr>", { desc = "Toggle quickfix list" })

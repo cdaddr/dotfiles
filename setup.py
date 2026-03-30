@@ -144,6 +144,7 @@ with section("nvim lsp"):
         "@tailwindcss/language-server",
         "@vtsls/language-server",
         "yaml-language-server",
+        "@olrtg/emmet-language-server",
     ]:
         run(pkg, "volta", "install", pkg)
 

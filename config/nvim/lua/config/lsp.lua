@@ -16,7 +16,6 @@ local servers = {
   -- "djlsp",
   "html",
   "tailwindcss",
-  "emmet_language_server",
 }
 
 for _, server in ipairs(servers) do
@@ -89,7 +88,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<f25>", function() vim.diagnostic.setqflist({ open = true }) end, { buffer = true, desc = "Send diagnostics to quickfix <c-f1>" })
     vim.keymap.set("n", "<f37>", function() vim.diagnostic.setloclist({ open = true }) end, { buffer = true, desc = "Send buffer diagnostics to loclist <cs-f1>" })
 
-    vim.keymap.set("n", "<m-cr>", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
+    vim.keymap.set({ "n", "v" }, "<m-cr>", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
 
     -- these are discoverable for when I forget
     vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { buffer = true, desc = "Code action" })
@@ -130,6 +129,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     vim.keymap.set("n", "<leader>lF", vim.lsp.buf.format, { noremap = true, buffer = true, desc = "Format buffer (lsp)" })
     vim.keymap.set("n", "<leader>lR", vim.lsp.buf.rename, { noremap = true, buffer = true, desc = "Rename file (lsp)" })
+
+    local ts_fts = { typescript = true, typescriptreact = true, javascript = true, javascriptreact = true, svelte = true }
+    if ts_fts[filetype] then
+      vim.keymap.set("n", "<leader>li", function()
+        vim.lsp.buf.code_action({
+          apply = true,
+          context = { only = { "source.removeUnusedImports" }, diagnostics = {} },
+        })
+      end, { buffer = true, desc = "Remove unused imports (ts)" })
+    end
     vim.keymap.set("n", "<leader>ln", function()
       local old = vim.api.nvim_buf_get_name(0)
       vim.ui.input({ prompt = "New name: ", default = old }, function(new)

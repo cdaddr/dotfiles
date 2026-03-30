@@ -1,10 +1,102 @@
 {
+  "s-base": {
+    "prefix": "s-base",
+    "body": [
+      "<script lang=\"ts\">",
+      "  interface Props {",
+      "    ${1}",
+      "  }",
+      "",
+      "  let { ${2} }: Props = \\$props();",
+      "</script>",
+      "",
+      "${0}"
+    ]
+  },
   "if": {
     "prefix": "if",
     "body": ["{#if ${1:cond}}", "  ${2}", "{/if}"]
   },
+  "if-else": {
+    "prefix": "ife",
+    "body": ["{#if ${1:cond}}", "  ${2}", "{:else}", "  ${3}", "{/if}"]
+  },
   "jst": {
     "prefix": "jst",
     "body": ["{JSON.stringify(${1})}"]
+  },
+  "Svelte $state()": {
+    "prefix": "s-state",
+    "body": ["let ${1:state} = \\$state(${2})$0"]
+  },
+  "Svelte $state.frozen()": {
+    "prefix": "s-state-frozen",
+    "body": ["let state = \\$state.frozen(${0})"]
+  },
+  "Svelte $state.snapshot()": {
+    "prefix": "s-state-snapshot",
+    "body": ["\\$state.snapshot(${0})"]
+  },
+  "Svelte $state.is()": {
+    "prefix": "s-state-is",
+    "body": ["\\$state.is(${1}, ${0})"]
+  },
+  "Svelte $derived()": {
+    "prefix": "s-derived",
+    "body": ["const ${1:value} = \\$derived(${2})$0"]
+  },
+  "Svelte $derived.by()": {
+    "prefix": "s-derived-by",
+    "body": ["const ${1:value} = \\$derived.by(() => {", "  ${2}", "})$0"]
+  },
+  "Svelte $effect()": {
+    "prefix": "s-effect",
+    "body": ["\\$effect(() => {", "  ${0}", "})"]
+  },
+  "Svelte $effect.pre()": {
+    "prefix": "s-effect-pre",
+    "body": ["\\$effect.pre(() => {", "  ${0}", "})"]
+  },
+  "Svelte $effect.tracking()": {
+    "prefix": "s-effect-tracking",
+    "body": [
+      "\\$effect(() => {",
+      "  console.log('in effect:', \\$effect.tracking());",
+      "})"
+    ]
+  },
+  "Svelte $effect.root()": {
+    "prefix": "s-effect-root",
+    "body": [
+      "const cleanup = \\$effect.root(() => {",
+      "  \\$effect(() => {",
+      "    ${0}",
+      "  })",
+      "",
+      "  return () => {",
+      "    ",
+      "  };",
+      "});"
+    ]
+  },
+  "Svelte $props()": {
+    "prefix": "s-props",
+    "body": ["interface Props {${1}}", "", "let {${0}}: Props = \\$props();"]
+  },
+  "Svelte $host()": {
+    "prefix": "s-host",
+    "body": ["\\$host().dispatchEvent(", "  ${0}", ");"]
+  },
+  "Svelte setContext()": {
+    "prefix": "s-set-context",
+    "body": ["setContext(\"${1:key}\", ${0:value});"]
+  },
+  "Svelte getContext()": {
+    "prefix": "s-get-context",
+    "body": ["const context = getContext(${0:key});"]
+  },
+  "Svelte hasContext()": {
+    "prefix": "s-has-context",
+    "body": ["if (hasContext('${1:key}')) {", "  ${0}", "}"]
   }
 }

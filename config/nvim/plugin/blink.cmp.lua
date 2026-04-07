@@ -95,6 +95,7 @@ require('blink.cmp').setup({
     },
     providers = {
       snippets = {
+        score_offset = 200,
         opts = {
           -- block friendly-snippets svelte (targets svelte 4)
           filter_snippets = function(filetype, file)

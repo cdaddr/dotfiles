@@ -21,6 +21,98 @@
     "prefix": "ife",
     "body": ["{#if ${1:cond}}", "  ${2}", "{:else}", "  ${3}", "{/if}"]
   },
+  "if-else-if": {
+    "prefix": "ifei",
+    "body": ["{#if ${1:cond}}", "  ${2}", "{:else if ${3:cond}}", "  ${4}", "{:else}", "  ${5}", "{/if}"]
+  },
+  "each": {
+    "prefix": "each",
+    "body": ["{#each ${1:items} as ${2:item}}", "  ${0}", "{/each}"]
+  },
+  "each-index": {
+    "prefix": "eachi",
+    "body": ["{#each ${1:items} as ${2:item}, ${3:i}}", "  ${0}", "{/each}"]
+  },
+  "each-keyed": {
+    "prefix": "eachk",
+    "body": ["{#each ${1:items} as ${2:item} (${2:item}.${3:id})}", "  ${0}", "{/each}"]
+  },
+  "each-else": {
+    "prefix": "eache",
+    "body": ["{#each ${1:items} as ${2:item}}", "  ${3}", "{:else}", "  ${0}", "{/each}"]
+  },
+  "key": {
+    "prefix": "key",
+    "body": ["{#key ${1:expr}}", "  ${0}", "{/key}"]
+  },
+  "await": {
+    "prefix": "await",
+    "body": ["{#await ${1:promise}}", "  ${2}", "{:then ${3:value}}", "  ${4}", "{:catch ${5:err}}", "  ${0}", "{/await}"]
+  },
+  "await-then": {
+    "prefix": "awaitt",
+    "body": ["{#await ${1:promise} then ${2:value}}", "  ${0}", "{/await}"]
+  },
+  "await-catch": {
+    "prefix": "awaitc",
+    "body": ["{#await ${1:promise} catch ${2:err}}", "  ${0}", "{/await}"]
+  },
+  "snippet": {
+    "prefix": "snip",
+    "body": ["{#snippet ${1:name}(${2})}", "  ${0}", "{/snippet}"]
+  },
+  "render": {
+    "prefix": "render",
+    "body": ["{@render ${1:snippet}(${2})}"]
+  },
+  "html": {
+    "prefix": "html",
+    "body": ["{@html ${1:content}}"]
+  },
+  "const": {
+    "prefix": "const",
+    "body": ["{@const ${1:name} = ${0}}"]
+  },
+  "debug": {
+    "prefix": "debug",
+    "body": ["{@debug ${0}}"]
+  },
+  "svelte:element": {
+    "prefix": "s-element",
+    "body": ["<svelte:element this={${1:tag}} ${2}>${0}</svelte:element>"]
+  },
+  "svelte:window": {
+    "prefix": "s-window",
+    "body": ["<svelte:window ${0} />"]
+  },
+  "svelte:document": {
+    "prefix": "s-document",
+    "body": ["<svelte:document ${0} />"]
+  },
+  "svelte:body": {
+    "prefix": "s-body",
+    "body": ["<svelte:body ${0} />"]
+  },
+  "svelte:head": {
+    "prefix": "s-head",
+    "body": ["<svelte:head>", "  ${0}", "</svelte:head>"]
+  },
+  "svelte:options": {
+    "prefix": "s-options",
+    "body": ["<svelte:options ${0} />"]
+  },
+  "Svelte $bindable()": {
+    "prefix": "s-bindable",
+    "body": ["let { ${1:prop} = \\$bindable(${2}) } = \\$props();$0"]
+  },
+  "Svelte $inspect()": {
+    "prefix": "s-inspect",
+    "body": ["\\$inspect(${0});"]
+  },
+  "Svelte $inspect().with()": {
+    "prefix": "s-inspect-with",
+    "body": ["\\$inspect(${1}).with(${0});"]
+  },
   "jst": {
     "prefix": "jst",
     "body": ["{JSON.stringify(${1})}"]

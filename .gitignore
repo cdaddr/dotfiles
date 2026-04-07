@@ -8,3 +8,4 @@ config/jj/repos/
 config/kitty/local.conf
 .jj
 config/jj/workspaces
+claude/CLAUDE.md

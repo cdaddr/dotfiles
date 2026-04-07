@@ -1,4 +1,4 @@
-vim.pack.add({ 'https://github.com/nvim-tree/nvim-tree.lua' })
+vim.pack.add({ "https://github.com/nvim-tree/nvim-tree.lua" })
 
 -- apply git marker colors; linked to standard diff/diagnostic highlights so they
 -- work across themes without hardcoding palette values
@@ -14,7 +14,7 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", { callback = set_git_hl })
 set_git_hl()
 
-require('nvim-tree').setup({
+require("nvim-tree").setup({
   renderer = {
     icons = {
       git_placement = "right_align",
@@ -43,6 +43,6 @@ require('nvim-tree').setup({
 })
 
 -- stylua: ignore start
-vim.keymap.set("n", "<d-e>", function() require("nvim-tree.api").tree.open() end, { desc = "nvim-tree: toggle (cwd)" })
-vim.keymap.set("n", "<d-E>", function() require("nvim-tree.api").tree.open({ path = vim.fn.expand('%:h') }) end, { desc = "nvim-tree: toggle (buffer dir)" })
+vim.keymap.set("n", "<d-e>", function() require("nvim-tree.api").tree.open({find_file = true }) end, { desc = "nvim-tree: toggle (cwd)" })
+vim.keymap.set("n", "<d-E>", function() require("nvim-tree.api").tree.open({find_file = true, path = vim.fn.expand('%:h') }) end, { desc = "nvim-tree: toggle (buffer dir)" })
 -- stylua: ignore end

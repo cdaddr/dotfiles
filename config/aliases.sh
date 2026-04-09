@@ -43,4 +43,16 @@ alias_reminder() {
 alias_reminder "du" "dua"
 alias_reminder "grep" "rg"
 
+# fetch from remote and rebase @ onto the updated remote bookmark
+jjp() {
+  local bookmark
+  bookmark=$(jj log -r 'latest(ancestors(@) & bookmarks())' --no-graph -T 'bookmarks' 2>/dev/null | head -1)
+  if [[ -z "$bookmark" ]]; then
+    echo "jjp: could not determine bookmark" >&2
+    return 1
+  fi
+  echo "jjp: rebasing onto ${bookmark}@origin"
+  jj git fetch && jj rebase -d "${bookmark}@origin"
+}
+
 # [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"

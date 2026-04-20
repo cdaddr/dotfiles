@@ -6,3 +6,14 @@ default:
 push:
     jj bookmark set main
     jj git push
+
+sync:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    jj git fetch
+    if jj log -r 'conflicts()' --no-graph --no-pager -T '"x"' | grep -q x; then
+        echo "Conflicts detected, aborting" >&2
+        exit 1
+    fi
+    jj new
+    jj abandon 'empty() & ~@ & mutable()' 2>/dev/null || true

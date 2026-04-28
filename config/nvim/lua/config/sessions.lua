@@ -5,7 +5,7 @@
 -- and make sure not to overwrite the existing session file if there is one
 
 local vimrc_augroup = vim.api.nvim_create_augroup("vimrc", { clear = false })
-local should_use_session = vim.fn.argc() == 0
+local should_use_session = vim.fn.argc() == 0 and not vim.g._no_session
 
 -- don't include `options`; it messes with lchdir autocmd elsewhere
 vim.opt.sessionoptions = {

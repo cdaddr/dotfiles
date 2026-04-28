@@ -1,8 +1,10 @@
 "$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
 
 [ui]
-default-command = ["log", "-r", "local_stack"]
-merge-editor = ["nvim", "-c", "DiffviewOpen"]
+diff-editor = ["nvim", "--cmd", "let g:_no_session = 1", "-c", "DiffEditor $left $right $output"]
+diff-instructions = false
+# default-command = ["log", "-r", "local_stack"]
+# merge-editor = ["nvim", "-c", "DiffviewOpen"]
 
 [revset-aliases]
 "recent" = "ancestors(@, 20)"
@@ -21,4 +23,4 @@ draft_commit_description = "builtin_draft_commit_description_with_diff"
 logs = ["log", "-r", "stack"]
 
 [snapshot]
-max-new-file-size = "3MiB"
+max-new-gile-size = "3MiB"

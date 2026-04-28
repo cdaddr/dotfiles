@@ -53,6 +53,10 @@
       "rev": "37d0eafc6a2dcf8641aa19fc2a8db5e391b7f16b",
       "src": "https://github.com/MagicDuck/grug-far.nvim"
     },
+    "hunk.nvim": {
+      "rev": "a73c34934e87af4f2e615fea3a57ee28b2dceec8",
+      "src": "https://github.com/julienvincent/hunk.nvim"
+    },
     "image.nvim": {
       "rev": "da2be65c153ba15a14a342b05591652a6df70d58",
       "src": "https://github.com/3rd/image.nvim"

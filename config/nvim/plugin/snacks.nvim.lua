@@ -225,6 +225,7 @@ vim.keymap.set("n", "<leader>su", function() Snacks.picker.undo() end, { desc = 
 vim.keymap.set("n", "<leader>ss", function() Snacks.picker.lsp_symbols() end, { desc = "LSP Symbols" })
 vim.keymap.set("n", "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, { desc = "LSP Workspace Symbols" })
 vim.keymap.set("n", "<leader>sU", pickers.unicode, { desc = "Unicode Character" })
+vim.keymap.set("n", "<leader>sP", function() Snacks.picker.files({ cwd = vim.fn.stdpath("data") .. "/site/pack" }) end, { desc = "Installed Plugin Source" })
 vim.keymap.set("n", "<leader>xx", pickers.npm, { desc = "npm script" })
 -- LSP
 vim.keymap.set("n", "<leader>ld", function() Snacks.picker.lsp_definitions() end, { desc = "Goto Definition" })

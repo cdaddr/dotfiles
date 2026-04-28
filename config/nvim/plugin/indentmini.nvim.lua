@@ -1,6 +1,11 @@
 local util = require("util")
 
-vim.pack.add({ 'https://github.com/nvimdev/indentmini.nvim' })
+vim.pack.add({ "https://github.com/nvimdev/indentmini.nvim" })
+
+require("indentmini").setup({
+  minlevel = 2,
+  char = "┊",
+})
 
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
@@ -12,9 +17,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
       vim.api.nvim_set_hl(0, "IndentLineCurrent", { fg = linenr_hl.fg })
     end
   end,
-})
-
-require('indentmini').setup({
-  minlevel = 2,
-  char = "┊",
 })

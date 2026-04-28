@@ -107,31 +107,31 @@ local function set_dim_diagnostics()
 end
 
 -- single-pixel split separator; focused=oniViolet, unfocused=sumiInk3 (Normal bg)
-local win_sep_fg = nil
-
-local function set_win_separator_focused()
-  if win_sep_fg then
-    vim.api.nvim_set_hl(0, "WinSeparator", { fg = win_sep_fg })
-  end
-end
-
-local function set_win_separator_unfocused()
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-  vim.api.nvim_set_hl(0, "WinSeparator", { fg = normal.bg })
-end
-
-local function set_win_separator()
-  local hl = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
-  win_sep_fg = hl.fg
-  set_win_separator_focused()
-end
+-- local win_sep_fg = nil
+--
+-- local function set_win_separator_focused()
+--   if win_sep_fg then
+--     vim.api.nvim_set_hl(0, "WinSeparator", { fg = win_sep_fg })
+--   end
+-- end
+--
+-- local function set_win_separator_unfocused()
+--   local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+--   vim.api.nvim_set_hl(0, "WinSeparator", { fg = normal.bg })
+-- end
+--
+-- local function set_win_separator()
+--   local hl = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
+--   win_sep_fg = hl.fg
+--   set_win_separator_focused()
+-- end
 
 au("ColorScheme", { callback = set_dim_diagnostics })
-au("ColorScheme", { callback = set_win_separator })
-au("FocusGained", { callback = set_win_separator_focused })
-au("FocusLost", { callback = set_win_separator_unfocused })
+-- au("ColorScheme", { callback = set_win_separator })
+-- au("WinEnter", { callback = set_win_separator_focused })
+-- au("WinLeave", { callback = set_win_separator_unfocused })
 set_dim_diagnostics()
-set_win_separator()
+-- set_win_separator()
 
 -- folding fallbacks: treesitter > lsp > syntax
 local function setup_folding(bufnr)

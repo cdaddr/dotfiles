@@ -1,14 +1,28 @@
 -- see colorscheme.lua for highlights
 local util = require("util")
 
-vim.pack.add({ 'https://github.com/echasnovski/mini.nvim' })
+vim.pack.add({ "https://github.com/echasnovski/mini.nvim" })
 
 local mini_jump = require("mini.jump")
 mini_jump.setup({})
 vim.api.nvim_set_hl(0, "MiniJump", { link = "IncSearch" })
 
 local icons = require("mini.icons")
-icons.setup({})
+icons.setup({
+  filetype = {
+    lua = { glyph = "" },
+    toml = { glyph = "󰣖" },
+    json = { glyph = "" },
+  },
+  default = {
+    file = { hl = "MiniIconsBlue" },
+    directory = { hl = "MiniIconsBlue", glyph = "Q" },
+  },
+  lsp = {
+    folder = { glyph = "Q" },
+  },
+})
+icons.mock_nvim_web_devicons()
 
 require("mini.cmdline").setup({
   autocomplete = {
@@ -79,25 +93,42 @@ ai.setup({
     -- parent html/svelte element; 'a' = whole element, 'i' = content between tags
     P = function(ai_type)
       local node = vim.treesitter.get_node()
-      if not node then return end
-      while node and node:type() ~= "element" do node = node:parent() end
-      if not node then return end
+      if not node then
+        return
+      end
+      while node and node:type() ~= "element" do
+        node = node:parent()
+      end
+      if not node then
+        return
+      end
       node = node:parent()
-      while node and node:type() ~= "element" do node = node:parent() end
-      if not node then return end
+      while node and node:type() ~= "element" do
+        node = node:parent()
+      end
+      if not node then
+        return
+      end
       if ai_type == "a" then
         local sr, sc, er, ec = node:range()
         return { from = { line = sr + 1, col = sc + 1 }, to = { line = er + 1, col = ec } }
       end
       local start_tag, end_tag
       for child in node:iter_children() do
-        if child:type() == "start_tag" then start_tag = child
-        elseif child:type() == "end_tag" then end_tag = child end
+        if child:type() == "start_tag" then
+          start_tag = child
+        elseif child:type() == "end_tag" then
+          end_tag = child
+        end
       end
-      if not start_tag or not end_tag then return end
+      if not start_tag or not end_tag then
+        return
+      end
       local _, _, fr, fc = start_tag:range()
       local tr, tc = end_tag:range()
-      if fr > tr or (fr == tr and fc >= tc) then return end
+      if fr > tr or (fr == tr and fc >= tc) then
+        return
+      end
       return { from = { line = fr + 1, col = fc + 1 }, to = { line = tr + 1, col = tc } }
     end,
     -- restore built-ins (custom_textobjects overrides defaults)
@@ -107,7 +138,9 @@ ai.setup({
     -- token within a string (e.g. a css class in class="foo bar")
     k = function(ai_type)
       local node = vim.treesitter.get_node()
-      if not node then return end
+      if not node then
+        return
+      end
       local string_types = {
         attribute_value = true,
         quoted_attribute_value = true,
@@ -116,15 +149,25 @@ ai.setup({
         string_value = true,
       }
       local cur = node
-      while cur and not string_types[cur:type()] do cur = cur:parent() end
-      if not cur then return end
+      while cur and not string_types[cur:type()] do
+        cur = cur:parent()
+      end
+      if not cur then
+        return
+      end
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
       col = col + 1
-      if line:sub(col, col):match("[%s\"'`]") then return end
+      if line:sub(col, col):match("[%s\"'`]") then
+        return
+      end
       local s, e = col, col
-      while s > 1 and not line:sub(s - 1, s - 1):match("[%s\"'`]") do s = s - 1 end
-      while e < #line and not line:sub(e + 1, e + 1):match("[%s\"'`]") do e = e + 1 end
+      while s > 1 and not line:sub(s - 1, s - 1):match("[%s\"'`]") do
+        s = s - 1
+      end
+      while e < #line and not line:sub(e + 1, e + 1):match("[%s\"'`]") do
+        e = e + 1
+      end
       if ai_type == "i" then
         return { from = { line = row, col = s }, to = { line = row, col = e } }
       end
@@ -148,13 +191,19 @@ local function make_textobject(ai_type, id)
     local from, to
     for i = 1, n do
       local region = ai.find_textobject(ai_type, id, { n_times = 1 })
-      if not region or not region.to then break end
-      if i == 1 then from = region.from end
+      if not region or not region.to then
+        break
+      end
+      if i == 1 then
+        from = region.from
+      end
       to = region.to
       if i < n then
         local line_content = vim.api.nvim_buf_get_lines(0, to.line - 1, to.line, true)[1]
         if to.col >= #line_content then
-          if to.line >= vim.api.nvim_buf_line_count(0) then break end
+          if to.line >= vim.api.nvim_buf_line_count(0) then
+            break
+          end
           vim.api.nvim_win_set_cursor(0, { to.line + 1, 0 })
         else
           vim.api.nvim_win_set_cursor(0, { to.line, to.col })
@@ -177,19 +226,29 @@ end
 -- P: parent html element; count = levels to go up (d2aP = grandparent, etc.)
 local function walk_to_parent_element(n)
   local node = vim.treesitter.get_node()
-  if not node then return end
+  if not node then
+    return
+  end
   for _ = 1, n do
-    while node and node:type() ~= "element" do node = node:parent() end
-    if not node then return end
+    while node and node:type() ~= "element" do
+      node = node:parent()
+    end
+    if not node then
+      return
+    end
     node = node:parent()
   end
-  while node and node:type() ~= "element" do node = node:parent() end
+  while node and node:type() ~= "element" do
+    node = node:parent()
+  end
   return node
 end
 
 vim.keymap.set({ "o", "x" }, "aP", function()
   local node = walk_to_parent_element(vim.v.count > 0 and vim.v.count or 1)
-  if not node then return end
+  if not node then
+    return
+  end
   local sr, sc, er, ec = node:range()
   vim.fn.cursor(sr + 1, sc + 1)
   vim.cmd.normal("v")
@@ -198,16 +257,25 @@ end)
 
 vim.keymap.set({ "o", "x" }, "iP", function()
   local node = walk_to_parent_element(vim.v.count > 0 and vim.v.count or 1)
-  if not node then return end
+  if not node then
+    return
+  end
   local start_tag, end_tag
   for child in node:iter_children() do
-    if child:type() == "start_tag" then start_tag = child
-    elseif child:type() == "end_tag" then end_tag = child end
+    if child:type() == "start_tag" then
+      start_tag = child
+    elseif child:type() == "end_tag" then
+      end_tag = child
+    end
   end
-  if not start_tag or not end_tag then return end
+  if not start_tag or not end_tag then
+    return
+  end
   local _, _, fr, fc = start_tag:range()
   local tr, tc = end_tag:range()
-  if fr > tr or (fr == tr and fc >= tc) then return end
+  if fr > tr or (fr == tr and fc >= tc) then
+    return
+  end
   vim.fn.cursor(fr + 1, fc + 1)
   vim.cmd.normal("v")
   vim.fn.cursor(tr + 1, tc)
@@ -239,7 +307,9 @@ require("mini.notify").setup({
       local min_width = 30
       local width = min_width
       local line_widths = vim.tbl_map(vim.fn.strdisplaywidth, vim.api.nvim_buf_get_lines(bufnr, 0, -1, true))
-      for _, l_w in ipairs(line_widths) do width = math.max(width, l_w) end
+      for _, l_w in ipairs(line_widths) do
+        width = math.max(width, l_w)
+      end
       local max_width = math.max(math.floor(max_width_share * vim.o.columns), 1)
       width = math.min(width, max_width)
       local col = math.floor((vim.o.columns - width) / 2)

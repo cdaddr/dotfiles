@@ -1,9 +1,9 @@
 vim.pack.add({
-  'https://github.com/stevearc/oil.nvim',
-  'https://github.com/nvim-tree/nvim-web-devicons',
+  "https://github.com/stevearc/oil.nvim",
+  -- 'https://github.com/nvim-tree/nvim-web-devicons',
 })
 
-require('oil').setup({
+require("oil").setup({
   default_file_explorer = true,
   columns = {
     { "permissions", highlight = "String" },
@@ -27,5 +27,9 @@ require('oil').setup({
   },
 })
 
-vim.keymap.set("n", "<Leader>o", function() require("oil").open_float() end, { desc = "Open Oil (float)" })
-vim.keymap.set("n", "<Leader>O", function() require("oil").open() end, { desc = "Open Oil" })
+vim.keymap.set("n", "<Leader>o", function()
+  require("oil").open_float()
+end, { desc = "Open Oil (float)" })
+vim.keymap.set("n", "<Leader>O", function()
+  require("oil").open()
+end, { desc = "Open Oil" })

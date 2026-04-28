@@ -10,6 +10,7 @@ local function set_git_hl()
   vim.api.nvim_set_hl(0, "NvimTreeGitNew", { link = "DiffAdd" })
   vim.api.nvim_set_hl(0, "NvimTreeGitDeleted", { link = "DiffDelete" })
   vim.api.nvim_set_hl(0, "NvimTreeGitIgnored", { link = "Comment" })
+  vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", { link = "MiniIconsBlue" })
 end
 vim.api.nvim_create_autocmd("ColorScheme", { callback = set_git_hl })
 set_git_hl()
@@ -28,6 +29,16 @@ require("nvim-tree").setup({
           deleted = "D",
           ignored = "!",
         },
+        -- folder = {
+        --   arrow_closed = "",
+        --   arrow_open = "",
+        --   default = "",
+        --   open = "",
+        --   empty = "",
+        --   empty_open = "",
+        --   symlink = "",
+        --   symlink_open = "",
+        -- },
       },
     },
   },

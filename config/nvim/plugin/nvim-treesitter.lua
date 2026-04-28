@@ -47,6 +47,7 @@ local ensure_installed = {
   "jsdoc",
   "json",
   "jsx",
+  "just",
   "lua",
   "luadoc",
   "markdown",
@@ -118,7 +119,7 @@ vim.api.nvim_create_autocmd("BufRead", {
 
     parser_installed = pcall(vim.treesitter.get_parser, bufnr, parser_name)
     if parser_installed then
-      vim.treesitter.start(bufnr, parser_name)
+      pcall(vim.treesitter.start, bufnr, parser_name)
     end
   end,
 })

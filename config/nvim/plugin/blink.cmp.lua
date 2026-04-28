@@ -1,7 +1,7 @@
 -- see colorscheme.lua for highlights
 vim.pack.add({
-  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.x') },
-  'https://github.com/rafamadriz/friendly-snippets',
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.x") },
+  "https://github.com/rafamadriz/friendly-snippets",
 })
 
 local highlight = function(ctx)
@@ -11,7 +11,7 @@ end
 local default_providers = { "lsp", "lazydev", "snippets", "path", "buffer" }
 
 ---@type blink.cmp.Config
-require('blink.cmp').setup({
+require("blink.cmp").setup({
   keymap = {
     preset = "none",
     ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
@@ -89,9 +89,9 @@ require('blink.cmp').setup({
   sources = {
     default = default_providers,
     per_filetype = {
-      sql = { "dadbod", "snippets", "buffer" },
-      mysql = { "dadbod", "snippets", "buffer" },
-      plsql = { "dadbod", "snippets", "buffer" },
+      sql = { "snippets", "buffer" },
+      mysql = { "snippets", "buffer" },
+      plsql = { "snippets", "buffer" },
     },
     providers = {
       snippets = {
@@ -106,7 +106,6 @@ require('blink.cmp').setup({
           end,
         },
       },
-      dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink", score_offset = 1000 },
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",

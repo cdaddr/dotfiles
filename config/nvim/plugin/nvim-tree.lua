@@ -1,8 +1,9 @@
 vim.pack.add({ "https://github.com/nvim-tree/nvim-tree.lua" })
+local util = require("util")
 
 -- apply git marker colors; linked to standard diff/diagnostic highlights so they
 -- work across themes without hardcoding palette values
-local function set_git_hl()
+util.on_colorscheme(function()
   vim.api.nvim_set_hl(0, "NvimTreeGitDirty", { link = "DiffChange" })
   vim.api.nvim_set_hl(0, "NvimTreeGitStaged", { link = "DiffAdd" })
   vim.api.nvim_set_hl(0, "NvimTreeGitMerge", { link = "DiffDelete" })
@@ -11,9 +12,7 @@ local function set_git_hl()
   vim.api.nvim_set_hl(0, "NvimTreeGitDeleted", { link = "DiffDelete" })
   vim.api.nvim_set_hl(0, "NvimTreeGitIgnored", { link = "Comment" })
   vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", { link = "MiniIconsBlue" })
-end
-vim.api.nvim_create_autocmd("ColorScheme", { callback = set_git_hl })
-set_git_hl()
+end)
 
 require("nvim-tree").setup({
   renderer = {

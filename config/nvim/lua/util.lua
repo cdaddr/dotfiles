@@ -231,6 +231,10 @@ function M.pick(src, keys)
   return out
 end
 
+function M.on_colorscheme(fn)
+  vim.api.nvim_create_autocmd("ColorScheme", { callback = fn })
+end
+
 -- abbreviates middle segments: ~/foo/a/b/c/bar/file.lua -> ~/foo/a/b/c/bar/file.lua
 function M.short_filename(path)
   if not path or path == "" then

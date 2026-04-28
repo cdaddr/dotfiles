@@ -320,13 +320,10 @@ require("mini.notify").setup({
 
 local hipatterns = require("mini.hipatterns")
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-  callback = function()
-    local hi_warning = util.copy_hl("WarningMsg")
-    vim.api.nvim_set_hl(0, "MiniHipatternsWS", { bg = hi_warning.fg })
-  end,
-  desc = "Setup mini.hipatterns",
-})
+util.on_colorscheme(function()
+  local hi_warning = util.copy_hl("WarningMsg")
+  vim.api.nvim_set_hl(0, "MiniHipatternsWS", { bg = hi_warning.fg })
+end)
 
 hipatterns.setup({
   delay = { text_change = 5 },

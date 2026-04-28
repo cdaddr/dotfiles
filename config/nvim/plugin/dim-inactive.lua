@@ -3,7 +3,8 @@
 -- note: NormalNC applies to all non-current windows, not just normal buftypes
 local util = require("util")
 
-local function setup_hl()
+util.on_colorscheme(function()
+  vim.fn.writefile({ "debug" }, "/tmp/dim", "a")
   local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
   if normal.bg then
     vim.api.nvim_set_hl(0, "NormalNC", {
@@ -11,10 +12,4 @@ local function setup_hl()
       bg = util.blend(normal.bg, 0, 0.3),
     })
   end
-end
-
-setup_hl()
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-  callback = setup_hl,
-})
+end)

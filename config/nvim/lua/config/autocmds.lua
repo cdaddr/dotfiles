@@ -126,11 +126,10 @@ end
 --   set_win_separator_focused()
 -- end
 
-au("ColorScheme", { callback = set_dim_diagnostics })
+util.on_colorscheme(set_dim_diagnostics)
 -- au("ColorScheme", { callback = set_win_separator })
 -- au("WinEnter", { callback = set_win_separator_focused })
 -- au("WinLeave", { callback = set_win_separator_unfocused })
-set_dim_diagnostics()
 -- set_win_separator()
 
 -- folding fallbacks: treesitter > lsp > syntax

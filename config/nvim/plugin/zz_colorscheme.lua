@@ -1,7 +1,7 @@
 -- installs and applies the active theme from theme.lua only
 local theme_file = vim.fn.stdpath("config") .. "/theme.lua"
 local theme = vim.fn.filereadable(theme_file) == 1 and dofile(theme_file) or { nvim = "default", lualine = "auto" }
-local nvim_theme = theme.nvim
+_G.cdaddr.theme = theme.nvim
 
 -- map colorscheme name prefix to pack src
 local packs = {
@@ -12,7 +12,7 @@ local packs = {
   nordic = "https://github.com/AlexvZyl/nordic.nvim",
 }
 
-local prefix = nvim_theme:match("^([^%-]+)")
+local prefix = _G.cdaddr.theme:match("^([^%-]+)")
 local pack = packs[prefix]
 if pack then
   vim.pack.add({ pack })
@@ -123,19 +123,4 @@ elseif prefix == "nord" then
   })
 end
 
--- initial application so lualine's vim.schedule (queued during plugin loading) reads correct highlights
-vim.schedule(function()
-  vim.cmd.colorscheme(nvim_theme)
-end)
-
--- second application after all VimEnter handlers finish; dadbod's s:job_wait busy-wait loop
--- (sleep 1m inside FileType sql during session restore) yields to the event loop and can
--- consume the vim.schedule above before ColorScheme autocmds fire cleanly
-vim.api.nvim_create_autocmd("VimEnter", {
-  once = true,
-  callback = function()
-    vim.schedule(function()
-      vim.cmd.colorscheme(nvim_theme)
-    end)
-  end,
-})
+vim.cmd.colorscheme(_G.cdaddr.theme)

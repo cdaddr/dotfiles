@@ -93,6 +93,7 @@
   logs = log --pretty=tformat:'%Cred%h %Creset%s %Cblue(%cr - %an)'
   logg = log --date=format:'%a %b %e, %Y' --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%cd%C(reset) %C(blue)%an%C(reset) %C(green)%d%C(reset)' --graph
   lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	yoink = "!f() { git archive \"$1\" \"$2\" | tar -x -C \"${3:-.}\"; }; f"
 
 [url "https://github.com/"]
   insteadOf = git://github.com/

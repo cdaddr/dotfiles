@@ -7,5 +7,17 @@
   "vim.keymap.set": {
     "prefix": "!key",
     "body": "vim.keymap.set('{${1:n}}', '${2:<leader>}', { desc = '${3:Description}'})"
+  },
+  "keymap-fn": {
+    "prefix": "!keyfn",
+    "body": ["vim.keymap.set('${1:n}', '${2:<leader>}', function()", "  ${0}", "end, { desc = '${3:Description}' })"]
+  },
+  "autocmd": {
+    "prefix": "autocmd",
+    "body": ["vim.api.nvim_create_autocmd('${1:event}', {", "  pattern = '${2:*}',", "  callback = function(${3:ev})", "    ${0}", "  end,", "})"]
+  },
+  "user-command": {
+    "prefix": "usercmd",
+    "body": ["vim.api.nvim_create_user_command('${1:Name}', function(${2:opts})", "  ${0}", "end, { nargs = '${3:0}' })"]
   }
 }

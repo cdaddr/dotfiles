@@ -318,4 +318,23 @@ function M.get_display_filename(bufnr)
   return M.short_filename(full_path), false
 end
 
+-- usage: in kitty set `allow_remote_control yes`
+-- then in a kitty split, run `kitty @ set-user-vars tag=1` subbing in `tag`
+-- then calling this function in nvim will send text to that split as bracketed paste
+M.kitty_send = function(tag, text)
+  if not text:find("\n$") then
+    text = text .. "\n"
+  end
+  vim
+    .system({
+      "kitty",
+      "@",
+      "send-text",
+      "--match",
+      "var:" .. tag .. "=1",
+      "--stdin",
+    }, { stdin = text })
+    :wait()
+end
+
 return M

@@ -132,6 +132,14 @@ util.on_colorscheme(set_dim_diagnostics)
 -- au("WinLeave", { callback = set_win_separator_unfocused })
 -- set_win_separator()
 
+-- equalize splits on terminal resize
+au("VimResized", {
+  callback = function()
+    vim.cmd("wincmd =")
+  end,
+  desc = "Equalize window sizes on terminal resize",
+})
+
 -- folding fallbacks: treesitter > lsp > syntax
 local function setup_folding(bufnr)
   local win = vim.fn.bufwinid(bufnr)

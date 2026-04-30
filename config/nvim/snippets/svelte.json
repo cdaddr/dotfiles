@@ -190,5 +190,29 @@
   "Svelte hasContext()": {
     "prefix": "s-has-context",
     "body": ["if (hasContext('${1:key}')) {", "  ${0}", "}"]
+  },
+  "onMount": {
+    "prefix": "s-mount",
+    "body": ["onMount(() => {", "  ${0}", "});"]
+  },
+  "onDestroy": {
+    "prefix": "s-destroy",
+    "body": ["onDestroy(() => {", "  ${0}", "});"]
+  },
+  "untrack": {
+    "prefix": "s-untrack",
+    "body": ["untrack(() => ${0})"]
+  },
+  "tick": {
+    "prefix": "s-tick",
+    "body": ["await tick();"]
+  },
+  "use-action": {
+    "prefix": "use",
+    "body": ["use:${1:action}={${0}}"]
+  },
+  "svelte:boundary": {
+    "prefix": "s-boundary",
+    "body": ["<svelte:boundary>", "  ${1}", "  {#snippet failed(error)}", "    ${0}", "  {/snippet}", "</svelte:boundary>"]
   }
 }

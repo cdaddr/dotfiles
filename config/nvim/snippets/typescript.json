@@ -1,0 +1,22 @@
+{
+  "playwright-test": {
+    "prefix": "ptest",
+    "body": ["test('${1:description}', async ({ page }) => {", "  ${0}", "});"]
+  },
+  "playwright-describe": {
+    "prefix": "pdesc",
+    "body": ["test.describe('${1:group}', () => {", "  ${0}", "});"]
+  },
+  "sveltekit-load": {
+    "prefix": "skload",
+    "body": ["import type { PageLoad } from './$types';", "", "export const load: PageLoad = async ({ ${1:params} }) => {", "  ${0}", "  return {};", "};"]
+  },
+  "sveltekit-server-load": {
+    "prefix": "skloadserver",
+    "body": ["import type { PageServerLoad } from './$types';", "", "export const load: PageServerLoad = async ({ ${1:params} }) => {", "  ${0}", "  return {};", "};"]
+  },
+  "sveltekit-get": {
+    "prefix": "skget",
+    "body": ["import type { RequestHandler } from './$types';", "", "export const GET: RequestHandler = async ({ ${1:params} }) => {", "  ${0}", "  return new Response();", "};"]
+  }
+}

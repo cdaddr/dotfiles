@@ -70,7 +70,7 @@ lualine = "nordic"
 theme = "Nord"
 
 [vivid]
-theme = "nord"
+theme = "current"
 
 [bat]
 theme = "Nord"

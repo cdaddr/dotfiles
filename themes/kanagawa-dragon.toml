@@ -72,7 +72,7 @@ lualine = "kanagawa"
 theme = "Kanagawa Dragon (Gogh)"
 
 [vivid]
-theme = "tokyonight-night"
+theme = "current"
 
 [bat]
 theme = "OneHalfDark"

@@ -23,6 +23,11 @@ export LESS_TERMCAP_us=$'\e[4;38;5;150m' # Begin underline - Green
 
 source "$HOME/.dotfiles/config/current-theme-env.zsh"
 
+# generate LS_COLORS before completion list-colors captures it (below)
+if command -v vivid &>/dev/null; then
+  export LS_COLORS="$(vivid generate $VIVID_THEME)"
+fi
+
 [[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -113,10 +118,6 @@ export PATH=$HOME/bin:$HOME/.local/bin:$VOLTA_HOME/bin:/usr/local/bin:$PATH
 ############################################################################
 ## From here down is all junk added by tools.  May need periodic cleanup.
 
-if command -v vivid &>/dev/null; then
-  export LS_COLORS="$(vivid generate $VIVID_THEME)"
-fi
-
 export WORDCHARS="${WORDCHARS/\/}"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
@@ -193,6 +194,4 @@ fi
 
 # Syntax highlighting (must be last)
 source "$ZSH_PLUGINS/pnpm.sh"
-source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
-source "$ZSH_PLUGINS/current-syntax-highlighting.zsh"
-source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+eval "$(zsh-patina activate)"

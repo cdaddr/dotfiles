@@ -37,6 +37,6 @@ M.colors = {
 M.wezterm = "Kanagawa (Gogh)"
 M.nvim    = "kanagawa-wave"
 M.lualine = "kanagawa"
-M.vivid   = "tokyonight-storm"
+M.vivid   = "current"
 
 return M

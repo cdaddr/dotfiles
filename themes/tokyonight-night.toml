@@ -74,7 +74,7 @@ lualine = "tokyonight-night"
 theme = "tokyonight_night"
 
 [vivid]
-theme = "tokyonight-night"
+theme = "current"
 
 [bat]
 theme = "TwoDark"

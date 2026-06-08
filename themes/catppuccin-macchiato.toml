@@ -75,7 +75,7 @@ lualine = "catppuccin-macchiato"
 theme = "Catppuccin Macchiato"
 
 [vivid]
-theme = "catppuccin-macchiato"
+theme = "current"
 
 [bat]
 theme = "Catppuccin Macchiato"

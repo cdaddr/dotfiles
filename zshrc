@@ -4,6 +4,17 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
 export FPATH="$ZSH_PLUGINS/functions:$FPATH"
 
+# Terminal I/O must happen BEFORE the instant-prompt preamble below; once instant
+# prompt takes over the TTY, stty would fail and p10k warns about console output.
+# free up ^Q ^S ^P ^O
+[[ -t 0 ]] && stty stop undef start undef rprnt undef discard undef
+
+# Powerlevel10k instant prompt: render a prompt immediately while the rest of
+# this file runs. Must stay near the top and before anything prints to console.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export EDITOR='nvim'
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -24,8 +35,15 @@ export LESS_TERMCAP_us=$'\e[4;38;5;150m' # Begin underline - Green
 source "$HOME/.dotfiles/config/current-theme-env.zsh"
 
 # generate LS_COLORS before completion list-colors captures it (below)
+# cache vivid output; regenerate only when the theme env file changes
 if command -v vivid &>/dev/null; then
-  export LS_COLORS="$(vivid generate $VIVID_THEME)"
+  _ls_colors_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/ls_colors-$VIVID_THEME"
+  [[ -d "${_ls_colors_cache:h}" ]] || mkdir -p "${_ls_colors_cache:h}"
+  if [[ ! -s "$_ls_colors_cache" || "$HOME/.dotfiles/config/current-theme-env.zsh" -nt "$_ls_colors_cache" ]]; then
+    vivid generate $VIVID_THEME >| "$_ls_colors_cache"
+  fi
+  export LS_COLORS="$(<$_ls_colors_cache)"
+  unset _ls_colors_cache
 fi
 
 [[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
@@ -88,9 +106,6 @@ zstyle ':completion:*:*:git:*' script $XDG_CONFIG_HOME/bash/git-completion.bash
 # zstyle ':completion::*:git::*' remote-branches false
 # zstyle ':completion::complete:git-checkout:*' tag-refs false
 
-# free up ^Q ^S ^P ^O
-stty stop undef start undef rprnt undef discard undef
-
 bindkey -e # emacs style
 bindkey '\e[H' beginning-of-line # home
 bindkey '\e[1~' beginning-of-line # home
@@ -127,8 +142,22 @@ export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 export JJ_CONFIG="$XDG_CONFIG_HOME/jj"
 export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
-eval "$(zoxide init zsh)"
-eval "$(atuin init zsh --disable-up-arrow)"
+# cache a tool's init script and source it; regenerate when the binary is newer.
+# converts a per-startup subprocess spawn into a plain file source.
+_cache_init() {  # _cache_init <name> <binary> <command...>
+  local f="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/init-$1.zsh" bin=$2
+  shift 2
+  [[ -d "${f:h}" ]] || mkdir -p "${f:h}"
+  if [[ ! -s "$f" || "$commands[$bin]" -nt "$f" ]]; then
+    "$@" >| "$f" 2>/dev/null
+  fi
+  source "$f"
+}
+# rebuild cached tool init scripts (run after upgrading these tools)
+cacherebuild() { rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zsh/init-*.zsh "${XDG_CACHE_HOME:-$HOME/.cache}"/zsh/ls_colors-* && echo "Tool init cache cleared; reopen the shell." }
+
+_cache_init zoxide zoxide zoxide init zsh
+_cache_init atuin atuin atuin init zsh --disable-up-arrow
 
 if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
     source "$HOME/.local/share/cargo/env"
@@ -140,53 +169,19 @@ if [[ -f "$XDG_CONFIG_HOME/zsh-private.sh" ]]; then
 fi
 
 if type mise &>/dev/null; then
-  eval "$(mise activate zsh)"
+  _cache_init mise mise mise activate zsh
 fi
 
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$PATH:$GOPATH/bin"
 
-# flags
-typeset -g __omp_seen=0
-typeset -g __omp_last_was_clear=0
-
-# preexec: record the command text in $1
-__omp_record_cmd() {
-  case "$1" in
-    clear|clear\ *) __omp_last_was_clear=1 ;;
-    *)              __omp_last_was_clear=0 ;;
-  esac
-}
-
-# precmd: print a blank line except on first prompt; skip once after `clear`
-__omp_add_newline_precmd() {
-  if (( __omp_seen )); then
-    if (( __omp_last_was_clear )); then
-      __omp_last_was_clear=0   # consume the skip so future empty Enters still print
-    else
-      print ''                 # actual newline before prompt
-    fi
-  else
-    __omp_seen=1
-  fi
-}
-
-# register hooks
-if type add-zsh-hook >/dev/null 2>&1; then
-  add-zsh-hook preexec  __omp_record_cmd
-  add-zsh-hook precmd   __omp_add_newline_precmd
-else
-  preexec_functions+=(__omp_record_cmd)
-  precmd_functions+=(__omp_add_newline_precmd)
+# Powerlevel10k prompt. Uses the gitstatus daemon (no per-prompt git fork) and
+# pairs with the instant-prompt block at the top of this file. The blank line
+# before each prompt is provided by POWERLEVEL9K_PROMPT_ADD_NEWLINE in p10k.zsh.
+if [[ -r /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+  source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+  source "$ZSH_PLUGINS/p10k.zsh"
 fi
-if type add-zsh-hook >/dev/null 2>&1; then
-  add-zsh-hook preexec  __omp_record_cmd
-  add-zsh-hook precmd   __omp_add_newline_precmd
-else
-  preexec_functions+=(__omp_record_cmd)
-  precmd_functions+=(__omp_add_newline_precmd)
-fi
-eval "$(oh-my-posh init zsh --config $XDG_CONFIG_HOME/zsh/current-theme.omp.json)"
 
 if [[ -n "$INTELLIJ_ENVIRONMENT_READER" ]]; then
   unsetopt no_clobber

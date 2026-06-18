@@ -98,6 +98,30 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>lD", vim.lsp.buf.definition, { buffer = true, desc = "Jump to definition" })
     vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { buffer = true, desc = "Jump to type definition" })
     vim.keymap.set("n", "<leader>lr", vim.lsp.buf.references, { buffer = true, desc = "References" })
+    -- roslyn (and others) return every overload in textDocument/signatureHelp,
+    -- but blink/native only render the active one. This lists them all. Put the
+    -- cursor inside the call's parentheses, then <leader>lo.
+    if client:supports_method("textDocument/signatureHelp") then
+      vim.keymap.set("n", "<leader>lo", function()
+        local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+        client:request("textDocument/signatureHelp", params, function(err, result)
+          local sigs = result and result.signatures
+          if err or not sigs or vim.tbl_isempty(sigs) then
+            vim.notify("No overloads here (cursor must be inside the call's parentheses)", vim.log.levels.INFO)
+            return
+          end
+          local lines = {}
+          for i, sig in ipairs(sigs) do
+            lines[#lines + 1] = ("%d. %s"):format(i, (sig.label:gsub("%s*\n%s*", " ")))
+          end
+          vim.lsp.util.open_floating_preview(lines, filetype, {
+            border = "rounded",
+            title = (" %d overloads "):format(#sigs),
+            wrap = false,
+          })
+        end, bufnr)
+      end, { buffer = true, desc = "List overloads (signatureHelp)" })
+    end
     vim.keymap.set("n", "<f2>", function ()
       vim.diagnostic.jump({ count = 1, severity = { min = vim.diagnostic.severity.WARN } })
     end, { buffer = true, desc = "Next diagnostic" })

@@ -125,6 +125,13 @@ require("blink.cmp").setup({
 
   cmdline = { enabled = false },
 
+  -- signature help (textDocument/signatureHelp): shows the function signature
+  -- with the active param highlighted, and for overloaded methods (e.g. C#)
+  -- the active overload -- roslyn picks it from the args already typed. Toggle
+  -- with <f1> (see keymap above) or it auto-shows on trigger chars like "(".
+  -- Experimental in blink, hence disabled by default.
+  signature = { enabled = true },
+
   fuzzy = {
     implementation = "prefer_rust_with_warning",
     sorts = { "exact", "score", "sort_text" },

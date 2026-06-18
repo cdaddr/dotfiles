@@ -7,27 +7,30 @@ end
 vim.api.nvim_create_user_command("FormatDisable", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
 vim.keymap.set("n", "\\f", toggleFormatOnSave, { desc = "Toggle Format-on-save" })
 
-vim.keymap.set({ "n", "v" }, "<leader>xf", function()
-  local conform = require("conform")
-  local bufnr = vim.api.nvim_get_current_buf()
-
-  local formatters = conform.list_formatters(bufnr)
-  if #formatters > 0 then
-    conform.format({ bufnr = bufnr, async = true })
-    return
+-- A dedicated conform formatter for the filetype (lua, python, rust, ...) wins.
+-- Otherwise, if an LSP advertises formatting (e.g. roslyn for C#), run it. The
+-- universal "*" (codespell) and "_" (trim_whitespace) entries match every
+-- buffer, so conform.list_formatters() is never empty and the LSP would never
+-- get a turn -- check the dedicated filetype key directly instead.
+local function wants_lsp_format(bufnr)
+  if require("conform").formatters_by_ft[vim.bo[bufnr].filetype] then
+    return false
   end
-
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  for _, client in ipairs(clients) do
-    if client.supports_method("textDocument/formatting") then
-      vim.lsp.buf.format({ bufnr = bufnr, async = true })
-      return
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+    if client:supports_method("textDocument/formatting") then
+      return true
     end
   end
+  return false
+end
 
-  local view = vim.fn.winsaveview()
-  vim.cmd("normal! gggqG")
-  vim.fn.winrestview(view)
+vim.keymap.set({ "n", "v" }, "<leader>xf", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local opts = { bufnr = bufnr, async = true }
+  if wants_lsp_format(bufnr) then
+    opts.lsp_format = "first"
+  end
+  require("conform").format(opts)
 end, { desc = "Format buffer" })
 
 require('conform').setup({
@@ -45,21 +48,12 @@ require('conform').setup({
     ["_"] = { "trim_whitespace" },
   },
   format_on_save = function(bufnr)
-    local conform = require("conform")
     if vim.b.disable_format_on_save then return false end
-
-    local formatters = conform.list_formatters(bufnr)
-    if #formatters > 0 then
-      return { timeout_ms = 1500, undojoin = true }
+    local opts = { timeout_ms = 1500, undojoin = true }
+    if wants_lsp_format(bufnr) then
+      opts.lsp_format = "first"
+      opts.timeout_ms = 2000
     end
-
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
-    for _, client in ipairs(clients) do
-      if client.supports_method("textDocument/formatting") then
-        return { timeout_ms = 500, lsp_format = "fallback", undojoin = true }
-      end
-    end
-
-    return false
+    return opts
   end,
 })

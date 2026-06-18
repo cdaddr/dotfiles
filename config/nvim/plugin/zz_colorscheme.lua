@@ -37,6 +37,11 @@ if prefix == "kanagawa" then
         PmenuSbar = { bg = palette.sumiInk4 },
         PmenuSel = { link = "Visual" },
         Delimiter = { fg = palette.sumiInk4 },
+        -- roslyn (and other LSPs) emit an `@lsp.type.punctuation` semantic token
+        -- at priority 125, which overrides treesitter's blue `@punctuation.bracket`
+        -- (priority 100) and routes brackets/parens through the faint `Delimiter`
+        -- above. Re-link it to treesitter's bracket group so C# matches C.
+        ["@lsp.type.punctuation"] = { link = "@punctuation.bracket" },
 
         DiffAdd = { bg = palette.winterGreen, fg = palette.springGreen },
         DiffChange = { bg = palette.winterBlue, fg = palette.springBlue },

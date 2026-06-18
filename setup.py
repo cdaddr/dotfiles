@@ -134,6 +134,11 @@ with section("nvim lsp"):
     run("rubocop",  "rv", "tool", "install", "rubocop")
     run("ruby-lsp", "rv", "tool", "install", "ruby-lsp")
     run("ruff", "uv", "tool", "install", "ruff")
+    # C# LSP for roslyn.nvim (the official MS Roslyn server; csharp-ls can't
+    # locate MSBuild on recent .NET SDKs). Azure feed is more current than nuget.org.
+    run("roslyn-language-server", "dotnet", "tool", "update", "--global",
+        "roslyn-language-server", "--prerelease", "--source",
+        "https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json")
     run("node", "volta", "install", "node")
     for pkg in [
         "bash-language-server",
@@ -147,6 +152,15 @@ with section("nvim lsp"):
         "@olrtg/emmet-language-server",
     ]:
         run(pkg, "volta", "install", pkg)
+
+# monogame (machine-global; run once, not per-project. the per-project content
+# builder `dotnet-mgcb` comes from each project's tool manifest via `dotnet tool
+# restore`. `mgcb-editor --register` is skipped: it's broken/unneeded on macOS.)
+
+with section("monogame"):
+    run("monogame templates", "dotnet", "new", "install", "MonoGame.Templates.CSharp")
+    run("mgcb-editor", "dotnet", "tool", "update", "--global", "dotnet-mgcb-editor")
+    run("mgcb-editor-mac", "dotnet", "tool", "update", "--global", "dotnet-mgcb-editor-mac")
 
 # drift check
 

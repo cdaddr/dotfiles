@@ -35,6 +35,7 @@ local ensure_installed = {
   "bash",
   "c",
   "clojure",
+  "c_sharp",
   "comment",
   "css",
   "git_config",
@@ -66,6 +67,7 @@ local ensure_installed = {
   "typescript",
   "vim",
   "vimdoc",
+  "xml", -- .csproj/.props/.targets
   "yaml",
   "zsh",
 }
@@ -84,6 +86,17 @@ if #ensure_installed > 0 then
     })
   end
 end
+
+-- `.cs` files get filetype `cs`, but the parser is named `c_sharp`. The loop
+-- above keys the FileType autocmd off the parser name, so it misses cs buffers.
+vim.treesitter.language.register("c_sharp", "cs")
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "cs",
+  callback = function(event)
+    vim.treesitter.start(event.buf, "c_sharp")
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
 
 -- auto-install and start parsers for any buffer
 vim.api.nvim_create_autocmd("BufRead", {

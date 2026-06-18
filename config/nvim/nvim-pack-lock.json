@@ -163,6 +163,10 @@
       "rev": "54d4b5431e9634ee3d8d30784e017239b5b89d41",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
+    "roslyn.nvim": {
+      "rev": "c4ef25973bcc30a2c8c8766711fbbdb3d02b70a3",
+      "src": "https://github.com/seblyng/roslyn.nvim"
+    },
     "snacks.nvim": {
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim"

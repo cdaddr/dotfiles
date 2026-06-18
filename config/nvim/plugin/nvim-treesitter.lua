@@ -94,7 +94,10 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cs",
   callback = function(event)
     vim.treesitter.start(event.buf, "c_sharp")
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    -- NB: nvim-treesitter (main) ships no `indents.scm` for c_sharp, so the
+    -- treesitter indentexpr returns 0 for every line (<CR> jumps to col 0).
+    -- Leave indentexpr alone so the built-in `indent/cs.vim` (cindent-based
+    -- GetCSIndent) handles auto-indent.
   end,
 })
 

@@ -95,7 +95,9 @@ require("blink.cmp").setup({
     },
     providers = {
       snippets = {
-        score_offset = 200,
+        -- snippets rank last (LSP first); negative offset sinks them below
+        -- lsp/lazydev/path/buffer regardless of fuzzy score
+        score_offset = -100,
         opts = {
           -- block friendly-snippets svelte (targets svelte 4)
           filter_snippets = function(filetype, file)
@@ -109,9 +111,10 @@ require("blink.cmp").setup({
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
-        score_offset = 100,
+        -- lsp-adjacent (lua nvim API); keep just under real lsp
+        score_offset = 90,
       },
-      lsp = { fallbacks = {} },
+      lsp = { fallbacks = {}, score_offset = 100 },
       -- default is buffer's wd, I want cwd
       path = {
         opts = {

@@ -101,6 +101,54 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- nvim-treesitter's html/svelte/css indent queries deliberately leave the body
+-- of <script>/<style> at column 0 (upstream: "script/style elements aren't
+-- indented"). With content present, treesitter anchors to the first body line's
+-- indent and keeps things correct; it only falls to 0 on the *first* body line of
+-- an empty block, so `<script lang="ts"><CR>` lands at column 0. prettier
+-- (svelteIndentScriptAndStyle, on by default) indents the body one level, so bump
+-- just that first-line case. Registered after the loop above to override the plain
+-- indentexpr set there.
+local ts_indent = require("nvim-treesitter.indent")
+
+function _G.SvelteIndent()
+  local lnum = vim.v.lnum
+  local indent = ts_indent.get_indent(lnum) or 0
+  if indent < 0 then
+    return indent
+  end
+  -- only when the previous non-blank line is the opening <script>/<style> tag
+  -- (i.e. we're on the first body line) and the current line is still inside it
+  local prevlnum = vim.fn.prevnonblank(lnum)
+  if prevlnum >= 1 then
+    local ok, parser = pcall(vim.treesitter.get_parser, 0, "svelte")
+    if ok and parser then
+      local root = parser:parse()[1]:root()
+      local pcol = (vim.fn.getline(prevlnum):find("%S") or 1) - 1
+      local node = root:named_descendant_for_range(prevlnum - 1, pcol, prevlnum - 1, pcol)
+      while node do
+        local t = node:type()
+        if t == "script_element" or t == "style_element" then
+          local srow, _, erow = node:range()
+          if (prevlnum - 1) == srow and (lnum - 1) > srow and (lnum - 1) < erow then
+            return indent + vim.fn.shiftwidth()
+          end
+          break
+        end
+        node = node:parent()
+      end
+    end
+  end
+  return indent
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "svelte",
+  callback = function()
+    vim.bo.indentexpr = "v:lua.SvelteIndent()"
+  end,
+})
+
 -- auto-install and start parsers for any buffer
 vim.api.nvim_create_autocmd("BufRead", {
   callback = function(event)

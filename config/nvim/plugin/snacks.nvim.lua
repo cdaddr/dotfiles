@@ -1,4 +1,5 @@
 local pickers = require("config.pickers")
+local pickerignore = require("config.pickerignore")
 
 -- open a grep picker with cwd shown in title
 local function grep(title, source, opts)
@@ -103,7 +104,6 @@ end
 local exit_insert = function() vim.cmd("stopinsert") end
 
 local win_opts = { input = { keys = { ["<c-o>"] = { "open_in_oil", mode = { "n", "i" }, desc = "Open in Oil" } } } }
-local exclude = { ".lock", "*lock.json", "*lock.yaml", "*lock.yml", "*lock.toml" }
 
 ---@type snacks.Config
 require('snacks').setup({
@@ -116,14 +116,14 @@ require('snacks').setup({
     },
     actions = { close_if_no_input = close_if_no_input, open_in_oil = open_in_oil, exit_insert = exit_insert },
     sources = {
-      files = { win = win_opts, exclude = exclude },
-      git_files = { win = win_opts, exclude = exclude },
-      recent = { win = win_opts, exclude = exclude },
+      files = { win = win_opts, transform = pickerignore.transform },
+      git_files = { win = win_opts, transform = pickerignore.transform },
+      recent = { win = win_opts, transform = pickerignore.transform },
       buffers = { win = win_opts },
-      smart = { win = win_opts, exclude = exclude },
-      grep = { format = grep_format, win = win_opts, exclude = exclude, layout = grep_layout },
+      smart = { win = win_opts, transform = pickerignore.transform },
+      grep = { format = grep_format, win = win_opts, layout = grep_layout, transform = pickerignore.transform },
       grep_buffers = { format = grep_format, win = win_opts, layout = grep_layout },
-      grep_word = { format = grep_format, win = win_opts, layout = grep_layout },
+      grep_word = { format = grep_format, win = win_opts, layout = grep_layout, transform = pickerignore.transform },
     },
     win = {
       input = {

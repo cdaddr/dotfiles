@@ -31,6 +31,19 @@ local function save()
   -- I only want to save the first tab; others will be stuff like diffview
   vim.cmd("1tabnext | tabonly")
 
+  -- snacks picker creates hidden `snacks://picker/highlight/<lang>` scratch
+  -- buffers to run treesitter over previewed code. With `buffers` in
+  -- sessionoptions, mksession persists them (nofile doesn't exempt a named
+  -- buffer); on restore they come back as normal, modified buffers holding
+  -- stale picker text and block `:qa`. They're regenerated on demand, so wipe
+  -- them before mksession. VimLeavePre only, so no restore needed.
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name:match("^snacks://") then
+      pcall(vim.api.nvim_buf_delete, buf, { force = true })
+    end
+  end
+
   -- mark non-file buffers as nofile before mksession so they're excluded
   -- then restore buftype/buflisted after saving session
   -- https://github.com/neovim/neovim/issues/12242

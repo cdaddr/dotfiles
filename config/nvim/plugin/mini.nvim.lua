@@ -53,6 +53,14 @@ animate.setup({
   close = { enable = false },
 })
 
+-- qed uses slow regex syntax highlighting; animating its redraws lags badly
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qed",
+  callback = function(args)
+    vim.b[args.buf].minianimate_disable = true
+  end,
+})
+
 -- disable mini.animate during mouse scroll to prevent jitter/bounce;
 -- use direct scroll commands instead of feedkeys to avoid key misinterpretation
 local function mouse_scroll(cmd)

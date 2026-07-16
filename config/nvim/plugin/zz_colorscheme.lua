@@ -22,6 +22,20 @@ now(function()
     vim.pack.add({ pack })
   end
 
+  -- put the inactive themes on the runtimepath without loading them (load=false
+  -- == packadd!: adds rtp, sources no plugin/). Their colors/*.lua files require()
+  -- the theme module, so :colorscheme switching and the Snacks colorscheme picker
+  -- would otherwise error "module '<theme>' not found" for any non-active theme.
+  local others = {}
+  for name, src in pairs(packs) do
+    if name ~= prefix then
+      others[#others + 1] = src
+    end
+  end
+  if #others > 0 then
+    vim.pack.add(others, { load = false })
+  end
+
   if prefix == "kanagawa" then
     require("kanagawa").setup({
       compile = false,

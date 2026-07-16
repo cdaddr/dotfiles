@@ -218,9 +218,26 @@ local function make_textobject(ai_type, id)
   end
 end
 
+-- which-key picks these up in operator-pending/visual mode; desc labels the menu
+local textobj_desc = {
+  f = "function",
+  F = "call",
+  c = "class",
+  l = "loop",
+  o = "conditional",
+  m = "comment",
+  A = "attribute",
+  k = "string token",
+  a = "argument",
+  b = "brackets ()[]{}",
+  q = "quote '\"`",
+  B = "buffer (entire)",
+  I = "indent",
+}
 for _, id in ipairs({ "f", "F", "c", "l", "o", "m", "A", "k", "a", "b", "q", "B", "I" }) do
-  vim.keymap.set({ "o", "x" }, "a" .. id, make_textobject("a", id))
-  vim.keymap.set({ "o", "x" }, "i" .. id, make_textobject("i", id))
+  local d = textobj_desc[id]
+  vim.keymap.set({ "o", "x" }, "a" .. id, make_textobject("a", id), { desc = "around " .. d })
+  vim.keymap.set({ "o", "x" }, "i" .. id, make_textobject("i", id), { desc = "inside " .. d })
 end
 
 -- P: parent html element; count = levels to go up (d2aP = grandparent, etc.)
@@ -253,7 +270,7 @@ vim.keymap.set({ "o", "x" }, "aP", function()
   vim.fn.cursor(sr + 1, sc + 1)
   vim.cmd.normal("v")
   vim.fn.cursor(er + 1, ec)
-end)
+end, { desc = "around parent element" })
 
 vim.keymap.set({ "o", "x" }, "iP", function()
   local node = walk_to_parent_element(vim.v.count > 0 and vim.v.count or 1)

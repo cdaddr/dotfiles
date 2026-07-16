@@ -1,2 +1,5 @@
-vim.pack.add({ 'https://github.com/Fildo7525/pretty_hover' })
-require('pretty_hover').setup({})
+-- deferred: prettier LSP hover; only needed once an LSP attaches
+later(function()
+  vim.pack.add({ "https://github.com/Fildo7525/pretty_hover" })
+  require("pretty_hover").setup({})
+end)

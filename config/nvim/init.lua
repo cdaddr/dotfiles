@@ -7,6 +7,14 @@ _G.cdaddr = {}
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- single plugin-loading mechanism, two verbs:
+--   now(fn)   -> load during startup (visual baseline: colorscheme, statusline, …)
+--   later(fn) -> load in the background after the UI is responsive
+-- init.lua runs at vim_did_init=0 so mini needs an explicit load=true here; plugin/
+-- files and later() callbacks run at vim_did_init=1, where vim.pack.add loads by default.
+vim.pack.add({ "https://github.com/echasnovski/mini.nvim" }, { load = true })
+_G.now, _G.later = require("mini.deps").now, require("mini.deps").later
+
 require("config.opts")
 require("config.keymaps")
 require("config.autocmds")

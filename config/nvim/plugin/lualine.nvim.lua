@@ -1,39 +1,43 @@
-local util = require("util")
+-- eager (now): statusline is part of the first frame. setup() already self-defers
+-- via vim.schedule below (for colorscheme timing), so now() preserves that behavior.
+now(function()
+  local util = require("util")
 
-vim.pack.add({ "https://github.com/nvim-lualine/lualine.nvim" })
+  vim.pack.add({ "https://github.com/nvim-lualine/lualine.nvim" })
 
-local nvim_theme = dofile(vim.fn.stdpath("config") .. "/theme.lua")
-local sections_mod = require("config.lualine.sections")
-local active, inactive = sections_mod.sections()
-local ext = require("config.lualine.extensions")
+  local nvim_theme = dofile(vim.fn.stdpath("config") .. "/theme.lua")
+  local sections_mod = require("config.lualine.sections")
+  local active, inactive = sections_mod.sections()
+  local ext = require("config.lualine.extensions")
 
--- defer until after colorscheme is applied so highlight groups are available
-vim.schedule(function()
-  local status, theme = pcall(require, "lualine.themes." .. nvim_theme.lualine)
-  if not status then
-    theme = require("lualine.themes.auto")
-  end
+  -- defer until after colorscheme is applied so highlight groups are available
+  vim.schedule(function()
+    local status, theme = pcall(require, "lualine.themes." .. nvim_theme.lualine)
+    if not status then
+      theme = require("lualine.themes.auto")
+    end
 
-  theme.normal.c.bg = util.copy_hl("LineNr").bg
-  theme.inactive.c.bg = util.copy_hl("LineNr").bg
-  theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
+    theme.normal.c.bg = util.copy_hl("LineNr").bg
+    theme.inactive.c.bg = util.copy_hl("LineNr").bg
+    theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
 
-  require("lualine").setup({
-    extensions = {
-      ext.quickfix,
-      ext.oil,
-      ext.diffview,
-      ext.nvim_tree,
-      ext.toggleterm,
-    },
-    options = {
-      theme = theme,
-      icons_enabled = true,
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
-      ignore_focus = { "grapple" },
-    },
-    sections = active,
-    inactive_sections = inactive,
-  })
+    require("lualine").setup({
+      extensions = {
+        ext.quickfix,
+        ext.oil,
+        ext.diffview,
+        ext.nvim_tree,
+        ext.toggleterm,
+      },
+      options = {
+        theme = theme,
+        icons_enabled = true,
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        ignore_focus = { "grapple" },
+      },
+      sections = active,
+      inactive_sections = inactive,
+    })
+  end)
 end)

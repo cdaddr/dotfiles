@@ -1,3 +1,6 @@
-vim.pack.add({ 'https://github.com/XXiaoA/atone.nvim' })
-require('atone').setup({})
-vim.keymap.set("n", "U", "<cmd>Atone<cr>", { desc = "Atone (undo tree)" })
+-- deferred: undo-tree viewer, opened on demand via `U`
+later(function()
+  vim.pack.add({ "https://github.com/XXiaoA/atone.nvim" })
+  require("atone").setup({})
+  vim.keymap.set("n", "U", "<cmd>Atone<cr>", { desc = "Atone (undo tree)" })
+end)

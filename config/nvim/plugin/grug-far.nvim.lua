@@ -1,7 +1,10 @@
-vim.pack.add({ "https://github.com/MagicDuck/grug-far.nvim" })
+-- deferred: search/replace UI, opened on demand via :Grug
+later(function()
+  vim.pack.add({ "https://github.com/MagicDuck/grug-far.nvim" })
 
-require("grug-far").setup({})
+  require("grug-far").setup({})
 
-vim.api.nvim_create_user_command("Grug", function()
-  require("grug-far").open({ transient = true })
-end, { desc = "Open grug-far (transient)" })
+  vim.api.nvim_create_user_command("Grug", function()
+    require("grug-far").open({ transient = true })
+  end, { desc = "Open grug-far (transient)" })
+end)

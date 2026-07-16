@@ -232,6 +232,10 @@ function M.pick(src, keys)
 end
 
 function M.on_colorscheme(fn)
+  -- apply now for the current colorscheme, then on every change. The immediate
+  -- call matters for deferred (later()) callers that register after the initial
+  -- ColorScheme event has already fired — without it their highlights never apply.
+  fn()
   vim.api.nvim_create_autocmd("ColorScheme", { callback = fn })
 end
 

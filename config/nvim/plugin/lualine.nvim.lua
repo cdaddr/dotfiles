@@ -1,5 +1,6 @@
--- eager (now): statusline is part of the first frame. setup() already self-defers
--- via vim.schedule below (for colorscheme timing), so now() preserves that behavior.
+-- eager (now): statusline is part of the first frame. setup() runs via
+-- util.on_colorscheme so it (re)builds after the colorscheme is applied and on
+-- every colorscheme change, keeping the statusline in sync with the active theme.
 now(function()
   local util = require("util")
 
@@ -7,20 +8,35 @@ now(function()
 
   local nvim_theme = dofile(vim.fn.stdpath("config") .. "/theme.lua")
   local sections_mod = require("config.lualine.sections")
-  local active, inactive = sections_mod.sections()
   local ext = require("config.lualine.extensions")
 
-  -- defer until after colorscheme is applied so highlight groups are available
-  vim.schedule(function()
-    local status, theme = pcall(require, "lualine.themes." .. nvim_theme.lualine)
-    if not status then
-      theme = require("lualine.themes.auto")
+  local function resolve_theme()
+    -- prefer the lualine palette matching the active colorscheme (so runtime theme
+    -- switches are honored), then the generated theme name, then auto.
+    for _, name in ipairs({ vim.g.colors_name, nvim_theme.lualine }) do
+      if name then
+        local ok, theme = pcall(require, "lualine.themes." .. name)
+        if ok then
+          return theme
+        end
+      end
     end
-
+    -- no theme-provided palette: fall back to auto and blend the middle (c)
+    -- section into the gutter/window border so it isn't a flat default.
+    local theme = require("lualine.themes.auto")
     theme.normal.c.bg = util.copy_hl("LineNr").bg
     theme.inactive.c.bg = util.copy_hl("LineNr").bg
     theme.inactive.c.fg = util.copy_hl("WinSeparator").fg
+    return theme
+  end
 
+  local function setup()
+    -- build sections here, not at load time: the section palette derives its
+    -- colors from theme highlight groups (DiffChange/Keyword/StatusLineNC/…), so
+    -- it must run after the colorscheme is applied — otherwise it captures the
+    -- default (dark) palette and bakes it into every theme (a dark near-black
+    -- middle section regardless of the theme selected).
+    local active, inactive = sections_mod.sections()
     require("lualine").setup({
       extensions = {
         ext.quickfix,
@@ -30,7 +46,7 @@ now(function()
         ext.toggleterm,
       },
       options = {
-        theme = theme,
+        theme = resolve_theme(),
         icons_enabled = true,
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
@@ -39,5 +55,7 @@ now(function()
       sections = active,
       inactive_sections = inactive,
     })
-  end)
+  end
+
+  util.on_colorscheme(setup)
 end)

@@ -48,6 +48,7 @@ text      = "$fg"
 
 [kitty]
 font_size             = "20"
+inactive_text_alpha   = "0.75"
 cursor                = "$bright_white"
 selection_fg          = "$bright_white"
 selection_bg          = "$blue_dim"
@@ -65,6 +66,7 @@ tab_inactive_title_fg = "$grey"
 tab_active_index_bg   = "$primary"
 tab_active_index_fg   = "$black"
 tab_active_title_bg   = "$purple"
+tab_active_title_fg   = "$grey_darkest"
 
 [nvim]
 theme   = "tokyonight-night"

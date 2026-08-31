@@ -34,7 +34,7 @@ colors:
   bg_orange: "2A2A37"
   bg_yellow: "2A2A37"
   bg_green1: "2A2A37"
-  bg_green2: "2d4f67"
+  bg_green2: "363646"
 
 core: # See `dircolors -p` for explanations
   normal_text:

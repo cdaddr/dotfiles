@@ -49,6 +49,7 @@ text      = "$fg"
 
 [kitty]
 font_size             = "20"
+inactive_text_alpha   = "0.75"
 cursor                = "$rosewater"
 selection_fg          = "$bright_white"
 selection_bg          = "$grey_dim"
@@ -66,6 +67,7 @@ tab_inactive_title_fg = "$overlay1"
 tab_active_index_bg   = "$primary"
 tab_active_index_fg   = "$black"
 tab_active_title_bg   = "$purple"
+tab_active_title_fg   = "$black"
 
 [nvim]
 theme   = "catppuccin-macchiato"

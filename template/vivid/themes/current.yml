@@ -4,7 +4,7 @@
 # below is adapted from vivid's bundled tokyonight-storm theme.
 
 colors:
-  fg:        "{{colors.bright_white}}"
+  fg:        "{{colors.fg}}"
   bg:        "{{colors.grey_darkest}}"
 
   gray1:     "{{colors.grey_dark}}"  # subtle background highlight
@@ -34,7 +34,7 @@ colors:
   bg_orange: "{{colors.grey_darker}}"
   bg_yellow: "{{colors.grey_darker}}"
   bg_green1: "{{colors.grey_darker}}"
-  bg_green2: "{{colors.blue_dim}}"
+  bg_green2: "{{colors.grey_dark}}"
 
 core: # See `dircolors -p` for explanations
   normal_text:

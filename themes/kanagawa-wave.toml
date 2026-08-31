@@ -43,6 +43,7 @@ text      = "$fg"
 
 [kitty]
 font_size             = "20"
+inactive_text_alpha   = "0.75"
 cursor                = "$white"
 selection_fg          = "$white"
 selection_bg          = "$blue_dim"
@@ -60,6 +61,7 @@ tab_inactive_title_fg = "$comment"
 tab_active_index_bg   = "$primary"
 tab_active_index_fg   = "$black"
 tab_active_title_bg   = "$accent"
+tab_active_title_fg   = "$bg"
 
 [nvim]
 theme   = "kanagawa-wave"

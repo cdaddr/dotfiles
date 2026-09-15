@@ -13,6 +13,7 @@ local servers = {
   "svelte",
   "yamlls",
   "taplo", --toml
+  "julials",
   -- "djlsp",
   "html",
   "tailwindcss",
@@ -31,6 +32,30 @@ vim.lsp.config("ruby_lsp", {
   init_options = {
     formatter = "standard",
     linters = { "standard" },
+  },
+})
+
+-- LanguageServer.jl >= 6 changed its constructor; the launch script in the
+-- pinned nvim-lspconfig (Mar 2026) passes the old args and crashes on start.
+-- This mirrors upstream's fix (lspconfig 2026-09-10): just call runserver().
+-- Drop this override once nvim-lspconfig is updated past that.
+vim.lsp.config("julials", {
+  cmd = {
+    "julia",
+    "--startup-file=no",
+    "--history-file=no",
+    "-e",
+    [[
+      ls_install_path = joinpath(
+          get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")),
+          "environments", "nvim-lspconfig"
+      )
+      pushfirst!(LOAD_PATH, ls_install_path)
+      using LanguageServer
+      popfirst!(LOAD_PATH)
+      @info "Running language server" VERSION pwd()
+      LanguageServer.runserver()
+    ]],
   },
 })
 

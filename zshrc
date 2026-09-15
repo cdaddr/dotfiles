@@ -140,6 +140,8 @@ export GOPATH="$XDG_DATA_HOME/go"
 export HOMEBREW_NO_ENV_HINTS=1
 export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 export JJ_CONFIG="$XDG_CONFIG_HOME/jj"
+# trailing colon keeps julia's bundled stdlib depot after the user depot
+export JULIA_DEPOT_PATH="$XDG_CONFIG_HOME/julia:"
 export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
 # cache a tool's init script and source it; regenerate when the binary is newer.

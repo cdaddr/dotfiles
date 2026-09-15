@@ -134,6 +134,13 @@ with section("nvim lsp"):
     run("rubocop",  "rv", "tool", "install", "rubocop")
     run("ruby-lsp", "rv", "tool", "install", "ruby-lsp")
     run("ruff", "uv", "tool", "install", "ruff")
+    # julia: @name resolves to <depot>/environments/<name> (depot set by
+    # JULIA_DEPOT_PATH in zshrc). nvim-lspconfig's julials looks for
+    # LanguageServer.jl in @nvim-lspconfig; Runic.jl (formatter) is run from
+    # @runic by conform.
+    run("julia LanguageServer", "julia", "--project=@nvim-lspconfig",
+        "-e", 'using Pkg; Pkg.add("LanguageServer")')
+    run("julia Runic", "julia", "--project=@runic", "-e", 'using Pkg; Pkg.add("Runic")')
     # C# LSP for roslyn.nvim (the official MS Roslyn server; csharp-ls can't
     # locate MSBuild on recent .NET SDKs). Azure feed is more current than nuget.org.
     run("roslyn-language-server", "dotnet", "tool", "update", "--global",

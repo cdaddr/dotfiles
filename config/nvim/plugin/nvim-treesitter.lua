@@ -51,6 +51,7 @@ now(function()
     "jsdoc",
     "json",
     "jsx",
+    "julia",
     "just",
     "lua",
     "luadoc",

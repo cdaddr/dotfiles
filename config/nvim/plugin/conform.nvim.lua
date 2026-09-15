@@ -36,10 +36,19 @@ later(function()
   end, { desc = "Format buffer" })
 
   require("conform").setup({
+    formatters = {
+      -- Runic.jl is installed into the shared @runic env by setup.py; run it
+      -- through julia instead of a `runic` shim on PATH.
+      runic = {
+        command = "julia",
+        prepend_args = { "--project=@runic", "--startup-file=no", "-m", "Runic" },
+      },
+    },
     formatters_by_ft = {
       lua = { "stylua" },
       python = { "isort", "black" },
       rust = { "rustfmt" },
+      julia = { "runic" },
       sql = { "pg_format" },
       json = { "prettierd", "prettier", stop_after_first = true },
       javascript = { "prettierd", "prettier", stop_after_first = true },

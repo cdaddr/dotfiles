@@ -175,32 +175,28 @@ now(function()
           PmenuExtra = { bg = "none" },
           PmenuSel = { link = "Visual" },
           Pmenu = { bg = "none" },
-          -- CursorLineNr = { bg = gutter_bg, fg = palette.oniViolet },
-          -- SignColumn = { fg = "palette.white" },
-          -- WinSeparator = { bg = palette.sumiInk1, fg = palette.sumiInk6 },
-          -- StatusLine = { bg = gutter_bg },
-          -- StatusLineNC = { bg = gutter_bg },
-          -- StatusColFold = { fg = palette.sumiInk5, bg = gutter_bg },
-          -- Folded = { bg = palette.sumiInk1 },
           StatusColFold = { fg = "palette.bg4" },
           GitSignsChange = { fg = "palette.bg4" },
           GitSignsAdd = { fg = "palette.bg4" },
           GitSignsUntracked = { fg = "palette.bg4" },
           GitSignsDelete = { fg = "palette.red" },
-          -- EndOfBuffer = { bg = palette.sumiInk1 },
-          -- TabLineSel = { bg = palette.oniViolet, fg = palette.sumiInk0 },
         },
       },
-      require("gitsigns").setup({
-        signs = {
-          add = { text = "+" },
-          change = { text = "≈" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-          untracked = { text = "┆" },
-        },
-      }),
+    })
+
+    -- dayfox mutes GitSignsAdd/Change/Untracked to the same palette.bg4, so the
+    -- glyph carries the distinction the color no longer does. Only `signs` is
+    -- passed: gitsigns merges per top-level key, so on_attach and signs_staged
+    -- from gitsigns.nvim.lua survive and staged hunks keep the plain │.
+    require("gitsigns").setup({
+      signs = {
+        add = { text = "+" },
+        change = { text = "≈" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+        untracked = { text = "┆" },
+      },
     })
   end
 

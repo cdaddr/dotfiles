@@ -4,12 +4,12 @@
 local util = require("util")
 
 util.on_colorscheme(function()
-  vim.fn.writefile({ "debug" }, "/tmp/dim", "a")
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
-  if normal.bg then
-    vim.api.nvim_set_hl(0, "NormalNC", {
-      fg = normal.fg,
-      bg = util.blend(normal.bg, 0, 0.3),
-    })
-  end
+  -- vim.fn.writefile({ "debug" }, "/tmp/dim", "a")
+  -- local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+  -- if normal.bg then
+  --   vim.api.nvim_set_hl(0, "NormalNC", {
+  --     fg = normal.fg,
+  --     bg = util.blend(normal.bg, 0, 0.3),
+  --   })
+  -- end
 end)

@@ -4,14 +4,42 @@ local helpers = require("config.lualine.helpers")
 local M = {}
 
 local jj_head = ""
-local jj_repo_status = { added = 0, modified = 0, removed = 0, conflicts = 0 }
+local jj_conflict = false
+local jj_repo_status = { added = 0, modified = 0, removed = 0 }
 local jj_head_job = nil
 local jj_status_job = nil
 
+local function refresh()
+  vim.schedule(function()
+    if package.loaded["lualine"] then
+      require("lualine").refresh()
+    end
+  end)
+end
+
+-- count changed files from `git status --porcelain` or `jj status` lines
+local function count_changes(lines, porcelain)
+  local added, modified, removed = 0, 0, 0
+  for _, line in ipairs(lines) do
+    local code = porcelain and vim.trim(line:sub(1, 2)):sub(1, 1) or (line:match("^(%u) ") or "")
+    if code == "A" or code == "?" then
+      added = added + 1
+    elseif code == "D" then
+      removed = removed + 1
+    elseif code ~= "" then
+      modified = modified + 1
+    end
+  end
+  return { added = added, modified = modified, removed = removed }
+end
+
+-- every jj call here passes --ignore-working-copy: without it each statusline
+-- refresh snapshots the working copy and adds an entry to the jj operation log
 local function update_jj_status()
   if not helpers.is_jj_repo() then
     jj_head = ""
-    jj_repo_status = { added = 0, modified = 0, removed = 0, conflicts = 0 }
+    jj_conflict = false
+    jj_repo_status = { added = 0, modified = 0, removed = 0 }
     return
   end
 
@@ -22,47 +50,32 @@ local function update_jj_status()
     vim.fn.jobstop(jj_status_job)
   end
 
-  -- get current change: show bookmarks if present, otherwise short change id
-  jj_head_job = vim.fn.jobstart(
-    { "jj", "log", "-r", "@", "--no-graph", "-T", "separate(' ', local_bookmarks, change_id.short(8))" },
-    {
-      stdout_buffered = true,
-      on_stdout = function(_, data)
-        if data and data[1] then
-          jj_head = data[1]:gsub("%s+$", "")
-        end
-        vim.schedule(function()
-          if package.loaded["lualine"] then
-            require("lualine").refresh()
-          end
-        end)
-      end,
-    }
-  )
-
-  -- parse `jj status` for file change counts
-  jj_status_job = vim.fn.jobstart({ "jj", "status", "--no-pager" }, {
+  -- line 1: bookmarks if present, otherwise short change id; line 2: conflict marker
+  local template = [[separate(' ', local_bookmarks, change_id.short(8)) ++ "\n" ++ if(conflict, "conflict") ++ "\n"]]
+  jj_head_job = vim.fn.jobstart({ "jj", "log", "--ignore-working-copy", "-r", "@", "--no-graph", "-T", template }, {
     stdout_buffered = true,
     on_stdout = function(_, data)
-      local added, modified, removed, conflicts = 0, 0, 0, 0
-      for _, line in ipairs(data) do
-        local code = line:sub(1, 1)
-        if code == "A" then
-          added = added + 1
-        elseif code == "M" then
-          modified = modified + 1
-        elseif code == "D" then
-          removed = removed + 1
-        elseif code == "C" then
-          conflicts = conflicts + 1
-        end
+      if data and data[1] then
+        jj_head = data[1]:gsub("%s+$", "")
+        jj_conflict = data[2] == "conflict"
       end
-      jj_repo_status = { added = added, modified = modified, removed = removed, conflicts = conflicts }
-      vim.schedule(function()
-        if package.loaded["lualine"] then
-          require("lualine").refresh()
-        end
-      end)
+      refresh()
+    end,
+  })
+
+  -- colocated repo: git sees the same uncommitted changes (HEAD is @-) and reads
+  -- the files on disk, so counts stay live without a jj snapshot. Otherwise fall
+  -- back to jj's last snapshot, which lags until the next real jj command.
+  local root = vim.fn.fnamemodify(vim.fn.finddir(".jj", vim.fn.getcwd() .. ";"), ":p:h:h")
+  local colocated = vim.fn.isdirectory(root .. "/.git") == 1
+  local cmd = colocated and { "git", "--no-optional-locks", "status", "--porcelain" }
+    or { "jj", "status", "--ignore-working-copy", "--no-pager" }
+  jj_status_job = vim.fn.jobstart(cmd, {
+    cwd = root,
+    stdout_buffered = true,
+    on_stdout = function(_, data)
+      jj_repo_status = count_changes(data, colocated)
+      refresh()
     end,
   })
 end
@@ -104,8 +117,8 @@ function M.repo_status(palette, active)
       if jj_repo_status.removed > 0 then
         table.insert(parts, "-" .. jj_repo_status.removed)
       end
-      if jj_repo_status.conflicts > 0 then
-        table.insert(parts, "!" .. jj_repo_status.conflicts)
+      if jj_conflict then
+        table.insert(parts, "!")
       end
       return table.concat(parts, " ")
     end,
@@ -117,7 +130,7 @@ function M.repo_status(palette, active)
           jj_repo_status.added > 0
           or jj_repo_status.modified > 0
           or jj_repo_status.removed > 0
-          or jj_repo_status.conflicts > 0
+          or jj_conflict
         )
     end,
   }

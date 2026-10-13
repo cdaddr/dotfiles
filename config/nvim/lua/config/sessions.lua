@@ -24,6 +24,26 @@ local function session_path()
   return vim.fn.stdpath("state") .. "/sessions/" .. name .. ".vim"
 end
 
+-- plugins create hidden named scratch buffers (e.g. snacks picker's
+-- `snacks://picker/highlight/<lang>`, mini.notify's
+-- `mininotify://<id>/textlock-check-scratch`). If one ends up in a session
+-- file it comes back as a normal buffer that can become modified and block
+-- `:qa`. They're regenerated on demand, so they're always safe to wipe.
+-- oil:// and fugitive:// are deliberately not listed; those restore properly.
+local scratch_name_patterns = { "^snacks://", "^mini%a+://", "^diffview://" }
+
+local function wipe_plugin_scratch_bufs()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    for _, pat in ipairs(scratch_name_patterns) do
+      if name:match(pat) then
+        pcall(vim.api.nvim_buf_delete, buf, { force = true })
+        break
+      end
+    end
+  end
+end
+
 local function save()
   if not should_use_session then
     return
@@ -31,18 +51,8 @@ local function save()
   -- I only want to save the first tab; others will be stuff like diffview
   vim.cmd("1tabnext | tabonly")
 
-  -- snacks picker creates hidden `snacks://picker/highlight/<lang>` scratch
-  -- buffers to run treesitter over previewed code. With `buffers` in
-  -- sessionoptions, mksession persists them (nofile doesn't exempt a named
-  -- buffer); on restore they come back as normal, modified buffers holding
-  -- stale picker text and block `:qa`. They're regenerated on demand, so wipe
-  -- them before mksession. VimLeavePre only, so no restore needed.
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    local name = vim.api.nvim_buf_get_name(buf)
-    if name:match("^snacks://") then
-      pcall(vim.api.nvim_buf_delete, buf, { force = true })
-    end
-  end
+  -- only runs when exiting/restarting, so no restore needed
+  wipe_plugin_scratch_bufs()
 
   -- mark non-file buffers as nofile before mksession so they're excluded
   -- then restore buftype/buflisted after saving session
@@ -88,6 +98,8 @@ local function load()
   local path = session_path()
   if vim.fn.filereadable(path) == 1 then
     vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+    -- drop stale scratch buffers from session files saved before the wipe in save()
+    wipe_plugin_scratch_bufs()
   end
 end
 

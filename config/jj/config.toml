@@ -3,6 +3,7 @@
 [ui]
 diff-editor = ["nvim", "--cmd", "let g:_no_session = 1", "-c", "DiffEditor $left $right $output"]
 diff-instructions = false
+default-command = "log"
 # default-command = ["log", "-r", "local_stack"]
 # merge-editor = ["nvim", "-c", "DiffviewOpen"]
 

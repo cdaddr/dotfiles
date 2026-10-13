@@ -7,6 +7,10 @@ default-command = "log"
 # default-command = ["log", "-r", "local_stack"]
 # merge-editor = ["nvim", "-c", "DiffviewOpen"]
 
+[revsets]
+# `jj bookmark advance` targets the newest described commit at or below @
+bookmark-advance-to = 'heads(::@ ~ description(exact:""))'
+
 [revset-aliases]
 "recent" = "ancestors(@, 20)"
 "stack" = "immutable_heads()..@"

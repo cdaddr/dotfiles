@@ -23,4 +23,4 @@ draft_commit_description = "builtin_draft_commit_description_with_diff"
 logs = ["log", "-r", "stack"]
 
 [snapshot]
-max-new-gile-size = "3MiB"
+max-new-file-size = "3MiB"

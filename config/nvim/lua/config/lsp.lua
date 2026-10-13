@@ -17,6 +17,7 @@ local servers = {
   -- "djlsp",
   "html",
   "tailwindcss",
+  "clojure_lsp",
 }
 
 for _, server in ipairs(servers) do

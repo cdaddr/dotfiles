@@ -7,7 +7,6 @@ tap "codecrafters-io/tap", trusted: { formula: "codecrafters" }
 tap "gcenx/wine", trusted: { cask: "game-porting-toolkit" }
 tap "jandedobbeleer/oh-my-posh"
 tap "jetbrains/utils"
-tap "michel-kraemer/zsh-patina", trusted: { formula: "zsh-patina" }
 tap "olets/tap", trusted: { formula: "zsh-abbr" }
 tap "tako8ki/tap", trusted: { formula: "gobang" }
 tap "xo/xo", trusted: { formula: "usql" }
@@ -124,7 +123,7 @@ brew "zsh"
 brew "borkdude/brew/babashka"
 brew "clojure-lsp/brew/clojure-lsp-native"
 brew "codecrafters-io/tap/codecrafters"
-brew "michel-kraemer/zsh-patina/zsh-patina"
+brew "zsh-patina" # now in homebrew-core; the michel-kraemer tap is no longer needed
 brew "olets/tap/zsh-abbr"
 brew "tako8ki/tap/gobang"
 brew "xo/xo/usql"
@@ -152,7 +151,6 @@ cask "wireshark-app"
 go "github.com/hadzicni/gitignore-cli/cmd/gitignore"
 # uv tools (brew bundle runs `uv tool install`; node tools stay with volta in setup.py)
 uv "harlequin[postgres]"
-uv "headroom-ai[all]"
 uv "ruff"
 uv "shandy-sqlfmt[jinjafmt]"
 uv "sqlit-tui"

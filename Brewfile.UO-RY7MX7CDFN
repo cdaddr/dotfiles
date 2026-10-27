@@ -1,2 +1,5 @@
 # packages only wanted on this machine (work laptop). loaded by Brewfile when
 # `hostname -s` matches the filename suffix.
+# brew bundle pins uv tools to brew's newest python (3.15); torch has no wheels for it, so
+# this can't be installed fresh elsewhere. already installed here under an older interpreter.
+uv "headroom-ai[all]"

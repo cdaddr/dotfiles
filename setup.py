@@ -23,6 +23,11 @@ HOST = subprocess.run(["hostname", "-s"], capture_output=True, text=True).stdout
 # brew's tap-trust store lives under XDG_CONFIG_HOME (~/.config/homebrew/trust.json);
 # without it (ssh, launchd, bootstrap) brew reads an empty ~/.homebrew/trust.json
 XDG_CONFIG_HOME = os.environ.setdefault("XDG_CONFIG_HOME", str(HOME / ".config"))
+# ssh/launchd shells lack these; dotnet-sdk's cask doesn't always link its binary into brew's bin
+os.environ["PATH"] = ":".join([
+    "/opt/homebrew/bin", "/usr/local/bin", "/usr/local/share/dotnet",
+    str(HOME / ".volta/bin"), str(HOME / ".local/bin"), os.environ["PATH"],
+])
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--upgrade", action="store_true", help="also run `brew upgrade` (slow)")
@@ -254,7 +259,8 @@ def launch_agent(label, program, keep_alive=False, calendar=None, log=None, extr
 
 # hand-made agents superseded by the declarations below
 def remove_legacy_agent(label):
-    target = HOME / "Library/LaunchAgents" / f"{label}.plist"
+    # the original maxwell agent's label already ended in ".plist", matching its filename
+    target = HOME / "Library/LaunchAgents" / (label if label.endswith(".plist") else f"{label}.plist")
     if not target.exists() and not agent_loaded(label):
         return
     if agent_loaded(label):
@@ -280,7 +286,8 @@ with section("homebrew drift"):
         ["brew", "bundle", "cleanup", f"--file={DOTFILES}/Brewfile"],
         capture_output=True, text=True,
     )
-    unlisted = r.stdout.strip()
+    # the "Would `brew cleanup`" block is cache/old-version housekeeping, not drift
+    unlisted = r.stdout.split("Would `brew cleanup`")[0].strip()
     if not unlisted:
         ok("no unlisted packages")
     else:

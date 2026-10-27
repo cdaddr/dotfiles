@@ -41,7 +41,7 @@ alias_reminder() {
 }
 
 alias_reminder "du" "dua"
-alias_reminder "grep" "rg"
+# alias_reminder "grep" "rg"
 
 # fetch from remote and rebase @ onto the updated remote bookmark
 jjp() {

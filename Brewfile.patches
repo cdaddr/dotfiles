@@ -1,0 +1,4 @@
+# packages only wanted on patches. loaded by Brewfile when `hostname -s` matches.
+cask "rectangle" # installed outside brew on the work laptop, so not in common
+cask "love" # cask disabled upstream (gatekeeper) since 2026-09; still installed here, can't be installed fresh
+cask "whisky" # cask disabled upstream (unmaintained) since 2026-04; same situation

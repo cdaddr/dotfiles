@@ -8,7 +8,8 @@ set -u
 # launchd's PATH lacks homebrew; cover both apple silicon and intel prefixes
 PATH=/opt/homebrew/bin:/usr/local/bin:$PATH
 FFMPEG=$(command -v ffmpeg) || { echo "ffmpeg not found" >&2; exit 1; }
-PATTERN=${MAXWELL_DEVICE_PATTERN:-maxwell}
+# the dongle exposes "Chat-Audeze Maxwell" (x2) and "Game-Audeze Maxwell"; game is the main audio path
+PATTERN=${MAXWELL_DEVICE_PATTERN:-Game-Audeze Maxwell}
 POLL=${MAXWELL_POLL_SECONDS:-10}
 
 player=

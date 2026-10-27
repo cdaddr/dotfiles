@@ -1,0 +1,2 @@
+# packages only wanted on this machine (work laptop). loaded by Brewfile when
+# `hostname -s` matches the filename suffix.

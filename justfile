@@ -7,6 +7,7 @@ push:
     jj bookmark set main
     jj git push
 
+# pull the other machine's changes and apply them here
 sync:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -17,3 +18,20 @@ sync:
     fi
     jj new
     jj abandon 'empty() & ~@ & mutable()' 2>/dev/null || true
+    ./setup.py
+
+# install everything declared (Brewfile, symlinks, tools, launch agents)
+setup:
+    ./setup.py
+
+# setup plus `brew upgrade`
+upgrade:
+    ./setup.py --upgrade
+
+# sort packages installed by hand into Brewfile.common / Brewfile.<host>
+triage:
+    ./brew-triage.py
+
+# what's installed here that the Brewfile doesn't list
+drift:
+    brew bundle cleanup --file=Brewfile

@@ -21,9 +21,8 @@ gui:
       - '#DCD7BA'
     searchingActiveBorderColor:
       - '#C8C093'
-
-  authorColors:
-    '*': '#b7bdf8'
+    authorColors:
+      '*': '#b7bdf8'
 git:
-  pagers:
-    - pager: diff-so-fancy
+  diffRenderers:
+    - command: diff-so-fancy

@@ -62,6 +62,7 @@ brew "lazysql"
 brew "lcdf-typetools"
 brew "leiningen"
 brew "lima"
+brew "llama.cpp" # llama-server for nvim completion; run by the ca.carper.llama-server launch agent
 brew "lua"
 brew "lua-language-server"
 brew "luarocks"

@@ -271,6 +271,7 @@ def remove_legacy_agent(label):
 with section("launch agents"):
     remove_legacy_agent("com.user.maxwell.plist")  # original maxwell fix on patches; its label included ".plist"
     launch_agent("ca.carper.maxwell-fix", [DOTFILES / "config/maxwell/keepalive.sh"], keep_alive=True)
+    launch_agent("ca.carper.llama-server", [DOTFILES / "config/llama.cpp/server.sh"], keep_alive=True)
     if HOST == "patches":
         launch_agent("ca.carper.allowance-backup", ["/bin/bash", HOME / "Backups/allowance-pull.sh"],
                      calendar=[{"Hour": 20, "Minute": 0}], log=HOME / "Backups/allowance-pull.log")

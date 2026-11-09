@@ -59,6 +59,35 @@ later(function()
     end,
   })
 
+  -- nvim-tree renames a file's buffer with nvim_buf_set_name() and then `:write!`s it.
+  -- Core LSP only tells servers about the new name (didClose old / didOpen new) in
+  -- BufWritePost, so a format-on-save edit in BufWritePre goes out as a didChange
+  -- for a URI the server never opened. Roslyn treats that as fatal and dies.
+  -- Skip format-on-save for that one write.
+  -- Rejected: detaching LSP clients around the rename. An edit while no client is
+  -- attached makes core drop its on_lines listener for good, so didChange stops
+  -- being sent after reattaching (nvim 0.13-dev).
+  -- The rename runs synchronously after WillRenameNode, so the scheduled restore
+  -- also covers a failed rename, where NodeRenamed never fires.
+  local tree_api = require("nvim-tree.api")
+  tree_api.events.subscribe(tree_api.events.Event.WillRenameNode, function(data)
+    local saved = {} ---@type table<integer, { value: boolean? }>
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      local name = vim.api.nvim_buf_get_name(buf)
+      if name == data.old_name or vim.startswith(name, data.old_name .. "/") then
+        saved[buf] = { value = vim.b[buf].disable_format_on_save }
+        vim.b[buf].disable_format_on_save = true
+      end
+    end
+    vim.schedule(function()
+      for buf, s in pairs(saved) do
+        if vim.api.nvim_buf_is_valid(buf) then
+          vim.b[buf].disable_format_on_save = s.value
+        end
+      end
+    end)
+  end)
+
 -- stylua: ignore start
 vim.keymap.set("n", "<d-e>", function() require("nvim-tree.api").tree.open({find_file = true }) end, { desc = "nvim-tree: toggle (cwd)" })
 vim.keymap.set("n", "<d-E>", function() require("nvim-tree.api").tree.open({find_file = true, path = vim.fn.expand('%:h') }) end, { desc = "nvim-tree: toggle (buffer dir)" })

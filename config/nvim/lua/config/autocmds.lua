@@ -29,7 +29,7 @@ au("SwapExists", {
 -- flash yanked region
 au("TextYankPost", {
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.hl_op()
   end,
 })
 

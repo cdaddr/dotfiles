@@ -13,12 +13,34 @@ later(function()
 
   local default_providers = { "lsp", "lazydev", "snippets", "path", "buffer" }
 
+  -- <Tab>/<S-Tab> on a bullets.vim list item demote/promote it (deeper/shallower
+  -- level, cycling the marker like >> / <<) wherever the cursor is on the line,
+  -- instead of completing. Lines that aren't list items keep normal <Tab> behaviour.
+  -- No cursor-position check on purpose: in the leading indent, a plain <Tab> only
+  -- inserts whitespace (no marker change), and a plain <S-Tab> inserts a tab, so it
+  -- indents instead of outdenting.
+  -- This lives in blink's chain rather than a buffer-local map because blink rebinds
+  -- <Tab> on InsertEnter, and a buffer map would only run as blink's fallback, i.e.
+  -- never while the completion menu is open.
+  -- The mapping is an expr map, so emit <Cmd> keys rather than editing directly.
+  local function list_shift(cmd)
+    return function()
+      if not vim.tbl_contains(vim.g.bullets_enabled_file_types or {}, vim.bo.filetype) then
+        return
+      end
+      local line = vim.api.nvim_get_current_line()
+      if line:match("^%s*[-*+]%s") or line:match("^%s*%d+[.)]%s") then
+        return vim.keycode("<Cmd>" .. cmd .. "<CR>")
+      end
+    end
+  end
+
   ---@type blink.cmp.Config
   require("blink.cmp").setup({
     keymap = {
       preset = "none",
-      ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
-      ["<S-Tab>"] = { "snippet_backward", "fallback" },
+      ["<Tab>"] = { list_shift("BulletDemote"), "select_and_accept", "snippet_forward", "fallback" },
+      ["<S-Tab>"] = { list_shift("BulletPromote"), "snippet_backward", "fallback" },
       ["<C-space>"] = { "show", "hide", "fallback" },
       -- blink will eat <esc> trying to get out of normal mode
       -- ...so leave this off

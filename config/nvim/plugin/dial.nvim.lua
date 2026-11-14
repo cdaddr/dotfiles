@@ -60,7 +60,7 @@ later(function()
   })
   local capitalized_boolean = augend.constant.new({ elements = { "True", "False" }, word = true, cyclic = true })
   local cases = augend.case.new({ types = { "camelCase", "snake_case" }, cyclic = true })
-  local comment_tags = augend.constant.new({ elements = { "TODO", "NOTE", "FIXME", "BUG", "HACK", "WARN" } })
+  local comment_tags = augend.constant.new({ elements = { "TODO", "NOTE", "IDEA", "FIXME", "BUG", "HACK", "WARN" } })
 
   local groups = {
     default = {

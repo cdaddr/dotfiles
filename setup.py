@@ -129,6 +129,7 @@ with section("symlinks"):
         symlink(DOTFILES / "config" / name, HOME / ".config" / name)
 
     for src, target in {
+        DOTFILES / "zshenv":           HOME / ".zshenv",
         DOTFILES / "zshrc":            HOME / ".zshrc",
         DOTFILES / "hushlogin":        HOME / ".hushlogin",
         DOTFILES / "claude/CLAUDE.md": HOME / ".claude/CLAUDE.md",

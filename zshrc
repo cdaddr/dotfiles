@@ -1,8 +1,12 @@
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
+# environment and PATH live in zshenv, which every zsh reads before this file
 export ZSH_PLUGINS="$XDG_CONFIG_HOME/zsh"
-export FPATH="$ZSH_PLUGINS/functions:$FPATH"
+typeset -U fpath
+fpath=(
+  $ZSH_PLUGINS/functions /opt/homebrew/share/zsh/site-functions(N-/)
+  $fpath
+  /Applications/OrbStack.app/Contents/Resources/completions/zsh(N-/)
+)
+export FPATH
 
 # Terminal I/O must happen BEFORE the instant-prompt preamble below; once instant
 # prompt takes over the TTY, stty would fail and p10k warns about console output.
@@ -15,15 +19,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export EDITOR='nvim'
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-
-export PAGER="less"
-export DELTA_PAGER="less -n"
-export MANPAGER="nvim +Man!"
-export LESS="-R -S -g -i -F -X" # raw ANSI color, lineno, chop, exit onescreen, don't clear, search, case-insensitive
 export LESS_TERMCAP_mb=$'\e[1;31m'     # Begin blinking - Red
 export LESS_TERMCAP_md=$'\e[1;94m'     # Begin bold - Blue
 export LESS_TERMCAP_me=$'\e[0m'        # End mode
@@ -45,8 +40,6 @@ if command -v vivid &>/dev/null; then
   export LS_COLORS="$(<$_ls_colors_cache)"
   unset _ls_colors_cache
 fi
-
-[[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -127,22 +120,14 @@ if [[ -f  "$XDG_CONFIG_HOME/aliases.sh" ]]; then
     source "$XDG_CONFIG_HOME/aliases.sh"
 fi
 
-export VOLTA_HOME="$XDG_DATA_HOME/volta"
-export PATH=$HOME/bin:$HOME/.local/bin:$VOLTA_HOME/bin:/usr/local/bin:$PATH
+# reapply PATH order from zshenv after /etc/zprofile's path_helper reshuffled it. only login
+# shells run path_helper; nested shells keep the parent's order (mise etc.)
+[[ -o login ]] && _dotfiles_path
 
 ############################################################################
 ## From here down is all junk added by tools.  May need periodic cleanup.
 
 export WORDCHARS="${WORDCHARS/\/}"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export GOPATH="$XDG_DATA_HOME/go"
-export HOMEBREW_NO_ENV_HINTS=1
-export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
-export JJ_CONFIG="$XDG_CONFIG_HOME/jj"
-# trailing colon keeps julia's bundled stdlib depot after the user depot
-export JULIA_DEPOT_PATH="$XDG_CONFIG_HOME/julia:"
-export PRETTIERD_DEFAULT_CONFIG="$XDG_CONFIG_HOME/prettierdrc.toml"
 
 # cache a tool's init script and source it; regenerate when the binary is newer.
 # converts a per-startup subprocess spawn into a plain file source.
@@ -161,11 +146,6 @@ cacherebuild() { rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zsh/init-*.zsh "${XDG_C
 _cache_init zoxide zoxide zoxide init zsh
 _cache_init atuin atuin atuin init zsh --disable-up-arrow
 
-if [[ -f  "$HOME/.local/share/cargo/env" ]]; then
-    source "$HOME/.local/share/cargo/env"
-    export PATH="$PATH:$CARGO_HOME/bin"
-fi
-
 if [[ -f "$XDG_CONFIG_HOME/zsh-private.sh" ]]; then
     source "$XDG_CONFIG_HOME/zsh-private.sh"
 fi
@@ -173,9 +153,6 @@ fi
 if type mise &>/dev/null; then
   _cache_init mise mise mise activate zsh
 fi
-
-export PATH="$PATH:$HOME/.dotnet/tools"
-export PATH="$PATH:$GOPATH/bin"
 
 # Powerlevel10k prompt. Uses the gitstatus daemon (no per-prompt git fork) and
 # pairs with the instant-prompt block at the top of this file. The blank line

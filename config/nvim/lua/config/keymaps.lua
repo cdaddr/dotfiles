@@ -59,6 +59,7 @@ end, { desc = "Save session and restart nvim" })
 -- toggle qf
 map("n", [[\q]], ":copen<cr>", { desc = "Toggle quickfix list" })
 map("n", [[\Q]], ":cclose<cr>", { desc = "Close quickfix list" })
+map("n", "<leader>m", "<cmd>silent make! | cwindow<cr>", { desc = ":make and open quickfix on errors" })
 
 map("x", ">", ">gv")
 map("x", "<", "<gv")

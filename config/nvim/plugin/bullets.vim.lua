@@ -44,6 +44,10 @@ later(function()
     pattern = vim.g.bullets_enabled_file_types,
     callback = function(ev)
       vim.keymap.set("x", "gb", bulletize, { buffer = ev.buf, desc = "Bulletize selection" })
+      -- bullets.vim has no per-mapping opt-out, so drop its default <leader>x here;
+      -- this group is defined after the plugin's, so its maps already exist.
+      pcall(vim.keymap.del, "n", "<leader>x", { buffer = ev.buf })
+      vim.keymap.set("n", "-", "<Plug>(bullets-toggle-checkbox)", { buffer = ev.buf, desc = "Toggle checkbox" })
     end,
   })
 

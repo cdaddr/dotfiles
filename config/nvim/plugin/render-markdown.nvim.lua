@@ -1,15 +1,24 @@
 -- see colorscheme.lua for highlights
 -- deferred: markdown rendering; only relevant in markdown buffers
 later(function()
-  vim.pack.add({ "https://github.com/MeanderingProgrammer/render-markdown.nvim" })
-  require("render-markdown").setup({
+  -- config goes in via this global rather than setup(): the plugin/ file sourced
+  -- by vim.pack.add calls setup(vim.g.render_markdown_config) and immediately
+  -- renders already-open buffers, so a setup() after it flashes the defaults
+  vim.g.render_markdown_config = {
     render_modes = { "n", "c", "v", "V", "Vs", "", "i", "R", "Rv" },
     heading = {
       border = true,
       above = "▂",
       below = "▀🮂",
       border_virtual = true,
-      icons = { "󰉫 ", "󰉬 ", "󰉭 ", "󰉮 ", "󰉯 ", "󰉰 " },
+      -- default 'overlay' left-pads the icon to fill the '#' markers' width, so
+      -- deeper headings get indented while h1/h2 (markers <= icon width) don't
+      position = "inline",
+      -- md-pound; the space after each lets kitty draw it 2 cells wide
+      icons = { " 󰐣  ", " 󰐣 󰐣  ", " 󰐣 󰐣 󰐣  ", " 󰐣 󰐣 󰐣 󰐣  ", " 󰐣 󰐣 󰐣 󰐣 󰐣  ", " 󰐣 󰐣 󰐣 󰐣 󰐣 󰐣  " },
+    },
+    bullet = {
+      icons = { "•", "○", "◆", "◇" },
     },
     code = {
       border = "thin",
@@ -40,5 +49,6 @@ later(function()
       breakindent = { default = vim.o.breakindent, rendered = true },
       breakindentopt = { default = vim.o.breakindentopt, rendered = "" },
     },
-  })
+  }
+  vim.pack.add({ "https://github.com/MeanderingProgrammer/render-markdown.nvim" })
 end)

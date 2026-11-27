@@ -62,7 +62,27 @@ now(function()
         local palette = colors.palette
         local gutter_bg = palette.sumiInk1
         local normal_bg = palette.sumiInk3
-        return {
+
+        -- violet -> red; bg is the same hue blended into normal_bg so the
+        -- border (render-markdown draws it in the bg colour) matches.
+        -- RenderMarkdownH* only colours the icon; heading text is treesitter's.
+        local heading_hl = {}
+        local color = require("kanagawa.lib.color")
+        local rainbow = {
+          palette.oniViolet,
+          palette.crystalBlue,
+          palette.springGreen,
+          palette.carpYellow,
+          palette.surimiOrange,
+          palette.peachRed,
+        }
+        for i, fg in ipairs(rainbow) do
+          heading_hl["RenderMarkdownH" .. i] = { fg = fg }
+          heading_hl["@markup.heading." .. i .. ".markdown"] = { fg = fg, bold = i <= 2 }
+          heading_hl["RenderMarkdownH" .. i .. "Bg"] = { bg = color(normal_bg):blend(fg, 0.15):to_hex() }
+        end
+
+        return vim.tbl_extend("error", heading_hl, {
           NormalFloat = { bg = "none" },
           FloatBorder = { bg = "none" },
           FloatTitle = { bg = "none" },
@@ -120,24 +140,12 @@ now(function()
 
           RenderMarkdownCode = { bg = palette.sumiInk2 },
           RenderMarkdownCodeBorder = { bg = palette.sumiInk2 },
-          RenderMarkdownH1 = { fg = palette.oniViolet },
-          RenderMarkdownH2 = { fg = palette.oniViolet },
-          RenderMarkdownH3 = { fg = palette.oniViolet },
-          RenderMarkdownH4 = { fg = palette.oniViolet },
-          RenderMarkdownH5 = { fg = palette.oniViolet },
-          RenderMarkdownH6 = { fg = palette.oniViolet },
-          RenderMarkdownH1Bg = { bg = palette.waveBlue1 },
-          RenderMarkdownH2Bg = { bg = palette.waveBlue1 },
-          RenderMarkdownH3Bg = { bg = palette.waveBlue1 },
-          RenderMarkdownH4Bg = { bg = palette.waveBlue1 },
-          RenderMarkdownH5Bg = { bg = palette.waveBlue1 },
-          RenderMarkdownH6Bg = { bg = palette.waveBlue1 },
 
           CodeDiffFiller = { fg = palette.oniViolet },
           MiniCursorword = { underdotted = true },
           MiniCursorwordCurrent = { underdotted = true },
           MiniJump = { link = "Search" },
-        }
+        })
       end,
     })
   elseif prefix == "catppuccin" then

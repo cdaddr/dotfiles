@@ -56,6 +56,24 @@ later(function()
       api.map.on_attach.default(bufnr)
       vim.keymap.set("n", "<Esc>", "<Cmd>wincmd p<CR>", opts("Focus previous window"))
       vim.keymap.set("n", "<C-[>", api.tree.change_root_to_parent, opts("Up"))
+      -- A second <CR> at the "Pick window" prompt picks window A. The picker reads
+      -- its key with a blocking vim.fn.getchar() in a local function, so there is
+      -- no hook; translate <CR> there for the duration of this one open.
+      -- Rejected: window_picker.picker = function, which means reimplementing the
+      -- whole statusline-label UI; and putting "\r" in window_picker.chars, which
+      -- renders a raw CR as window A's label.
+      vim.keymap.set("n", "<CR>", function()
+        local getchar = vim.fn.getchar
+        vim.fn.getchar = function(...)
+          local c = getchar(...)
+          return c == 13 and string.byte("A") or c
+        end
+        local ok, err = pcall(api.node.open.edit)
+        vim.fn.getchar = getchar
+        if not ok then
+          error(err, 0)
+        end
+      end, opts("Open (<CR> at picker = A)"))
     end,
   })
 

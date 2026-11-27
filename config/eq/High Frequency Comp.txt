@@ -1,0 +1,2 @@
+Preamp: -6.0 dB
+Filter 1: ON HS Fc 3000 Hz Gain 6.0 dB Q 0.70

@@ -137,7 +137,6 @@ brew "pgformatter"
 cask "beekeeper-studio"
 cask "docker-desktop"
 cask "dotnet-sdk" # official MS .NET SDK (net10); installs to /usr/local/share/dotnet so apphosts/roslyn find the runtime
-cask "finetune" # per-app volume/EQ; headphone corrections in config/eq are symlinked into ~/Library/Application Support/FineTune/AutoEQ
 cask "font-iosevka"
 cask "font-noto-sans"
 cask "gcenx/wine/game-porting-toolkit"
